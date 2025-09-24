@@ -7,63 +7,872 @@
   - Environments: .env
 
  ✓ Starting...
- ✓ Ready in 3.8s
- ○ Compiling /_not-found ...
- ✓ Compiled /_not-found in 3.5s (466 modules)
- GET /_next/static/css/css-app_styles_dance-theme_css.css?v=1758174953111 404 in 3814ms
- GET /_next/static/css/css-app_globals_css-node_modules_next_font_google_target_css.css?v=1758174953111 404 in 3834ms
- GET /_next/static/chunks/webpack.js?v=1758174953111 404 in 4017ms
- GET /_next/static/chunks/app-pages-internals.js 404 in 3384ms
- GET /_next/static/chunks/app/(public)/page.js 404 in 3381ms
- ✓ Compiled in 1038ms (452 modules)
- GET /_next/static/chunks/app/(public)/layout.js 404 in 830ms
- ✓ Compiled /middleware in 152ms (71 modules)
- ✓ Compiled /login in 456ms (500 modules)
- GET /login 200 in 719ms
- GET /login 200 in 711ms
- ✓ Compiled /api/auth/me in 216ms (285 modules)
- GET /api/auth/me 200 in 1945ms
- GET /api/auth/me 200 in 1926ms
- GET /api/auth/me 200 in 406ms
- GET /api/auth/me 200 in 398ms
- ✓ Compiled /dashboard in 382ms (566 modules)
- ✓ Compiled /api/auth/login in 359ms (390 modules)
-🔓 Development user login
- ✓ Compiled /api/user/dashboard/[id] in 92ms (392 modules)
- ✓ Compiled (460 modules)
- POST /api/auth/login 200 in 2002ms
- POST /api/auth/login 200 in 1936ms
- ✓ Compiled /api/auth/sessions in 241ms (462 modules)
- GET /api/auth/sessions?userId=cmfpu23d10002sryhwktjx8jb 200 in 504ms
- GET /api/auth/sessions?userId=cmfpu23d10002sryhwktjx8jb 200 in 496ms
- GET /api/notifications?userId=cmfpu23d10002sryhwktjx8jb&limit=10 200 in 1997ms
- GET /api/notifications?userId=cmfpu23d10002sryhwktjx8jb&limit=10 200 in 1982ms
- GET /api/notifications?userId=cmfpu23d10002sryhwktjx8jb&limit=10 200 in 1735ms
- GET /api/notifications?userId=cmfpu23d10002sryhwktjx8jb&limit=10 200 in 1728ms
- GET /api/notifications?userId=cmfpu23d10002sryhwktjx8jb&limit=10 200 in 507ms
- GET /api/notifications?userId=cmfpu23d10002sryhwktjx8jb&limit=10 200 in 501ms
- GET /api/notifications?userId=cmfpu23d10002sryhwktjx8jb&limit=10 200 in 384ms
- GET /api/notifications?userId=cmfpu23d10002sryhwktjx8jb&limit=10 200 in 379ms
- GET /api/user/dashboard/cmfpu23d10002sryhwktjx8jb 200 in 5171ms
- GET /api/user/dashboard/cmfpu23d10002sryhwktjx8jb 200 in 5150ms
- ✓ Compiled /unauthorized in 463ms (732 modules)
- GET /api/user/dashboard/cmfpu23d10002sryhwktjx8jb 200 in 1739ms
- GET /api/user/dashboard/cmfpu23d10002sryhwktjx8jb 200 in 1731ms
- GET /api/user/dashboard/cmfpu23d10002sryhwktjx8jb 200 in 3170ms
- GET /api/user/dashboard/cmfpu23d10002sryhwktjx8jb 200 in 3162ms
- GET /unauthorized 200 in 155ms
- GET /unauthorized 200 in 148ms
- GET /api/auth/me 200 in 1259ms
- GET /api/auth/me 200 in 1249ms
- GET /api/auth/me 200 in 503ms
- GET /api/auth/me 200 in 498ms
- POST /api/auth/login 200 in 2695ms
- POST /api/auth/login 200 in 2685ms
- ✓ Compiled in 129ms (71 modules)
- ○ Compiling /_error ...
- ✓ Compiled /_error in 2.2s (761 modules)
- GET /_next/static/css/css-app_globals_css-node_modules_next_font_google_target_css.css?v=1758174953111 404 in 2551ms
- GET /_next/static/css/css-app_styles_dance-theme_css.css?v=1758174953111 404 in 2540ms
- GET /_next/static/chunks/webpack.js?v=1758174953111 404 in 2378ms
- GET /sw.js 404 in 116ms
- GET /sw.js 404 in 2ms
+ ✓ Ready in 3.1s
+ ✓ Compiled /middleware in 276ms (71 modules)
+ ○ Compiling /api/test/notifications ...
+ ⚠ ./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/notification-triggers.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/push-notifications.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/push-notifications.ts
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/push-notifications.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/push-notifications.ts
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/push-notifications.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/push-notifications.ts
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/push-notifications.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/push-notifications.ts
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/push-notifications.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/push-notifications.ts
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+Error sending new user registration notifications: TypeError: Cannot read properties of undefined (reading 'user')
+    at NotificationTriggers.sendNewUserRegistrationNotifications (webpack-internal:///(rsc)/./app/lib/notification-triggers.ts:431:68)
+    at POST (webpack-internal:///(rsc)/./app/api/test/notifications/route.ts:27:108)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async /Users/hemantd/DL/dance-platform/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:53238
+    at async e_.execute (/Users/hemantd/DL/dance-platform/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:44501)
+    at async e_.handle (/Users/hemantd/DL/dance-platform/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:54492)
+    at async doRender (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/base-server.js:1372:42)
+    at async cacheEntry.responseCache.get.routeKind (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/base-server.js:1594:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/base-server.js:1502:28)
+    at async DevServer.renderPageComponent (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/base-server.js:1919:24)
+    at async DevServer.renderToResponseImpl (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/base-server.js:1957:32)
+    at async DevServer.pipeImpl (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/base-server.js:915:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/base-server.js:811:17)
+    at async /Users/hemantd/DL/dance-platform/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/hemantd/DL/dance-platform/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/lib/router-server.js:174:21)
+    at async handleRequest (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/lib/router-server.js:353:24)
+    at async requestHandlerImpl (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/lib/router-server.js:377:13)
+    at async Server.requestListener (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/lib/start-server.js:141:13)
+ POST /api/test/notifications 200 in 1063ms
+ POST /api/test/notifications 200 in 948ms
+ ⚠ ./app/lib/push-notifications.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/push-notifications.ts
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/push-notifications.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/push-notifications.ts
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/push-notifications.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/push-notifications.ts
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/push-notifications.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/push-notifications.ts
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/push-notifications.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/push-notifications.ts
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+ ⚠ ./app/lib/push-notifications.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/push-notifications.ts
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/push-notifications.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/push-notifications.ts
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/push-notifications.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/push-notifications.ts
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/push-notifications.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/push-notifications.ts
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+
+./app/lib/push-notifications.ts
+Attempted import error: 'db' is not exported from './db' (imported as 'db').
+
+Import trace for requested module:
+./app/lib/push-notifications.ts
+./app/lib/notification-triggers.ts
+./app/api/test/notifications/route.ts
+ ✓ Compiled /api/test/notifications in 109ms (159 modules)
+ ✓ Compiled in 16ms
+ ✓ Compiled /api/test/notifications in 84ms (159 modules)
+prisma:query SELECT "public"."users"."id", "public"."users"."email", "public"."users"."full_name", "public"."users"."created_at" FROM "public"."users" WHERE ("public"."users"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."users"."id" FROM "public"."users" WHERE 1=1 OFFSET $1) AS "sub"
+📧 Email would be sent:
+From: DanceLink <noreply@dancelink.com>
+To: testuser@example.com
+Subject: Welcome to DanceLink, Test! 🎉
+HTML Content: 
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>Welcome to DanceLink</title>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #ff6b35, #f72585); color: white; padding: 40px 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .content { background: white; padding: 30px; border: 1px solid #ddd; }
+          .footer { background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; }
+          .feature-box { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #f72585; }
+          .button { background: #f72585; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block; margin: 10px 0; font-weight: bold; }
+          .emoji { font-size: 1.2em; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>🎉 Welcome to DanceLink!</h1>
+            <p>Your journey into the world of dance begins now</p>
+          </div>
+          
+          <div class="content">
+            <h2>Hello Test User!</h2>
+            <p>Thank you for joining DanceLink - the premier platform for dancers, instructors, and dance enthusiasts. We're thrilled to have you as part of our vibrant community!</p>
+            
+            <div class="feature-box">
+              <h3><span class="emoji">💃</span> What you can do on DanceLink:</h3>
+              <ul>
+                <li><strong>Discover Classes:</strong> Browse and book dance classes from talented instructors</li>
+                <li><strong>Join Events:</strong> Attend workshops, performances, and special dance events</li>
+                <li><strong>Connect with Partners:</strong> Find dance partners who match your style and skill level</li>
+                <li><strong>Track Progress:</strong> Monitor your dance journey and achievements</li>
+                <li><strong>Community Forum:</strong> Share tips, ask questions, and connect with fellow dancers</li>
+              </ul>
+            </div>
+
+            <div class="feature-box">
+              <h3><span class="emoji">🚀</span> Getting Started:</h3>
+              <ol>
+                <li>Complete your profile to help others find you</li>
+                <li>Browse available classes and events in your area</li>
+                <li>Book your first dance class or event</li>
+                <li>Connect with the dance community</li>
+              </ol>
+            </div>
+
+            <p style="text-align: center;">
+              <a href="http://localhost:3001/dashboard" class="button">
+                Complete Your Profile
+              </a>
+            </p>
+
+            <p>Ready to start dancing? Explore our classes and events, or connect with other dancers in your area. If you have any questions, our community is here to help!</p>
+          </div>
+
+          <div class="footer">
+            <p>Need help getting started? Check out our <a href="http://localhost:3001/help">Help Center</a> or contact us at <a href="mailto:support@dancelink.com">support@dancelink.com</a></p>
+            <p>&copy; 2024 DanceLink. All rights reserved.</p>
+            <p style="font-size: 12px; color: #666;">You received this email because you created an account on DanceLink.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    
+Text Content: 
+      Welcome to DanceLink, Test User!
+
+      Thank you for joining DanceLink - the premier platform for dancers, instructors, and dance enthusiasts. We're thrilled to have you as part of our vibrant community!
+
+      What you can do on DanceLink:
+      • Discover Classes: Browse and book dance classes from talented instructors
+      • Join Events: Attend workshops, performances, and special dance events
+      • Connect with Partners: Find dance partners who match your style and skill level
+      • Track Progress: Monitor your dance journey and achievements
+      • Community Forum: Share tips, ask questions, and connect with fellow dancers
+
+      Getting Started:
+      1. Complete your profile to help others find you
+      2. Browse available classes and events in your area
+      3. Book your first dance class or event
+      4. Connect with the dance community
+
+      Visit your dashboard: http://localhost:3001/dashboard
+
+      Ready to start dancing? Explore our classes and events, or connect with other dancers in your area. If you have any questions, our community is here to help!
+
+      Need help getting started? Check out our Help Center or contact us at support@dancelink.com
+
+      © 2024 DanceLink. All rights reserved.
+      You received this email because you created an account on DanceLink.
+    
+---
+✅ Welcome email sent to: testuser@example.com
+prisma:query SELECT "public"."users"."id", "public"."users"."email", "public"."users"."full_name" FROM "public"."users" WHERE "public"."users"."role" = CAST($1::text AS "public"."UserRole") OFFSET $2
+📧 Email would be sent:
+From: DanceLink <noreply@dancelink.com>
+To: admin@dance.com
+Subject: New User Registration: Test User
+HTML Content: 
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>New User Registration</title>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: #1a1a2e; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .content { background: white; padding: 30px; border: 1px solid #ddd; }
+          .footer { background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; }
+          .user-info { background: #f0f9ff; padding: 20px; border-radius: 8px; margin: 20px 0; }
+          .stat-box { background: #f0f9ff; padding: 15px; border-radius: 8px; text-align: center; margin: 15px 0; }
+          .button { background: #7c3aed; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 10px 0; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>👤 New User Registration</h1>
+            <p>DanceLink Admin Notification</p>
+          </div>
+          
+          <div class="content">
+            <p>A new user has registered on the DanceLink platform:</p>
+            
+            <div class="user-info">
+              <h3>User Details</h3>
+              <p><strong>Name:</strong> Test User</p>
+              <p><strong>Email:</strong> testuser@example.com</p>
+              <p><strong>User ID:</strong> cmfu6lgl70002v1qn46i31uyk</p>
+              <p><strong>Registration Date:</strong> Monday, September 22, 2025 at 02:30 AM</p>
+            </div>
+
+            <div class="stat-box">
+              <h3 style="margin: 0; color: #7c3aed;">🎯 Platform Stats</h3>
+              <p style="margin: 10px 0 0 0; font-size: 1.2em;"><strong>Total Users: 23</strong></p>
+            </div>
+
+            <p style="text-align: center;">
+              <a href="http://localhost:3001/admin/users" class="button">
+                View User in Admin Panel
+              </a>
+            </p>
+          </div>
+
+          <div class="footer">
+            <p>This is an automated notification from the DanceLink platform.</p>
+            <p>&copy; 2024 DanceLink. All rights reserved.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    
+Text Content: 
+      New User Registration - DanceLink Admin Notification
+      
+      A new user has registered on the DanceLink platform:
+      
+      User Details:
+      - Name: Test User
+      - Email: testuser@example.com
+      - User ID: cmfu6lgl70002v1qn46i31uyk
+      - Registration Date: 9/22/2025
+      
+      Platform Stats:
+      Total Users: 23
+      
+      View user in admin panel: http://localhost:3001/admin/users
+      
+      This is an automated notification from the DanceLink platform.
+      © 2024 DanceLink. All rights reserved.
+    
+---
+✅ Admin notification sent to: admin@dance.com
+📧 Email would be sent:
+From: DanceLink <noreply@dancelink.com>
+To: admin@dev.local
+Subject: New User Registration: Test User
+HTML Content: 
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>New User Registration</title>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: #1a1a2e; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .content { background: white; padding: 30px; border: 1px solid #ddd; }
+          .footer { background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; }
+          .user-info { background: #f0f9ff; padding: 20px; border-radius: 8px; margin: 20px 0; }
+          .stat-box { background: #f0f9ff; padding: 15px; border-radius: 8px; text-align: center; margin: 15px 0; }
+          .button { background: #7c3aed; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 10px 0; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>👤 New User Registration</h1>
+            <p>DanceLink Admin Notification</p>
+          </div>
+          
+          <div class="content">
+            <p>A new user has registered on the DanceLink platform:</p>
+            
+            <div class="user-info">
+              <h3>User Details</h3>
+              <p><strong>Name:</strong> Test User</p>
+              <p><strong>Email:</strong> testuser@example.com</p>
+              <p><strong>User ID:</strong> cmfu6lgl70002v1qn46i31uyk</p>
+              <p><strong>Registration Date:</strong> Monday, September 22, 2025 at 02:30 AM</p>
+            </div>
+
+            <div class="stat-box">
+              <h3 style="margin: 0; color: #7c3aed;">🎯 Platform Stats</h3>
+              <p style="margin: 10px 0 0 0; font-size: 1.2em;"><strong>Total Users: 23</strong></p>
+            </div>
+
+            <p style="text-align: center;">
+              <a href="http://localhost:3001/admin/users" class="button">
+                View User in Admin Panel
+              </a>
+            </p>
+          </div>
+
+          <div class="footer">
+            <p>This is an automated notification from the DanceLink platform.</p>
+            <p>&copy; 2024 DanceLink. All rights reserved.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    
+Text Content: 
+      New User Registration - DanceLink Admin Notification
+      
+      A new user has registered on the DanceLink platform:
+      
+      User Details:
+      - Name: Test User
+      - Email: testuser@example.com
+      - User ID: cmfu6lgl70002v1qn46i31uyk
+      - Registration Date: 9/22/2025
+      
+      Platform Stats:
+      Total Users: 23
+      
+      View user in admin panel: http://localhost:3001/admin/users
+      
+      This is an automated notification from the DanceLink platform.
+      © 2024 DanceLink. All rights reserved.
+    
+---
+✅ Admin notification sent to: admin@dev.local
+📧 Email would be sent:
+From: DanceLink <noreply@dancelink.com>
+To: admin@test.com
+Subject: New User Registration: Test User
+HTML Content: 
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>New User Registration</title>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: #1a1a2e; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .content { background: white; padding: 30px; border: 1px solid #ddd; }
+          .footer { background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; }
+          .user-info { background: #f0f9ff; padding: 20px; border-radius: 8px; margin: 20px 0; }
+          .stat-box { background: #f0f9ff; padding: 15px; border-radius: 8px; text-align: center; margin: 15px 0; }
+          .button { background: #7c3aed; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 10px 0; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>👤 New User Registration</h1>
+            <p>DanceLink Admin Notification</p>
+          </div>
+          
+          <div class="content">
+            <p>A new user has registered on the DanceLink platform:</p>
+            
+            <div class="user-info">
+              <h3>User Details</h3>
+              <p><strong>Name:</strong> Test User</p>
+              <p><strong>Email:</strong> testuser@example.com</p>
+              <p><strong>User ID:</strong> cmfu6lgl70002v1qn46i31uyk</p>
+              <p><strong>Registration Date:</strong> Monday, September 22, 2025 at 02:30 AM</p>
+            </div>
+
+            <div class="stat-box">
+              <h3 style="margin: 0; color: #7c3aed;">🎯 Platform Stats</h3>
+              <p style="margin: 10px 0 0 0; font-size: 1.2em;"><strong>Total Users: 23</strong></p>
+            </div>
+
+            <p style="text-align: center;">
+              <a href="http://localhost:3001/admin/users" class="button">
+                View User in Admin Panel
+              </a>
+            </p>
+          </div>
+
+          <div class="footer">
+            <p>This is an automated notification from the DanceLink platform.</p>
+            <p>&copy; 2024 DanceLink. All rights reserved.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    
+Text Content: 
+      New User Registration - DanceLink Admin Notification
+      
+      A new user has registered on the DanceLink platform:
+      
+      User Details:
+      - Name: Test User
+      - Email: testuser@example.com
+      - User ID: cmfu6lgl70002v1qn46i31uyk
+      - Registration Date: 9/22/2025
+      
+      Platform Stats:
+      Total Users: 23
+      
+      View user in admin panel: http://localhost:3001/admin/users
+      
+      This is an automated notification from the DanceLink platform.
+      © 2024 DanceLink. All rights reserved.
+    
+---
+✅ Admin notification sent to: admin@test.com
+📧 Email would be sent:
+From: DanceLink <noreply@dancelink.com>
+To: system@audit.local
+Subject: New User Registration: Test User
+HTML Content: 
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>New User Registration</title>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: #1a1a2e; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .content { background: white; padding: 30px; border: 1px solid #ddd; }
+          .footer { background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; }
+          .user-info { background: #f0f9ff; padding: 20px; border-radius: 8px; margin: 20px 0; }
+          .stat-box { background: #f0f9ff; padding: 15px; border-radius: 8px; text-align: center; margin: 15px 0; }
+          .button { background: #7c3aed; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 10px 0; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>👤 New User Registration</h1>
+            <p>DanceLink Admin Notification</p>
+          </div>
+          
+          <div class="content">
+            <p>A new user has registered on the DanceLink platform:</p>
+            
+            <div class="user-info">
+              <h3>User Details</h3>
+              <p><strong>Name:</strong> Test User</p>
+              <p><strong>Email:</strong> testuser@example.com</p>
+              <p><strong>User ID:</strong> cmfu6lgl70002v1qn46i31uyk</p>
+              <p><strong>Registration Date:</strong> Monday, September 22, 2025 at 02:30 AM</p>
+            </div>
+
+            <div class="stat-box">
+              <h3 style="margin: 0; color: #7c3aed;">🎯 Platform Stats</h3>
+              <p style="margin: 10px 0 0 0; font-size: 1.2em;"><strong>Total Users: 23</strong></p>
+            </div>
+
+            <p style="text-align: center;">
+              <a href="http://localhost:3001/admin/users" class="button">
+                View User in Admin Panel
+              </a>
+            </p>
+          </div>
+
+          <div class="footer">
+            <p>This is an automated notification from the DanceLink platform.</p>
+            <p>&copy; 2024 DanceLink. All rights reserved.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    
+Text Content: 
+      New User Registration - DanceLink Admin Notification
+      
+      A new user has registered on the DanceLink platform:
+      
+      User Details:
+      - Name: Test User
+      - Email: testuser@example.com
+      - User ID: cmfu6lgl70002v1qn46i31uyk
+      - Registration Date: 9/22/2025
+      
+      Platform Stats:
+      Total Users: 23
+      
+      View user in admin panel: http://localhost:3001/admin/users
+      
+      This is an automated notification from the DanceLink platform.
+      © 2024 DanceLink. All rights reserved.
+    
+---
+✅ Admin notification sent to: system@audit.local
+prisma:query SELECT "public"."users"."id" FROM "public"."users" WHERE "public"."users"."email" IN ($1,$2,$3,$4) OFFSET $5
+prisma:error 
+Invalid `prisma.notification.createMany()` invocation:
+
+{
+  data: [
+    {
+      userId: "cmfa2tj1l0000v1i0frvbyyuc",
+      type: "SYSTEM_ANNOUNCEMENT",
+      title: "New User Registration 👤",
+      message: "Test User (testuser@example.com) has joined DanceLink. Total users: 23",
+      priority: "NORMAL",
+      actionUrl: "/admin/users",
+      relatedEntityId: "cmfu6lgl70002v1qn46i31uyk",
+      relatedEntityType: "user",
+      deliveryMethod: "IN_APP",
+      isDelivered: true,
+      deliveredAt: new Date("2025-09-21T21:10:02.203Z")
+    },
+    {
+      userId: "cmffeius70000v16dxqsn2pse",
+      type: "SYSTEM_ANNOUNCEMENT",
+      title: "New User Registration 👤",
+      message: "Test User (testuser@example.com) has joined DanceLink. Total users: 23",
+      priority: "NORMAL",
+      actionUrl: "/admin/users",
+      relatedEntityId: "cmfu6lgl70002v1qn46i31uyk",
+      relatedEntityType: "user",
+      deliveryMethod: "IN_APP",
+      isDelivered: true,
+      deliveredAt: new Date("2025-09-21T21:10:02.203Z")
+    },
+    {
+      userId: "cmfpbo9850004v18fvnhmed13",
+      type: "SYSTEM_ANNOUNCEMENT",
+      title: "New User Registration 👤",
+      message: "Test User (testuser@example.com) has joined DanceLink. Total users: 23",
+      priority: "NORMAL",
+      actionUrl: "/admin/users",
+      relatedEntityId: "cmfu6lgl70002v1qn46i31uyk",
+      relatedEntityType: "user",
+      deliveryMethod: "IN_APP",
+      isDelivered: true,
+      deliveredAt: new Date("2025-09-21T21:10:02.203Z")
+    },
+    {
+      userId: "cmfsgv5qf0000v1wua0p5rlcp",
+      type: "SYSTEM_ANNOUNCEMENT",
+      title: "New User Registration 👤",
+      message: "Test User (testuser@example.com) has joined DanceLink. Total users: 23",
+      priority: "NORMAL",
+      actionUrl: "/admin/users",
+      relatedEntityId: "cmfu6lgl70002v1qn46i31uyk",
+      relatedEntityType: "user",
+      deliveryMethod: "IN_APP",
+      isDelivered: true,
+      deliveredAt: new Date("2025-09-21T21:10:02.203Z")
+    }
+  ]
+}
+
+Unknown argument `relatedEntityId`. Available options are marked with ?.
+Error sending new user registration notifications: PrismaClientValidationError: 
+Invalid `prisma.notification.createMany()` invocation:
+
+{
+  data: [
+    {
+      userId: "cmfa2tj1l0000v1i0frvbyyuc",
+      type: "SYSTEM_ANNOUNCEMENT",
+      title: "New User Registration 👤",
+      message: "Test User (testuser@example.com) has joined DanceLink. Total users: 23",
+      priority: "NORMAL",
+      actionUrl: "/admin/users",
+      relatedEntityId: "cmfu6lgl70002v1qn46i31uyk",
+      relatedEntityType: "user",
+      deliveryMethod: "IN_APP",
+      isDelivered: true,
+      deliveredAt: new Date("2025-09-21T21:10:02.203Z")
+    },
+    {
+      userId: "cmffeius70000v16dxqsn2pse",
+      type: "SYSTEM_ANNOUNCEMENT",
+      title: "New User Registration 👤",
+      message: "Test User (testuser@example.com) has joined DanceLink. Total users: 23",
+      priority: "NORMAL",
+      actionUrl: "/admin/users",
+      relatedEntityId: "cmfu6lgl70002v1qn46i31uyk",
+      relatedEntityType: "user",
+      deliveryMethod: "IN_APP",
+      isDelivered: true,
+      deliveredAt: new Date("2025-09-21T21:10:02.203Z")
+    },
+    {
+      userId: "cmfpbo9850004v18fvnhmed13",
+      type: "SYSTEM_ANNOUNCEMENT",
+      title: "New User Registration 👤",
+      message: "Test User (testuser@example.com) has joined DanceLink. Total users: 23",
+      priority: "NORMAL",
+      actionUrl: "/admin/users",
+      relatedEntityId: "cmfu6lgl70002v1qn46i31uyk",
+      relatedEntityType: "user",
+      deliveryMethod: "IN_APP",
+      isDelivered: true,
+      deliveredAt: new Date("2025-09-21T21:10:02.203Z")
+    },
+    {
+      userId: "cmfsgv5qf0000v1wua0p5rlcp",
+      type: "SYSTEM_ANNOUNCEMENT",
+      title: "New User Registration 👤",
+      message: "Test User (testuser@example.com) has joined DanceLink. Total users: 23",
+      priority: "NORMAL",
+      actionUrl: "/admin/users",
+      relatedEntityId: "cmfu6lgl70002v1qn46i31uyk",
+      relatedEntityType: "user",
+      deliveryMethod: "IN_APP",
+      isDelivered: true,
+      deliveredAt: new Date("2025-09-21T21:10:02.203Z")
+    }
+  ]
+}
+
+Unknown argument `relatedEntityId`. Available options are marked with ?.
+    at _n (/Users/hemantd/DL/dance-platform/node_modules/@prisma/client/runtime/library.js:29:1363)
+    at ei.handleRequestError (/Users/hemantd/DL/dance-platform/node_modules/@prisma/client/runtime/library.js:121:6926)
+    at ei.handleAndLogRequestError (/Users/hemantd/DL/dance-platform/node_modules/@prisma/client/runtime/library.js:121:6608)
+    at ei.request (/Users/hemantd/DL/dance-platform/node_modules/@prisma/client/runtime/library.js:121:6315)
+    at async a (/Users/hemantd/DL/dance-platform/node_modules/@prisma/client/runtime/library.js:130:9551)
+    at async NotificationTriggers.sendNewUserRegistrationNotifications (webpack-internal:///(rsc)/./app/lib/notification-triggers.ts:527:21)
+    at async POST (webpack-internal:///(rsc)/./app/api/test/notifications/route.ts:27:21)
+    at async /Users/hemantd/DL/dance-platform/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:53238
+    at async e_.execute (/Users/hemantd/DL/dance-platform/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:44501)
+    at async e_.handle (/Users/hemantd/DL/dance-platform/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:54492)
+    at async doRender (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/base-server.js:1372:42)
+    at async cacheEntry.responseCache.get.routeKind (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/base-server.js:1594:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/base-server.js:1502:28)
+    at async DevServer.renderPageComponent (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/base-server.js:1919:24)
+    at async DevServer.renderToResponseImpl (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/base-server.js:1957:32)
+    at async DevServer.pipeImpl (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/base-server.js:915:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/base-server.js:811:17)
+    at async /Users/hemantd/DL/dance-platform/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/hemantd/DL/dance-platform/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/lib/router-server.js:174:21)
+    at async handleRequest (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/lib/router-server.js:353:24)
+    at async requestHandlerImpl (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/lib/router-server.js:377:13)
+    at async Server.requestListener (/Users/hemantd/DL/dance-platform/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  clientVersion: '6.16.2'
+}
+ POST /api/test/notifications 200 in 1920ms
+ POST /api/test/notifications 200 in 1896ms

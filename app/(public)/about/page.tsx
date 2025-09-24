@@ -84,10 +84,49 @@ export default function AboutPage() {
   // Show loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-pink-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading content...</p>
+      <div className="min-h-[calc(100vh-200px)]" style={{background: 'var(--neutral-light)'}}>
+        {/* Hero Section - Loading State */}
+        <section 
+          className="relative py-16 md:py-20 overflow-hidden mt-20"
+          style={{
+            background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'
+          }}
+        >
+          <div 
+            className="absolute inset-0 opacity-20"
+            style={{
+              backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M30 5 L35 15 L45 15 L37.5 22.5 L40 32.5 L30 25 L20 32.5 L22.5 22.5 L15 15 L25 15 Z" fill="%23ffffff" fill-opacity="0.3"/%3E%3C/svg%3E")',
+              backgroundSize: '30px 30px'
+            }}
+          ></div>
+          
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-8 left-10 text-2xl opacity-20 text-white animate-pulse">ℹ️</div>
+            <div className="absolute top-12 right-10 text-2xl opacity-20 text-white animate-pulse" style={{animationDelay: '1s'}}>✨</div>
+            <div className="absolute bottom-8 left-1/2 text-2xl opacity-20 text-white animate-pulse" style={{animationDelay: '2s'}}>🎆</div>
+          </div>
+          
+          <div className="relative z-10 dance-container text-center">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white mb-5">
+              <span className="mr-2">ℹ️</span>
+              <span className="text-sm font-medium">About Our Studio</span>
+            </div>
+            
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-5 dance-font text-white">
+              About <span className="text-yellow-100 dance-font">Us</span>
+            </h1>
+            
+            <p className="text-base md:text-lg text-white/90 mb-7 max-w-2xl mx-auto leading-relaxed">
+              Discover our story, mission, and the passionate team behind our dance studio.
+            </p>
+          </div>
+        </section>
+        
+        <div className="dance-container py-16 flex-grow flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 mb-4 mx-auto" style={{borderBottomColor: 'var(--primary-gold)'}}></div>
+            <p className="text-gray-600">Loading content...</p>
+          </div>
         </div>
       </div>
     )
@@ -96,11 +135,44 @@ export default function AboutPage() {
   // Show error state if no content
   if (!content) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-pink-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Content Unavailable</h2>
-          <p className="text-gray-600">Unable to load page content. Please try again later.</p>
+      <div className="min-h-[calc(100vh-200px)]" style={{background: 'var(--neutral-light)'}}>
+        {/* Hero Section - Error State */}
+        <section 
+          className="relative py-16 md:py-20 overflow-hidden mt-20"
+          style={{
+            background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'
+          }}
+        >
+          <div 
+            className="absolute inset-0 opacity-20"
+            style={{
+              backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M30 5 L35 15 L45 15 L37.5 22.5 L40 32.5 L30 25 L20 32.5 L22.5 22.5 L15 15 L25 15 Z" fill="%23ffffff" fill-opacity="0.3"/%3E%3C/svg%3E")',
+              backgroundSize: '30px 30px'
+            }}
+          ></div>
+          
+          <div className="relative z-10 dance-container text-center">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white mb-5">
+              <span className="mr-2">ℹ️</span>
+              <span className="text-sm font-medium">About Our Studio</span>
+            </div>
+            
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-5 dance-font text-white">
+              About <span className="text-yellow-100 dance-font">Us</span>
+            </h1>
+            
+            <p className="text-base md:text-lg text-white/90 mb-7 max-w-2xl mx-auto leading-relaxed">
+              Discover our story, mission, and the passionate team behind our dance studio.
+            </p>
+          </div>
+        </section>
+        
+        <div className="dance-container py-16 flex-grow flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-6xl mb-4">⚠️</div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Content Unavailable</h2>
+            <p className="text-gray-600">Unable to load page content. Please try again later.</p>
+          </div>
         </div>
       </div>
     )
@@ -109,32 +181,46 @@ export default function AboutPage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="dance-hero">
+      <section 
+        className="relative py-16 md:py-20 overflow-hidden mt-20"
+        style={{
+          background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'
+        }}
+      >
         <div 
-          className="dance-hero-background"
+          className="absolute inset-0 opacity-20"
           style={{
-            opacity: 0.1
+            backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M30 5 L35 15 L45 15 L37.5 22.5 L40 32.5 L30 25 L20 32.5 L22.5 22.5 L15 15 L25 15 Z" fill="%23ffffff" fill-opacity="0.3"/%3E%3C/svg%3E")',
+            backgroundSize: '30px 30px'
           }}
         ></div>
-        <div className="floating-elements">
-          <div className="floating-element" style={{top: '20%', left: '10%', animationDelay: '0s'}}>✦</div>
-          <div className="floating-element" style={{top: '60%', right: '10%', animationDelay: '3s'}}>✧</div>
-          <div className="floating-element" style={{bottom: '20%', left: '50%', animationDelay: '6s'}}>✨</div>
+        
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-8 left-10 text-2xl opacity-20 text-white animate-pulse">✦</div>
+          <div className="absolute top-12 right-10 text-2xl opacity-20 text-white animate-pulse" style={{animationDelay: '1s'}}>✧</div>
+          <div className="absolute bottom-8 left-1/2 text-2xl opacity-20 text-white animate-pulse" style={{animationDelay: '2s'}}>✨</div>
         </div>
-        <div className="dance-hero-content">
-          <p className="dance-hero-subtitle">{content.heroBadgeText}</p>
-          <h1 className="dance-hero-title dance-font">
+        
+        <div className="relative z-10 dance-container text-center">
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white mb-5">
+            <span className="mr-2">ℹ️</span>
+            <span className="text-sm font-medium">{content.heroBadgeText}</span>
+          </div>
+          
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-5 dance-font text-white">
             {content.heroTitle.split(' ').map((word, index) => 
               index === content.heroTitle.split(' ').length - 1 ? (
-                <span key={index} className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent dance-font">{word}</span>
+                <span key={index} className="text-yellow-100 dance-font">{word}</span>
               ) : (
                 word + ' '
               )
             )}
           </h1>
-          <p className="dance-hero-description">
+          
+          <p className="text-base md:text-lg text-white/90 mb-7 max-w-2xl mx-auto leading-relaxed">
             {content.heroSubtitle}
           </p>
+          
           <div className="flex gap-4 justify-center flex-wrap">
             {content.heroFeatures.map((feature, index) => (
               <div key={index} className="flex items-center text-white/90">
