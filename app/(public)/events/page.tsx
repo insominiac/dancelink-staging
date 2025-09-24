@@ -91,7 +91,7 @@ export default function EventsPage() {
 
   const fetchPageContent = async () => {
     try {
-      const res = await fetch('/api/admin/content/events')
+      const res = await fetch('/api/public/content/events')
       if (res.ok) {
         const content = await res.json()
         setPageContent(content)
