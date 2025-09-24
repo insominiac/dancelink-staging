@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
@@ -11,7 +11,7 @@ interface WisePaymentData {
   currency: string
 }
 
-export default function WisePaymentPage() {
+function WisePaymentPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [paymentData, setPaymentData] = useState<WisePaymentData | null>(null)
@@ -223,5 +223,21 @@ export default function WisePaymentPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+    </div>
+  )
+}
+
+export default function WisePaymentPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <WisePaymentPageContent />
+    </Suspense>
   )
 }

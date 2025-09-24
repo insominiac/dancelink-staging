@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import PaymentProviderSelector from '@/app/components/payments/PaymentProviderSelector'
@@ -22,7 +22,7 @@ interface BookingData {
   }
 }
 
-export default function PaymentPage() {
+function PaymentPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [bookingData, setBookingData] = useState<BookingData | null>(null)
@@ -422,5 +422,21 @@ export default function PaymentPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+    </div>
+  )
+}
+
+export default function PaymentPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <PaymentPageContent />
+    </Suspense>
   )
 }
