@@ -218,7 +218,7 @@ export default function HomePage() {
         className="dance-hero"
         style={{
           ...(homepageContent?.heroBackgroundImage && {
-            background: `linear-gradient(135deg, var(--hero-overlay) 0%, var(--hero-overlay) 100%), url('${homepageContent.heroBackgroundImage}')`,
+            background: `linear-gradient(135deg, rgba(26, 15, 31, 0.6) 0%, rgba(255, 107, 53, 0.5) 100%), url('${homepageContent.heroBackgroundImage}')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundAttachment: 'fixed'
@@ -228,7 +228,7 @@ export default function HomePage() {
         <div 
           className="dance-hero-background"
           style={{
-            opacity: homepageContent?.heroBackgroundImage ? 0.05 : 0.1
+            opacity: homepageContent?.heroBackgroundImage ? 0.15 : 0.1
           }}
         ></div>
         <div className="floating-elements">
