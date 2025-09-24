@@ -60,9 +60,49 @@ export default function ContactPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col">
-        <div className="flex-1 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+      <div className="min-h-[calc(100vh-200px)]" style={{background: 'var(--neutral-light)'}}>
+        {/* Hero Section - Loading State */}
+        <section 
+          className="relative py-16 md:py-20 overflow-hidden mt-20"
+          style={{
+            background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'
+          }}
+        >
+          <div 
+            className="absolute inset-0 opacity-20"
+            style={{
+              backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M30 5 L35 15 L45 15 L37.5 22.5 L40 32.5 L30 25 L20 32.5 L22.5 22.5 L15 15 L25 15 Z" fill="%23ffffff" fill-opacity="0.3"/%3E%3C/svg%3E")',
+              backgroundSize: '30px 30px'
+            }}
+          ></div>
+          
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-8 left-10 text-2xl opacity-20 text-white animate-pulse">📞</div>
+            <div className="absolute top-12 right-10 text-2xl opacity-20 text-white animate-pulse" style={{animationDelay: '1s'}}>✉️</div>
+            <div className="absolute bottom-8 left-1/2 text-2xl opacity-20 text-white animate-pulse" style={{animationDelay: '2s'}}>💬</div>
+          </div>
+          
+          <div className="relative z-10 dance-container text-center">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white mb-5">
+              <span className="mr-2">📞</span>
+              <span className="text-sm font-medium">Get in Touch</span>
+            </div>
+            
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-5 dance-font text-white">
+              Contact <span className="text-yellow-100 dance-font">Us</span>
+            </h1>
+            
+            <p className="text-base md:text-lg text-white/90 mb-7 max-w-2xl mx-auto leading-relaxed">
+              Ready to start dancing? We're here to help you find the perfect class!
+            </p>
+          </div>
+        </section>
+        
+        <div className="dance-container py-16 flex-grow flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 mb-4 mx-auto" style={{borderBottomColor: 'var(--primary-gold)'}}></div>
+            <p className="text-gray-600">Loading content...</p>
+          </div>
         </div>
       </div>
     )
@@ -70,10 +110,49 @@ export default function ContactPage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="py-16 md:py-24 mt-20" style={{background: 'var(--primary-dark)', color: 'white'}}>
-        <div className="dance-container text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 dance-font">{content?.heroTitle || "📞 Get in Touch"}</h1>
-          <p className="text-lg md:text-xl opacity-90 mb-12 max-w-2xl mx-auto leading-relaxed">{content?.heroSubtitle || "Ready to start dancing? We're here to help you find the perfect class!"}</p>
+      <section 
+        className="relative py-16 md:py-20 overflow-hidden mt-20"
+        style={{
+          background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'
+        }}
+      >
+        <div 
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M30 5 L35 15 L45 15 L37.5 22.5 L40 32.5 L30 25 L20 32.5 L22.5 22.5 L15 15 L25 15 Z" fill="%23ffffff" fill-opacity="0.3"/%3E%3C/svg%3E")',
+            backgroundSize: '30px 30px'
+          }}
+        ></div>
+        
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-8 left-10 text-2xl opacity-20 text-white animate-pulse">📞</div>
+          <div className="absolute top-12 right-10 text-2xl opacity-20 text-white animate-pulse" style={{animationDelay: '1s'}}>✉️</div>
+          <div className="absolute bottom-8 left-1/2 text-2xl opacity-20 text-white animate-pulse" style={{animationDelay: '2s'}}>💬</div>
+        </div>
+        
+        <div className="relative z-10 dance-container text-center">
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white mb-5">
+            <span className="mr-2">📞</span>
+            <span className="text-sm font-medium">Get in Touch</span>
+          </div>
+          
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-5 dance-font text-white">
+            {content?.heroTitle ? 
+              content.heroTitle.split(' ').map((word, index, array) => 
+                index === array.length - 1 ? (
+                  <span key={index} className="text-yellow-100 dance-font">{word}</span>
+                ) : (
+                  word + ' '
+                )
+              ) : (
+                <>Contact <span className="text-yellow-100 dance-font">Us</span></>
+              )
+            }
+          </h1>
+          
+          <p className="text-base md:text-lg text-white/90 mb-7 max-w-2xl mx-auto leading-relaxed">
+            {content?.heroSubtitle || "Ready to start dancing? We're here to help you find the perfect class!"}
+          </p>
           
           {/* Quick Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-6 justify-center max-w-3xl mx-auto">
@@ -85,10 +164,9 @@ export default function ContactPage() {
                 key={index}
                 href={button.href} 
                 className={button.isPrimary 
-                  ? "px-8 py-4 bg-white rounded-full font-bold text-lg hover:transform hover:scale-105 hover:shadow-2xl transition-all duration-300 flex-1 text-center"
-                  : "px-8 py-4 border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-gray-800 hover:transform hover:scale-105 transition-all duration-300 flex-1 text-center"
+                  ? "px-8 py-4 bg-white/20 backdrop-blur-sm border border-white/30 text-white rounded-full font-bold text-lg hover:bg-white/30 hover:transform hover:scale-105 hover:shadow-2xl transition-all duration-300 flex-1 text-center"
+                  : "px-8 py-4 border-2 border-white/50 text-white rounded-full font-semibold hover:bg-white/20 hover:backdrop-blur-sm hover:transform hover:scale-105 transition-all duration-300 flex-1 text-center"
                 }
-                style={button.isPrimary ? {color: 'var(--primary-dark)'} : {}}
               >
                 {button.text}
               </a>
