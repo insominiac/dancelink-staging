@@ -147,40 +147,61 @@ export default function ClassesPage() {
   return (
     <div className="min-h-[calc(100vh-200px)] bg-gray-50">
       {/* Header Section */}
-      <section className="dance-hero">
+      <section 
+        className="relative py-16 md:py-20 overflow-hidden mt-20"
+        style={{
+          background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'
+        }}
+      >
         <div 
-          className="dance-hero-background"
+          className="absolute inset-0 opacity-20"
           style={{
-            opacity: 0.1
+            backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M30 5 L35 15 L45 15 L37.5 22.5 L40 32.5 L30 25 L20 32.5 L22.5 22.5 L15 15 L25 15 Z" fill="%23ffffff" fill-opacity="0.3"/%3E%3C/svg%3E")',
+            backgroundSize: '30px 30px'
           }}
         ></div>
-        <div className="floating-elements">
-          <div className="floating-element" style={{top: '20%', left: '10%', animationDelay: '0s'}}>💃</div>
-          <div className="floating-element" style={{top: '60%', right: '10%', animationDelay: '3s'}}>🎵</div>
-          <div className="floating-element" style={{bottom: '20%', left: '50%', animationDelay: '6s'}}>✨</div>
+        
+        {/* Floating elements */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-8 left-10 text-2xl opacity-20 text-white animate-pulse">💃</div>
+          <div className="absolute top-12 right-10 text-2xl opacity-20 text-white animate-pulse" style={{animationDelay: '1s'}}>🎵</div>
+          <div className="absolute bottom-8 left-1/2 text-2xl opacity-20 text-white animate-pulse" style={{animationDelay: '2s'}}>✨</div>
         </div>
-        <div className="dance-hero-content">
-          <p className="dance-hero-subtitle">Discover Your Perfect Dance Style</p>
-          <h1 className="dance-hero-title dance-font">
-            Dance <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent dance-font">Classes</span>
+        
+        <div className="relative z-10 dance-container text-center">
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white mb-5">
+            <span className="mr-2">💃</span>
+            <span className="text-sm font-medium">Discover Your Perfect Dance Style</span>
+          </div>
+          
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-5 dance-font text-white">
+            Dance <span className="text-yellow-100 dance-font">Classes</span>
           </h1>
-          <p className="dance-hero-description">
+          
+          <p className="text-base md:text-lg text-white/90 mb-7 max-w-2xl mx-auto leading-relaxed">
             Join our vibrant dance community and learn from world-class instructors in a supportive, fun environment
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 flex-wrap">
-            <div className="flex items-center text-white/90 text-sm sm:text-base whitespace-nowrap">
-              <span className="mr-2">✨</span>
-              <span>All skill levels welcome</span>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <div className="flex items-center">
+              <div className="flex items-center text-white/90">
+                <span className="mr-2">✨</span>
+                <span className="font-medium">All skill levels welcome</span>
+              </div>
             </div>
-            <div className="hidden sm:block text-white/60 mx-2">•</div>
-            <div className="flex items-center text-white/90 text-sm sm:text-base whitespace-nowrap">
-              <span className="mr-2">👥</span>
-              <span>Small class sizes</span>
+            <div className="hidden sm:block text-white/60 mx-4">•</div>
+            <div className="flex items-center">
+              <div className="flex items-center text-white/90">
+                <span className="mr-2">👥</span>
+                <span className="font-medium">Small class sizes</span>
+              </div>
             </div>
-            <div className="hidden sm:block text-white/60 mx-2">•</div>
-            <div className="flex items-center text-white/90 text-sm sm:text-base whitespace-nowrap">
-              <span className="mr-2">🏆</span>
-              <span>Expert instructors</span>
+            <div className="hidden sm:block text-white/60 mx-4">•</div>
+            <div className="flex items-center">
+              <div className="flex items-center text-white/90">
+                <span className="mr-2">🏆</span>
+                <span className="font-medium">Expert instructors</span>
+              </div>
             </div>
           </div>
         </div>
