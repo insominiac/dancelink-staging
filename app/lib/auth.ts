@@ -10,7 +10,7 @@ export interface User {
   id: string
   email: string
   fullName: string
-  role: 'USER' | 'INSTRUCTOR' | 'ADMIN'
+  role: 'USER' | 'INSTRUCTOR' | 'ADMIN' | 'HOST'
   isVerified: boolean
 }
 

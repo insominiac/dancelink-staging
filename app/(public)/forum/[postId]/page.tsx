@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, MessageCircle, Eye, Lock, Pin, Send, Check, Trash2 } from 'lucide-react'
 import toast from 'react-hot-toast'
+import LoginModal from '@/app/components/LoginModal'
 
 interface Post {
   id: string
@@ -43,21 +44,23 @@ interface Reply {
 }
 
 export default function ForumPostPage({ params }: { params: { postId: string } }) {
-  const { user, isAuthenticated } = useAuth()
+  const { user, isAuthenticated, loading: authLoading } = useAuth()
   const router = useRouter()
   const [post, setPost] = useState<Post | null>(null)
   const [loading, setLoading] = useState(true)
   const [replyContent, setReplyContent] = useState('')
   const [replyingTo, setReplyingTo] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
+  const [showLoginModal, setShowLoginModal] = useState(false)
 
+  // Fetch post data immediately (no authentication required for viewing)
   useEffect(() => {
     fetchPost()
   }, [params.postId])
 
   const fetchPost = async () => {
     try {
-      const response = await fetch(`/api/forum/posts/${params.postId}`)
+      const response = await fetch(`/api/public/forum/posts/${params.postId}`)
       if (response.ok) {
         const data = await response.json()
         setPost(data)
@@ -145,6 +148,26 @@ export default function ForumPostPage({ params }: { params: { postId: string } }
       minute: '2-digit',
     })
   }
+
+  const handleLoginSuccess = () => {
+    setShowLoginModal(false)
+    // The useEffect will handle fetching the post after successful login
+  }
+
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
 
   const renderReply = (reply: Reply, depth = 0) => (
     <div key={reply.id} className={depth > 0 ? 'ml-12 mt-4' : ''}>

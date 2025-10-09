@@ -37,7 +37,8 @@ export async function POST(request: NextRequest) {
     const demoAccounts = {
       'admin@dev.local': { password: 'admin123', role: 'ADMIN' as UserRole, fullName: 'Development Admin' },
       'instructor@demo.com': { password: 'instructor123', role: 'INSTRUCTOR' as UserRole, fullName: 'Demo Instructor' },
-      'user@demo.com': { password: 'user123', role: 'USER' as UserRole, fullName: 'Demo User' }
+      'user@demo.com': { password: 'user123', role: 'USER' as UserRole, fullName: 'Demo User' },
+      'host@demo.com': { password: 'host123', role: 'HOST' as UserRole, fullName: 'Demo Host' }
     }
 
     const demoAccount = demoAccounts[email as keyof typeof demoAccounts]
@@ -62,8 +63,8 @@ export async function POST(request: NextRequest) {
           role: demoAccount.role,
           isVerified: true
         }
-
-        // If it's an instructor, create the instructor record too
+        
+        // If it's an instructor or host, create related records too
         if (demoAccount.role === 'INSTRUCTOR') {
           user = await prisma.user.create({
             data: {
@@ -81,9 +82,62 @@ export async function POST(request: NextRequest) {
               instructor: true
             }
           })
+        } else if (demoAccount.role === 'HOST') {
+          user = await prisma.user.create({
+            data: userData
+          })
+          // Create a richer demo host profile and auto-approve it
+          await prisma.host.create({
+            data: {
+              userId: user.id,
+              businessName: 'Demo Dance Academy',
+              businessType: 'Studio',
+              description: 'A premier dance studio offering classes in salsa, hip hop, ballet, and contemporary for all levels.',
+              experienceYears: 5,
+              country: 'USA',
+              city: 'New York',
+              isVerified: true,
+              isApproved: true,
+              applicationStatus: 'APPROVED',
+              approvedAt: new Date()
+            }
+          })
         } else {
           user = await prisma.user.create({
             data: userData
+          })
+        }
+      } else if (demoAccount.role === 'HOST') {
+        // Ensure a host profile exists for existing demo host user
+        const existingHost = await prisma.host.findUnique({ where: { userId: user.id } })
+        if (!existingHost) {
+          await prisma.host.create({
+            data: {
+              userId: user.id,
+              businessName: 'Demo Dance Academy',
+              businessType: 'Studio',
+              description: 'A premier dance studio offering classes in salsa, hip hop, ballet, and contemporary for all levels.',
+              experienceYears: 5,
+              country: 'USA',
+              city: 'New York',
+              isVerified: true,
+              isApproved: true,
+              applicationStatus: 'APPROVED',
+              approvedAt: new Date()
+            }
+          })
+        } else {
+          // Upgrade existing minimal demo host profile to approved with richer details
+          await prisma.host.update({
+            where: { userId: user.id },
+            data: {
+              description: existingHost.description ?? 'A premier dance studio offering classes in salsa, hip hop, ballet, and contemporary for all levels.',
+              experienceYears: existingHost.experienceYears ?? 5,
+              isVerified: true,
+              isApproved: true,
+              applicationStatus: 'APPROVED',
+              approvedAt: existingHost.approvedAt ?? new Date()
+            }
           })
         }
       }

@@ -239,7 +239,7 @@ export default function ContentManagement() {
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [lastUpdated, setLastUpdated] = useState<string>('')
-  const [activeTab, setActiveTab] = useState<'overview' | 'homepage' | 'about' | 'events' | 'instructors' | 'contact' | 'settings'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'homepage' | 'about' | 'events' | 'instructors' | 'contact' | 'settings' | 'footer'>('overview')
   const [isUploadingBg, setIsUploadingBg] = useState(false)
 
   useEffect(() => {
@@ -952,6 +952,666 @@ export default function ContentManagement() {
                 Enable Newsletter Signup Section
               </label>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+  const renderFooterTab = () => (
+    <div className="bg-white rounded-xl shadow-lg p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-semibold">Footer Management</h3>
+        <div className="flex gap-3">
+          <button
+            onClick={resetToDefaults}
+            disabled={isSaving}
+            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition disabled:opacity-50"
+          >
+            Reset Footer to Defaults
+          </button>
+          <button
+            onClick={saveSiteSettings}
+            disabled={isSaving}
+            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50"
+          >
+            {isSaving ? 'Saving...' : 'Save Footer Settings'}
+          </button>
+        </div>
+      </div>
+
+      <div className="space-y-8">
+        {/* Footer General Settings */}
+        <div className="border border-gray-200 rounded-lg p-6">
+          <h4 className="text-lg font-semibold mb-4">General Footer Settings</h4>
+          <div className="space-y-4">
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="footerEnabled"
+                checked={siteSettings.footer?.enabled ?? true}
+                onChange={(e) => setSiteSettings({
+                  ...siteSettings,
+                  footer: {
+                    ...siteSettings.footer,
+                    enabled: e.target.checked
+                  }
+                })}
+                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+              />
+              <label htmlFor="footerEnabled" className="ml-2 block text-sm text-gray-900">
+                Enable Footer
+              </label>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Footer Layout</label>
+                <select
+                  value={siteSettings.footer?.layout ?? 'centered'}
+                  onChange={(e) => setSiteSettings({
+                    ...siteSettings,
+                    footer: {
+                      ...siteSettings.footer,
+                      layout: e.target.value
+                    }
+                  })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="centered">Centered</option>
+                  <option value="columns">Multiple Columns</option>
+                  <option value="compact">Compact</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Background Color</label>
+                <select
+                  value={siteSettings.footer?.backgroundColor ?? 'gray-900'}
+                  onChange={(e) => setSiteSettings({
+                    ...siteSettings,
+                    footer: {
+                      ...siteSettings.footer,
+                      backgroundColor: e.target.value
+                    }
+                  })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="gray-900">Dark Gray</option>
+                  <option value="gray-800">Medium Gray</option>
+                  <option value="gray-700">Light Gray</option>
+                  <option value="purple-900">Dark Purple</option>
+                  <option value="blue-900">Dark Blue</option>
+                  <option value="black">Black</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tagline and Copyright */}
+        <div className="border border-gray-200 rounded-lg p-6">
+          <h4 className="text-lg font-semibold mb-4">Tagline & Copyright</h4>
+          <div className="space-y-4">
+            <div className="flex items-center mb-4">
+              <input
+                type="checkbox"
+                id="showTagline"
+                checked={siteSettings.footer?.showTagline ?? true}
+                onChange={(e) => setSiteSettings({
+                  ...siteSettings,
+                  footer: {
+                    ...siteSettings.footer,
+                    showTagline: e.target.checked
+                  }
+                })}
+                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+              />
+              <label htmlFor="showTagline" className="ml-2 block text-sm text-gray-900">
+                Show Tagline
+              </label>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Footer Tagline</label>
+              <input
+                type="text"
+                value={siteSettings.footer?.tagline ?? ''}
+                onChange={(e) => setSiteSettings({
+                  ...siteSettings,
+                  footer: {
+                    ...siteSettings.footer,
+                    tagline: e.target.value
+                  }
+                })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Connecting dancers worldwide through movement and passion"
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Copyright Year</label>
+                <input
+                  type="text"
+                  value={siteSettings.footer?.copyrightYear ?? new Date().getFullYear().toString()}
+                  onChange={(e) => setSiteSettings({
+                    ...siteSettings,
+                    footer: {
+                      ...siteSettings.footer,
+                      copyrightYear: e.target.value
+                    }
+                  })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="2024"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Copyright Text</label>
+                <input
+                  type="text"
+                  value={siteSettings.footer?.copyrightText ?? 'All rights reserved.'}
+                  onChange={(e) => setSiteSettings({
+                    ...siteSettings,
+                    footer: {
+                      ...siteSettings.footer,
+                      copyrightText: e.target.value
+                    }
+                  })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="All rights reserved."
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Custom Copyright Text (Optional)</label>
+              <textarea
+                value={siteSettings.footer?.customCopyrightText ?? ''}
+                onChange={(e) => setSiteSettings({
+                  ...siteSettings,
+                  footer: {
+                    ...siteSettings.footer,
+                    customCopyrightText: e.target.value
+                  }
+                })}
+                rows={2}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Override standard copyright format with custom text"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Social Media Links */}
+        <div className="border border-gray-200 rounded-lg p-6">
+          <h4 className="text-lg font-semibold mb-4">Social Media Links</h4>
+          <div className="space-y-4">
+            <div className="flex items-center mb-4">
+              <input
+                type="checkbox"
+                id="showSocialLinks"
+                checked={siteSettings.footer?.showSocialLinks ?? true}
+                onChange={(e) => setSiteSettings({
+                  ...siteSettings,
+                  footer: {
+                    ...siteSettings.footer,
+                    showSocialLinks: e.target.checked
+                  }
+                })}
+                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+              />
+              <label htmlFor="showSocialLinks" className="ml-2 block text-sm text-gray-900">
+                Show Social Links in Footer
+              </label>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Social Links Title</label>
+              <input
+                type="text"
+                value={siteSettings.footer?.socialLinksTitle ?? 'Follow Us'}
+                onChange={(e) => setSiteSettings({
+                  ...siteSettings,
+                  footer: {
+                    ...siteSettings.footer,
+                    socialLinksTitle: e.target.value
+                  }
+                })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Follow Us"
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Facebook</label>
+                <input
+                  type="url"
+                  value={siteSettings.socialMedia?.facebook ?? ''}
+                  onChange={(e) => setSiteSettings({
+                    ...siteSettings,
+                    socialMedia: {
+                      ...siteSettings.socialMedia,
+                      facebook: e.target.value
+                    }
+                  })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="https://facebook.com/dancelink"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Instagram</label>
+                <input
+                  type="url"
+                  value={siteSettings.socialMedia?.instagram ?? ''}
+                  onChange={(e) => setSiteSettings({
+                    ...siteSettings,
+                    socialMedia: {
+                      ...siteSettings.socialMedia,
+                      instagram: e.target.value
+                    }
+                  })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="https://instagram.com/dancelink"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Twitter/X</label>
+                <input
+                  type="url"
+                  value={siteSettings.socialMedia?.twitter ?? ''}
+                  onChange={(e) => setSiteSettings({
+                    ...siteSettings,
+                    socialMedia: {
+                      ...siteSettings.socialMedia,
+                      twitter: e.target.value
+                    }
+                  })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="https://twitter.com/dancelink"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">YouTube</label>
+                <input
+                  type="url"
+                  value={siteSettings.socialMedia?.youtube ?? ''}
+                  onChange={(e) => setSiteSettings({
+                    ...siteSettings,
+                    socialMedia: {
+                      ...siteSettings.socialMedia,
+                      youtube: e.target.value
+                    }
+                  })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="https://youtube.com/@dancelink"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">TikTok</label>
+                <input
+                  type="url"
+                  value={siteSettings.socialMedia?.tiktok ?? ''}
+                  onChange={(e) => setSiteSettings({
+                    ...siteSettings,
+                    socialMedia: {
+                      ...siteSettings.socialMedia,
+                      tiktok: e.target.value
+                    }
+                  })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="https://tiktok.com/@dancelink"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">LinkedIn</label>
+                <input
+                  type="url"
+                  value={siteSettings.socialMedia?.linkedin ?? ''}
+                  onChange={(e) => setSiteSettings({
+                    ...siteSettings,
+                    socialMedia: {
+                      ...siteSettings.socialMedia,
+                      linkedin: e.target.value
+                    }
+                  })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="https://linkedin.com/company/dancelink"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Links */}
+        <div className="border border-gray-200 rounded-lg p-6">
+          <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+          <div className="space-y-4">
+            <div className="flex items-center mb-4">
+              <input
+                type="checkbox"
+                id="showQuickLinks"
+                checked={siteSettings.footer?.showQuickLinks ?? true}
+                onChange={(e) => setSiteSettings({
+                  ...siteSettings,
+                  footer: {
+                    ...siteSettings.footer,
+                    showQuickLinks: e.target.checked
+                  }
+                })}
+                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+              />
+              <label htmlFor="showQuickLinks" className="ml-2 block text-sm text-gray-900">
+                Show Quick Navigation Links
+              </label>
+            </div>
+            <div className="space-y-3">
+              {(siteSettings.footer?.quickLinks || []).map((link, index) => (
+                <div key={index} className="flex gap-3 items-center p-3 bg-gray-50 rounded">
+                  <input
+                    type="text"
+                    value={link.title}
+                    onChange={(e) => {
+                      const newLinks = [...(siteSettings.footer?.quickLinks || [])]
+                      newLinks[index] = { ...newLinks[index], title: e.target.value }
+                      setSiteSettings({
+                        ...siteSettings,
+                        footer: {
+                          ...siteSettings.footer,
+                          quickLinks: newLinks
+                        }
+                      })
+                    }}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded"
+                    placeholder="Link Title"
+                  />
+                  <input
+                    type="text"
+                    value={link.url}
+                    onChange={(e) => {
+                      const newLinks = [...(siteSettings.footer?.quickLinks || [])]
+                      newLinks[index] = { ...newLinks[index], url: e.target.value }
+                      setSiteSettings({
+                        ...siteSettings,
+                        footer: {
+                          ...siteSettings.footer,
+                          quickLinks: newLinks
+                        }
+                      })
+                    }}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded"
+                    placeholder="/url-path"
+                  />
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={link.openInNewTab}
+                      onChange={(e) => {
+                        const newLinks = [...(siteSettings.footer?.quickLinks || [])]
+                        newLinks[index] = { ...newLinks[index], openInNewTab: e.target.checked }
+                        setSiteSettings({
+                          ...siteSettings,
+                          footer: {
+                            ...siteSettings.footer,
+                            quickLinks: newLinks
+                          }
+                        })
+                      }}
+                      className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                    />
+                    <span className="ml-2 text-sm text-gray-700">New tab</span>
+                  </label>
+                  <button
+                    onClick={() => {
+                      const newLinks = (siteSettings.footer?.quickLinks || []).filter((_, i) => i !== index)
+                      setSiteSettings({
+                        ...siteSettings,
+                        footer: {
+                          ...siteSettings.footer,
+                          quickLinks: newLinks
+                        }
+                      })
+                    }}
+                    className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+              <button
+                onClick={() => {
+                  const newLinks = [...(siteSettings.footer?.quickLinks || []), {
+                    title: "New Link",
+                    url: "/",
+                    openInNewTab: false
+                  }]
+                  setSiteSettings({
+                    ...siteSettings,
+                    footer: {
+                      ...siteSettings.footer,
+                      quickLinks: newLinks
+                    }
+                  })
+                }}
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                + Add Quick Link
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Contact Information */}
+        <div className="border border-gray-200 rounded-lg p-6">
+          <h4 className="text-lg font-semibold mb-4">Contact Information</h4>
+          <div className="space-y-4">
+            <div className="flex items-center mb-4">
+              <input
+                type="checkbox"
+                id="showContact"
+                checked={siteSettings.footer?.showContact ?? true}
+                onChange={(e) => setSiteSettings({
+                  ...siteSettings,
+                  footer: {
+                    ...siteSettings.footer,
+                    showContact: e.target.checked
+                  }
+                })}
+                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+              />
+              <label htmlFor="showContact" className="ml-2 block text-sm text-gray-900">
+                Show Contact Information in Footer
+              </label>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Contact Section Title</label>
+              <input
+                type="text"
+                value={siteSettings.footer?.contactSection?.title ?? 'Get in Touch'}
+                onChange={(e) => setSiteSettings({
+                  ...siteSettings,
+                  footer: {
+                    ...siteSettings.footer,
+                    contactSection: {
+                      ...siteSettings.footer?.contactSection,
+                      title: e.target.value
+                    }
+                  }
+                })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Get in Touch"
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="showEmail"
+                  checked={siteSettings.footer?.contactSection?.showEmail ?? true}
+                  onChange={(e) => setSiteSettings({
+                    ...siteSettings,
+                    footer: {
+                      ...siteSettings.footer,
+                      contactSection: {
+                        ...siteSettings.footer?.contactSection,
+                        showEmail: e.target.checked
+                      }
+                    }
+                  })}
+                  className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                />
+                <label htmlFor="showEmail" className="ml-2 block text-sm text-gray-900">
+                  Show Email
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="showPhone"
+                  checked={siteSettings.footer?.contactSection?.showPhone ?? true}
+                  onChange={(e) => setSiteSettings({
+                    ...siteSettings,
+                    footer: {
+                      ...siteSettings.footer,
+                      contactSection: {
+                        ...siteSettings.footer?.contactSection,
+                        showPhone: e.target.checked
+                      }
+                    }
+                  })}
+                  className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                />
+                <label htmlFor="showPhone" className="ml-2 block text-sm text-gray-900">
+                  Show Phone
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="showAddress"
+                  checked={siteSettings.footer?.contactSection?.showAddress ?? true}
+                  onChange={(e) => setSiteSettings({
+                    ...siteSettings,
+                    footer: {
+                      ...siteSettings.footer,
+                      contactSection: {
+                        ...siteSettings.footer?.contactSection,
+                        showAddress: e.target.checked
+                      }
+                    }
+                  })}
+                  className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                />
+                <label htmlFor="showAddress" className="ml-2 block text-sm text-gray-900">
+                  Show Address
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Newsletter Signup */}
+        <div className="border border-gray-200 rounded-lg p-6">
+          <h4 className="text-lg font-semibold mb-4">Newsletter Signup</h4>
+          <div className="space-y-4">
+            <div className="flex items-center mb-4">
+              <input
+                type="checkbox"
+                id="newsletterEnabled"
+                checked={siteSettings.footer?.newsletter?.enabled ?? true}
+                onChange={(e) => setSiteSettings({
+                  ...siteSettings,
+                  footer: {
+                    ...siteSettings.footer,
+                    newsletter: {
+                      ...siteSettings.footer?.newsletter,
+                      enabled: e.target.checked
+                    }
+                  }
+                })}
+                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+              />
+              <label htmlFor="newsletterEnabled" className="ml-2 block text-sm text-gray-900">
+                Enable Newsletter Signup in Footer
+              </label>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Newsletter Title</label>
+                <input
+                  type="text"
+                  value={siteSettings.footer?.newsletter?.title ?? 'Stay Updated'}
+                  onChange={(e) => setSiteSettings({
+                    ...siteSettings,
+                    footer: {
+                      ...siteSettings.footer,
+                      newsletter: {
+                        ...siteSettings.footer?.newsletter,
+                        title: e.target.value
+                      }
+                    }
+                  })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Stay Updated"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Button Text</label>
+                <input
+                  type="text"
+                  value={siteSettings.footer?.newsletter?.buttonText ?? 'Subscribe'}
+                  onChange={(e) => setSiteSettings({
+                    ...siteSettings,
+                    footer: {
+                      ...siteSettings.footer,
+                      newsletter: {
+                        ...siteSettings.footer?.newsletter,
+                        buttonText: e.target.value
+                      }
+                    }
+                  })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Subscribe"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Newsletter Description</label>
+              <textarea
+                value={siteSettings.footer?.newsletter?.description ?? ''}
+                onChange={(e) => setSiteSettings({
+                  ...siteSettings,
+                  footer: {
+                    ...siteSettings.footer,
+                    newsletter: {
+                      ...siteSettings.footer?.newsletter,
+                      description: e.target.value
+                    }
+                  }
+                })}
+                rows={2}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Get the latest updates on classes, events, and dance tips!"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Custom HTML */}
+        <div className="border border-gray-200 rounded-lg p-6">
+          <h4 className="text-lg font-semibold mb-4">Custom HTML</h4>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Custom Footer HTML</label>
+            <textarea
+              value={siteSettings.footer?.customHTML ?? ''}
+              onChange={(e) => setSiteSettings({
+                ...siteSettings,
+                footer: {
+                  ...siteSettings.footer,
+                  customHTML: e.target.value
+                }
+              })}
+              rows={4}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+              placeholder="<div>Custom HTML content...</div>"
+            />
+            <p className="text-sm text-gray-500 mt-2">
+              Add custom HTML content that will be rendered in the footer. Use with caution.
+            </p>
           </div>
         </div>
       </div>
@@ -2986,6 +3646,16 @@ export default function ContentManagement() {
           >
             ⚙️ Site Settings
           </button>
+          <button
+            onClick={() => setActiveTab('footer')}
+            className={`whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm ${
+              activeTab === 'footer'
+                ? 'border-purple-500 text-purple-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            🦶 Footer Management
+          </button>
         </nav>
       </div>
 
@@ -2997,6 +3667,7 @@ export default function ContentManagement() {
       {activeTab === 'instructors' && renderInstructorsTab()}
       {activeTab === 'contact' && renderContactTab()}
       {activeTab === 'settings' && renderSettingsTab()}
+      {activeTab === 'footer' && renderFooterTab()}
     </div>
   )
 }

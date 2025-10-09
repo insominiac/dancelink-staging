@@ -9,6 +9,9 @@ interface ServiceWorkerProviderProps {
 
 export default function ServiceWorkerProvider({ children }: ServiceWorkerProviderProps) {
   useEffect(() => {
+    // Only register the Service Worker in production to avoid dev/HMR issues
+    if (process.env.NODE_ENV !== 'production') return
+
     // Register service worker on client side only
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
       const registerServiceWorker = async () => {
@@ -56,6 +59,22 @@ export default function ServiceWorkerProvider({ children }: ServiceWorkerProvide
       
     } else {
       console.log('Service Workers not supported')
+    }
+  }, [])
+
+  // In development, proactively unregister any existing SW and clear caches to avoid stale responses
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production') return
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations?.().then((regs) => {
+        regs.forEach((r) => r.unregister().catch(() => {}))
+      }).catch(() => {})
+      // Best-effort cache clear
+      // @ts-ignore
+      if (window.caches?.keys) {
+        // @ts-ignore
+        caches.keys().then((keys: string[]) => keys.forEach((k) => caches.delete(k))).catch(() => {})
+      }
     }
   }, [])
 

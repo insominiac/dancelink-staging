@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
 import cssStyles from './DanceStylesTabs.module.css'
+import TranslatedText from './TranslatedText'
+import '@/lib/i18n'
 
 interface DanceStyle {
   id: string
@@ -163,6 +165,7 @@ export default function DanceStylesTabs({ danceStyles, className = '' }: DanceSt
 
   // Don't render dynamic content during SSR to avoid hydration mismatch
   if (!isMounted) {
+    // Render a neutral skeleton without translated text to ensure SSR/CSR match
     return (
       <section className={`py-20 ${className}`} style={{
         background: 'linear-gradient(135deg, var(--neutral-light) 0%, var(--white) 100%)',
@@ -170,12 +173,8 @@ export default function DanceStylesTabs({ danceStyles, className = '' }: DanceSt
       }}>
         <div className="dance-container">
           <div className="text-center mb-12">
-            <h2 className="text-5xl font-bold mb-4" style={{ color: 'var(--primary-dark)' }}>
-              {t('danceStyles.title')}
-            </h2>
-            <p className="text-xl opacity-70" style={{ color: 'var(--neutral-gray)' }}>
-              {t('danceStyles.loading')}
-            </p>
+            <div className="mx-auto h-8 w-64 bg-gray-200 rounded-md mb-4" aria-hidden="true"></div>
+            <div className="mx-auto h-5 w-80 bg-gray-100 rounded-md" aria-hidden="true"></div>
           </div>
           <div className="flex justify-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: 'var(--primary-gold)' }}></div>
@@ -285,7 +284,7 @@ export default function DanceStylesTabs({ danceStyles, className = '' }: DanceSt
                     }}
                   >
                     <span role="img" aria-label={`${style.name} icon`}>{style.icon}</span>
-                    <span>{style.name}</span>
+                    <span><TranslatedText text={style.name} /></span>
                     {style.totalCount > 0 && (
                       <span 
                         className="bg-white bg-opacity-20 px-2 py-1 rounded-full text-xs"
@@ -336,16 +335,16 @@ export default function DanceStylesTabs({ danceStyles, className = '' }: DanceSt
                   <div className={cssStyles.danceIcon}>{activeStyle.icon}</div>
                   <div>
                     <h2 className="text-4xl font-bold mb-2" style={{ color: 'var(--primary-dark)' }}>
-                      {activeStyle.name}
+                      <TranslatedText text={activeStyle.name} />
                     </h2>
                     <p className="text-xl italic" style={{ color: 'var(--neutral-gray)' }}>
-                      {activeStyle.subtitle}
+                      <TranslatedText text={activeStyle.subtitle} />
                     </p>
                   </div>
                 </div>
 
                 <p className="text-lg leading-relaxed mb-8" style={{ color: 'var(--neutral-gray)' }}>
-                  {activeStyle.description}
+                  <TranslatedText text={activeStyle.description} />
                 </p>
 
                 <div className={cssStyles.danceInfoGrid}>
@@ -354,10 +353,10 @@ export default function DanceStylesTabs({ danceStyles, className = '' }: DanceSt
                       {t('danceStyles.styleInfo')}
                     </h3>
                     <ul className="space-y-2">
-                      <li><strong>{t('danceStyles.origin')}:</strong> {activeStyle.origin}</li>
-                      <li><strong>{t('danceStyles.difficulty')}:</strong> {activeStyle.difficulty}</li>
-                      <li><strong>{t('danceStyles.musicStyle')}:</strong> {activeStyle.musicStyle}</li>
-                      <li><strong>{t('danceStyles.category')}:</strong> {activeStyle.category}</li>
+                      <li><strong>{t('danceStyles.origin')}:</strong> <TranslatedText text={activeStyle.origin} /></li>
+                      <li><strong>{t('danceStyles.difficulty')}:</strong> <TranslatedText text={activeStyle.difficulty} /></li>
+                      <li><strong>{t('danceStyles.musicStyle')}:</strong> <TranslatedText text={activeStyle.musicStyle} /></li>
+                      <li><strong>{t('danceStyles.category')}:</strong> <TranslatedText text={activeStyle.category} /></li>
                     </ul>
                   </div>
 
@@ -366,12 +365,12 @@ export default function DanceStylesTabs({ danceStyles, className = '' }: DanceSt
                       {t('danceStyles.characteristics')}
                     </h3>
                     <ul className="space-y-1">
-                      {activeStyle.characteristics.map((char, index) => (
-                        <li key={index} className="flex items-center">
-                          <span className="mr-2" style={{ color: 'var(--primary-gold)' }}>✓</span>
-                          {char}
-                        </li>
-                      ))}
+                          {activeStyle.characteristics.map((char, index) => (
+                            <li key={index} className="flex items-center">
+                              <span className="mr-2" style={{ color: 'var(--primary-gold)' }}>✓</span>
+                              <TranslatedText text={char} />
+                            </li>
+                          ))}
                     </ul>
                   </div>
 

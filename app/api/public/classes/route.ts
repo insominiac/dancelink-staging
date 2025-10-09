@@ -1,8 +1,11 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import prisma from '../../../lib/db'
+import { resolveLocale } from '@/app/lib/locale'
+import { translationService } from '@/lib/translation-service'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const locale = resolveLocale(request, 'en')
     // Fetch only active classes that haven't ended
     const classes = await prisma.class.findMany({
       where: {
@@ -60,13 +63,46 @@ export async function GET() {
     })
 
     // Calculate current students for each class and map field names
-    const classesWithStudentCount = classes.map(cls => ({
+    let classesWithStudentCount = classes.map(cls => ({
       ...cls,
       currentStudents: cls._count.bookings,
       maxStudents: cls.maxCapacity, // Map maxCapacity to maxStudents for frontend compatibility
       duration: cls.durationMins, // Map durationMins to duration for frontend compatibility
       schedule: cls.scheduleTime || cls.scheduleDays || 'TBD' // Map schedule fields
     }))
+
+    // Server-side translation for dynamic fields
+    if (locale && locale !== 'en') {
+      const texts: string[] = []
+      const positions: { idx: number, key: 'title'|'description'|'requirements'|'venue.name'|'venue.city'|'schedule' }[] = []
+      classesWithStudentCount.forEach((c, idx) => {
+        if (c.title) { texts.push(c.title); positions.push({ idx, key: 'title' }) }
+        if (c.description) { texts.push(c.description); positions.push({ idx, key: 'description' }) }
+        if (c.requirements) { texts.push(c.requirements); positions.push({ idx, key: 'requirements' }) }
+        if (c.schedule && typeof c.schedule === 'string') { texts.push(c.schedule); positions.push({ idx, key: 'schedule' }) }
+        if (c.venue?.name) { texts.push(c.venue.name); positions.push({ idx, key: 'venue.name' }) }
+        if (c.venue?.city) { texts.push(c.venue.city); positions.push({ idx, key: 'venue.city' }) }
+      })
+      if (texts.length) {
+        const translated = await translationService.translateBatch(texts, locale, 'en')
+        let p = 0
+        classesWithStudentCount = classesWithStudentCount.map((c, idx) => {
+          const clone: any = { ...c, venue: c.venue ? { ...c.venue } : c.venue }
+          positions.forEach(pos => {
+            if (pos.idx === idx) {
+              const val = translated[p++]
+              if (pos.key === 'title') clone.title = val
+              else if (pos.key === 'description') clone.description = val
+              else if (pos.key === 'requirements') clone.requirements = val
+              else if (pos.key === 'schedule') clone.schedule = val
+              else if (pos.key === 'venue.name' && clone.venue) clone.venue.name = val
+              else if (pos.key === 'venue.city' && clone.venue) clone.venue.city = val
+            }
+          })
+          return clone
+        })
+      }
+    }
 
     return NextResponse.json({ 
       classes: classesWithStudentCount,

@@ -80,6 +80,8 @@ interface ResourceStats {
 export default function InstructorDashboard() {
   const [dashboardData, setDashboardData] = useState<InstructorDashboardData | null>(null)
   const [resourceStats, setResourceStats] = useState<ResourceStats | null>(null)
+  const [classCounts, setClassCounts] = useState<{ published: number; draft: number } | null>(null)
+  const [studentCounts, setStudentCounts] = useState<{ total: number; thisMonth: number } | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [instructorId, setInstructorId] = useState<string | null>(null)
@@ -93,6 +95,39 @@ export default function InstructorDashboard() {
       fetchDashboardData()
     }
   }, [user])
+
+  useEffect(() => {
+    if (!instructorId) return
+    const loadCounts = async () => {
+      try {
+        const [pubRes, draftRes] = await Promise.all([
+          fetch(`/api/instructor/classes?instructorId=${instructorId}&status=active&page=1&pageSize=1`),
+          fetch(`/api/instructor/classes?instructorId=${instructorId}&status=inactive&page=1&pageSize=1`)
+        ])
+        if (pubRes.ok && draftRes.ok) {
+          const pub = await pubRes.json()
+          const dra = await draftRes.json()
+          setClassCounts({ published: pub.total ?? 0, draft: dra.total ?? 0 })
+        }
+      } catch (e) {
+        console.error('Classes count load error:', e)
+      }
+    }
+    loadCounts()
+
+    const loadStudentCounts = async () => {
+      try {
+        const res = await fetch(`/api/instructor/students/stats?instructorId=${instructorId}`)
+        if (res.ok) {
+          const s = await res.json()
+          setStudentCounts({ total: s.total ?? 0, thisMonth: s.thisMonth ?? 0 })
+        }
+      } catch (e) {
+        console.error('Students count load error:', e)
+      }
+    }
+    loadStudentCounts()
+  }, [instructorId])
 
   const fetchDashboardData = async () => {
     if (!user) return
@@ -400,13 +435,16 @@ export default function InstructorDashboard() {
                         </div>
                       </div>
                       
-                      <div className="ml-6 flex space-x-2">
-                        <button className="px-3 py-1 text-sm bg-purple-100 text-purple-700 rounded-md hover:bg-purple-200">
+<div className="ml-6 flex space-x-2">
+                        <Link href={`/instructor/classes/${cls.id}?tab=attendance`} className="px-3 py-1 text-sm bg-purple-100 text-purple-700 rounded-md hover:bg-purple-200">
                           Attendance
-                        </button>
-                        <button className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
+                        </Link>
+                        <Link href={`/instructor/classes/${cls.id}`} className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
                           Details
-                        </button>
+                        </Link>
+                        <Link href={`/instructor/classes/${cls.id}/edit`} className="px-3 py-1 text-sm bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200">
+                          Edit
+                        </Link>
                       </div>
                     </div>
                     
@@ -437,6 +475,26 @@ export default function InstructorDashboard() {
               <h3 className="text-lg font-medium text-gray-900">Quick Actions</h3>
             </div>
             <div className="p-4 space-y-3">
+              <Link 
+                href="/instructor/classes/new"
+                className="flex items-center p-3 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition"
+              >
+                <span className="text-lg mr-3">➕</span>
+                <div>
+                  <p className="font-medium text-emerald-900">Create Class</p>
+                  <p className="text-xs text-emerald-700">Start a new class</p>
+                </div>
+              </Link>
+<Link 
+                href="/instructor/settings"
+                className="flex items-center p-3 bg-teal-50 rounded-lg hover:bg-teal-100 transition"
+              >
+                <span className="text-lg mr-3">🧑‍🏫</span>
+                <div>
+                  <p className="font-medium text-teal-900">Manage Profile</p>
+                  <p className="text-xs text-teal-700">Update your profile & preferences</p>
+                </div>
+              </Link>
               <Link 
                 href="/instructor/messages"
                 className="flex items-center p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition"
@@ -515,6 +573,52 @@ export default function InstructorDashboard() {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+
+          {/* Classes Status */}
+          <div className="bg-white rounded-lg shadow">
+            <div className="p-4 border-b border-gray-200">
+              <h3 className="text-lg font-medium text-gray-900">Classes Status</h3>
+            </div>
+            <div className="p-4">
+              {classCounts ? (
+                <div className="grid grid-cols-2 gap-4 text-center">
+                  <div>
+                    <div className="text-2xl font-bold text-green-600">{classCounts.published}</div>
+                    <div className="text-sm text-gray-600">Published</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-gray-700">{classCounts.draft}</div>
+                    <div className="text-sm text-gray-600">Draft</div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-sm text-gray-600">Loading...</div>
+              )}
+            </div>
+          </div>
+
+          {/* Students */}
+          <div className="bg-white rounded-lg shadow">
+            <div className="p-4 border-b border-gray-200">
+              <h3 className="text-lg font-medium text-gray-900">Students</h3>
+            </div>
+            <div className="p-4">
+              {studentCounts ? (
+                <div className="grid grid-cols-2 gap-4 text-center">
+                  <div>
+                    <div className="text-2xl font-bold text-blue-600">{studentCounts.total}</div>
+                    <div className="text-sm text-gray-600">Total</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-indigo-600">{studentCounts.thisMonth}</div>
+                    <div className="text-sm text-gray-600">This Month</div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-sm text-gray-600">Loading...</div>
+              )}
             </div>
           </div>
 

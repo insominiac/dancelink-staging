@@ -13,7 +13,14 @@ import {
   Calendar,
   MapPin,
   Star,
-  TrendingUp
+  TrendingUp,
+  Check,
+  X,
+  AlertTriangle,
+  Edit,
+  Trash2,
+  Ban,
+  CheckCircle
 } from 'lucide-react';
 
 interface Profile {
@@ -177,6 +184,108 @@ export default function PartnerMatchingManagement() {
       console.error('Error loading partner matching data:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Admin Actions
+  const updateRequestStatus = async (requestId: string, status: string, adminNotes?: string) => {
+    try {
+      const response = await fetch(`/api/admin/partner-matching/requests/${requestId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status, adminNotes })
+      });
+      
+      const data = await response.json();
+      if (data.success) {
+        // Reload requests to reflect changes
+        if (activeTab === 'requests') {
+          loadData();
+        }
+        alert(`Request ${status.toLowerCase()} successfully!`);
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      console.error('Error updating request status:', error);
+      alert('Failed to update request status');
+    }
+  };
+
+  const updateProfileStatus = async (profileId: string, isActive: boolean, adminNotes?: string) => {
+    try {
+      const response = await fetch(`/api/admin/partner-matching/profiles/${profileId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ isActiveForMatching: isActive, adminNotes })
+      });
+      
+      const data = await response.json();
+      if (data.success) {
+        // Reload profiles to reflect changes
+        if (activeTab === 'profiles') {
+          loadData();
+        }
+        alert(`Profile ${isActive ? 'activated' : 'deactivated'} successfully!`);
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      console.error('Error updating profile status:', error);
+      alert('Failed to update profile status');
+    }
+  };
+
+  const updateMatchStatus = async (matchId: string, isActive: boolean, adminNotes?: string) => {
+    try {
+      const response = await fetch(`/api/admin/partner-matching/matches/${matchId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ isActive, adminNotes })
+      });
+      
+      const data = await response.json();
+      if (data.success) {
+        // Reload matches to reflect changes
+        if (activeTab === 'matches') {
+          loadData();
+        }
+        alert(`Match ${isActive ? 'activated' : 'deactivated'} successfully!`);
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      console.error('Error updating match status:', error);
+      alert('Failed to update match status');
+    }
+  };
+
+  const deleteRequest = async (requestId: string) => {
+    if (!confirm('Are you sure you want to delete this request? This action cannot be undone.')) {
+      return;
+    }
+    
+    try {
+      const response = await fetch(`/api/admin/partner-matching/requests/${requestId}`, {
+        method: 'DELETE'
+      });
+      
+      const data = await response.json();
+      if (data.success) {
+        loadData();
+        alert('Request deleted successfully!');
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      console.error('Error deleting request:', error);
+      alert('Failed to delete request');
     }
   };
 
@@ -426,6 +535,7 @@ export default function PartnerMatchingManagement() {
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dance Styles</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Activity</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -485,6 +595,37 @@ export default function PartnerMatchingManagement() {
                             {profile.isActiveForMatching ? 'Active' : 'Inactive'}
                           </span>
                         </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => updateProfileStatus(
+                                profile.id, 
+                                !profile.isActiveForMatching,
+                                `Status changed by admin on ${new Date().toLocaleDateString()}`
+                              )}
+                              className={`p-2 rounded-lg transition-colors ${
+                                profile.isActiveForMatching
+                                  ? 'text-red-600 hover:bg-red-50'
+                                  : 'text-green-600 hover:bg-green-50'
+                              }`}
+                              title={profile.isActiveForMatching ? 'Deactivate profile' : 'Activate profile'}
+                            >
+                              {profile.isActiveForMatching ? <Ban className="h-4 w-4" /> : <CheckCircle className="h-4 w-4" />}
+                            </button>
+                            <button
+                              onClick={() => {
+                                const notes = prompt('Add admin notes (optional):');
+                                if (notes !== null) {
+                                  updateProfileStatus(profile.id, profile.isActiveForMatching, notes);
+                                }
+                              }}
+                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              title="Add notes"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -540,6 +681,7 @@ export default function PartnerMatchingManagement() {
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Message</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -569,6 +711,47 @@ export default function PartnerMatchingManagement() {
                           <div className="flex items-center">
                             <Calendar className="h-4 w-4 mr-1" />
                             {new Date(request.createdAt).toLocaleDateString()}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <div className="flex space-x-2">
+                            {request.status === 'PENDING' && (
+                              <>
+                                <button
+                                  onClick={() => updateRequestStatus(request.id, 'ACCEPTED', 'Approved by admin')}
+                                  className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                  title="Accept request"
+                                >
+                                  <Check className="h-4 w-4" />
+                                </button>
+                                <button
+                                  onClick={() => updateRequestStatus(request.id, 'REJECTED', 'Rejected by admin')}
+                                  className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                  title="Reject request"
+                                >
+                                  <X className="h-4 w-4" />
+                                </button>
+                              </>
+                            )}
+                            <button
+                              onClick={() => {
+                                const notes = prompt('Add admin notes:', request.message || '');
+                                if (notes !== null) {
+                                  updateRequestStatus(request.id, request.status, notes);
+                                }
+                              }}
+                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              title="Edit notes"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => deleteRequest(request.id)}
+                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                              title="Delete request"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -623,6 +806,7 @@ export default function PartnerMatchingManagement() {
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Match Score</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Matched Date</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -662,6 +846,37 @@ export default function PartnerMatchingManagement() {
                           <div className="flex items-center">
                             <Calendar className="h-4 w-4 mr-1" />
                             {new Date(match.createdAt).toLocaleDateString()}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => updateMatchStatus(
+                                match.id, 
+                                !match.isActive,
+                                `Status changed by admin on ${new Date().toLocaleDateString()}`
+                              )}
+                              className={`p-2 rounded-lg transition-colors ${
+                                match.isActive
+                                  ? 'text-red-600 hover:bg-red-50'
+                                  : 'text-green-600 hover:bg-green-50'
+                              }`}
+                              title={match.isActive ? 'Deactivate match' : 'Activate match'}
+                            >
+                              {match.isActive ? <Ban className="h-4 w-4" /> : <CheckCircle className="h-4 w-4" />}
+                            </button>
+                            <button
+                              onClick={() => {
+                                const notes = prompt('Add admin notes (optional):');
+                                if (notes !== null) {
+                                  updateMatchStatus(match.id, match.isActive, notes);
+                                }
+                              }}
+                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              title="Add notes"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </button>
                           </div>
                         </td>
                       </tr>

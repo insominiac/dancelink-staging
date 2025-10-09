@@ -8,11 +8,11 @@ const CONTENT_FILE = path.join(process.cwd(), 'data', 'homepage-content.json')
 // Default homepage content
 const DEFAULT_CONTENT = {
   heroTitle: "Master the Art of Dance",
-  heroSubtitle: "Join our community of passionate dancers and experienced instructors",
+  heroSubtitle: "Connect with passionate dancers and experienced instructors through DanceLink",
   heroButtonText: "Start Your Journey",
   heroBackgroundImage: null,
-  aboutTitle: "Why Choose Our Studio?",
-  aboutDescription: "We offer a wide range of dance classes for all skill levels, with expert instructors and a supportive community.",
+  aboutTitle: "Why Choose DanceLink?",
+  aboutDescription: "We connect dancers worldwide through our comprehensive platform, offering classes for all skill levels with expert instructors and a supportive community.",
   testimonialsEnabled: true,
   newsletterEnabled: true
 }

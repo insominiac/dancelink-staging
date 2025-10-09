@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
 
 interface Message {
   id: string
@@ -276,12 +277,12 @@ export default function InstructorMessagesPage() {
         <div className="p-4 border-b border-gray-200">
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-xl font-bold text-gray-900">Messages</h1>
-            <button 
-              onClick={() => setShowNewMessageModal(true)}
+            <Link 
+              href="/instructor/messages/new"
               className="px-3 py-2 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700 transition"
             >
               + New
-            </button>
+            </Link>
           </div>
           
           {/* Filter tabs */}

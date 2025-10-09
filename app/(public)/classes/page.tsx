@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useTranslation } from 'react-i18next'
+import '@/lib/i18n' // Initialize unified i18n
+import TranslatedText from '../../components/TranslatedText'
 
 interface Class {
   id: string
@@ -25,10 +28,13 @@ interface Class {
 
 export default function ClassesPage() {
   const router = useRouter()
+  const { t } = useTranslation('common')
+  const [isMounted, setIsMounted] = useState(false)
   const [classes, setClasses] = useState<Class[]>([])
   const [filteredClasses, setFilteredClasses] = useState<Class[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [bookingClass, setBookingClass] = useState<string | null>(null)
+  const [seo, setSeo] = useState<{ title?: string; description?: string; ogTitle?: string; customMeta?: any } | null>(null)
   const [filters, setFilters] = useState({
     level: 'all',
     style: 'all',
@@ -38,7 +44,12 @@ export default function ClassesPage() {
   const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  useEffect(() => {
     fetchClasses()
+    fetchSeo()
   }, [])
 
   useEffect(() => {
@@ -58,6 +69,28 @@ export default function ClassesPage() {
       console.error('Error fetching classes:', err)
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const fetchSeo = async () => {
+    try {
+      // Fetch SEO content for the classes page from DB
+      const res = await fetch('/api/seo?path=/classes')
+      if (res.ok) {
+        const data = await res.json()
+        if (data?.seoData) {
+          setSeo({
+            title: data.seoData.title || undefined,
+            description: data.seoData.description || undefined,
+            ogTitle: data.seoData.ogTitle || undefined,
+            customMeta: data.seoData.customMeta || undefined,
+          })
+        } else {
+          setSeo(null)
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching SEO data:', err)
     }
   }
 
@@ -137,7 +170,7 @@ export default function ClassesPage() {
         <div className="dance-container py-16">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 mb-4 mx-auto" style={{borderBottomColor: 'var(--primary-gold)'}}></div>
-            <p className="text-gray-600">Loading dance classes...</p>
+            <p className="text-gray-600">{(seo?.customMeta?.loadingText) || (isMounted ? t('ui.loading') : 'Loading...')}</p>
           </div>
         </div>
       </div>
@@ -148,11 +181,11 @@ export default function ClassesPage() {
     <div className="min-h-[calc(100vh-200px)] bg-gray-50">
       {/* Header Section */}
       <section 
-        className="relative py-16 md:py-20 overflow-hidden mt-20"
-        style={{
-          background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'
-        }}
-      >
+          className="relative py-16 md:py-20 overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'
+          }}
+        >
         <div 
           className="absolute inset-0 opacity-20"
           style={{
@@ -171,36 +204,36 @@ export default function ClassesPage() {
         <div className="relative z-10 dance-container text-center">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white mb-5">
             <span className="mr-2">💃</span>
-            <span className="text-sm font-medium">Discover Your Perfect Dance Style</span>
+            <span className="text-sm font-medium">{isMounted ? (seo?.ogTitle || t('classes.subtitle')) : 'Find the perfect class for your level and style'}</span>
           </div>
           
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-5 dance-font text-white">
-            Dance <span className="text-yellow-100 dance-font">Classes</span>
+            {isMounted ? (seo?.title || t('classes.title')) : 'Dance Classes'}
           </h1>
           
           <p className="text-base md:text-lg text-white/90 mb-7 max-w-2xl mx-auto leading-relaxed">
-            Join our vibrant dance community and learn from world-class instructors in a supportive, fun environment
+            {isMounted ? (seo?.description || t('classes.description')) : 'Explore our wide range of dance classes for all levels, from beginners to advanced.'}
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <div className="flex items-center">
               <div className="flex items-center text-white/90">
                 <span className="mr-2">✨</span>
-                <span className="font-medium">All skill levels welcome</span>
+                <span className="font-medium">{isMounted ? t('about.allLevelsWelcome') : 'All skill levels welcome'}</span>
               </div>
             </div>
             <div className="hidden sm:block text-white/60 mx-4">•</div>
             <div className="flex items-center">
               <div className="flex items-center text-white/90">
                 <span className="mr-2">👥</span>
-                <span className="font-medium">Small class sizes</span>
+                <span className="font-medium">{isMounted ? t('about.smallClassSizes') : 'Small class sizes'}</span>
               </div>
             </div>
             <div className="hidden sm:block text-white/60 mx-4">•</div>
             <div className="flex items-center">
               <div className="flex items-center text-white/90">
                 <span className="mr-2">🏆</span>
-                <span className="font-medium">Expert instructors</span>
+                <span className="font-medium">{isMounted ? t('about.expertInstructors') : 'Expert instructors'}</span>
               </div>
             </div>
           </div>
@@ -213,15 +246,15 @@ export default function ClassesPage() {
           {/* Search and Filters */}
           <div className="dance-search-container mb-12">
             <div className="dance-section-header">
-              <h2 className="dance-section-title">Find Your Perfect Class</h2>
-              <p>Filter classes by your preferences and skill level</p>
+              <h2 className="dance-section-title">{isMounted ? t('classes.findPerfectClass') : 'Find Your Perfect Class'}</h2>
+              <p>{isMounted ? t('classes.filterDescription') : 'Filter classes by your preferences and skill level'}</p>
             </div>
             
             <div className="flex flex-col lg:flex-row gap-4 mb-6">
               <div className="flex-1">
                 <input
                   type="text"
-                  placeholder="🔍 Search classes by name or description..."
+                  placeholder={isMounted ? t('classes.searchPlaceholder') : '🔍 Search classes by name or description...'}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="dance-search-input"
@@ -231,7 +264,7 @@ export default function ClassesPage() {
                 onClick={filterClasses}
                 className="dance-btn dance-btn-accent hover:transform hover:scale-105 transition-all duration-300"
               >
-                Search Classes
+                {isMounted ? t('classes.searchClasses') : 'Search Classes'}
               </button>
             </div>
             
@@ -241,11 +274,11 @@ export default function ClassesPage() {
                 onChange={(e) => setFilters({...filters, level: e.target.value})}
                 className="dance-filter-select"
               >
-                <option value="all">All Levels</option>
-                <option value="Beginner">Beginner</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Advanced">Advanced</option>
-                <option value="All Levels">All Levels</option>
+                <option value="all">{isMounted ? t('classes.allLevels') : 'All Levels'}</option>
+                <option value="Beginner">{isMounted ? t('classes.levels.beginner') : 'Beginner'}</option>
+                <option value="Intermediate">{isMounted ? t('classes.levels.intermediate') : 'Intermediate'}</option>
+                <option value="Advanced">{isMounted ? t('classes.levels.advanced') : 'Advanced'}</option>
+                <option value="All Levels">{isMounted ? t('classes.levels.all') : 'All Levels'}</option>
               </select>
               
               <select
@@ -253,11 +286,11 @@ export default function ClassesPage() {
                 onChange={(e) => setFilters({...filters, priceRange: e.target.value})}
                 className="dance-filter-select"
               >
-                <option value="all">Any Price</option>
-                <option value="0-25">Under $25</option>
-                <option value="25-50">$25 - $50</option>
-                <option value="50-75">$50 - $75</option>
-                <option value="75-999">Over $75</option>
+                <option value="all">{isMounted ? t('classes.anyPrice') : 'Any Price'}</option>
+                <option value="0-25">{isMounted ? t('classes.under25') : 'Under $25'}</option>
+                <option value="25-50">{isMounted ? t('classes.from25to50') : '$25 - $50'}</option>
+                <option value="50-75">{isMounted ? t('classes.from50to75') : '$50 - $75'}</option>
+                <option value="75-999">{isMounted ? t('classes.over75') : 'Over $75'}</option>
               </select>
               
               <button
@@ -267,7 +300,7 @@ export default function ClassesPage() {
                 }}
                 className="dance-btn dance-btn-secondary hover:transform hover:scale-105 transition-all duration-300"
               >
-                Clear Filters
+                {isMounted ? t('classes.clearFilters') : 'Clear Filters'}
               </button>
             </div>
           </div>
@@ -276,7 +309,7 @@ export default function ClassesPage() {
           <div className="mb-8 text-center">
             <div className="inline-flex items-center px-4 py-2 bg-white rounded-full shadow-sm border border-gray-200">
               <span className="text-sm text-gray-600">
-                <span className="font-semibold text-indigo-600">{filteredClasses.length}</span> of {classes.length} classes found
+                <span className="font-semibold text-indigo-600">{filteredClasses.length}</span> {isMounted ? t('ui.of') : 'of'} {classes.length} {isMounted ? t('classes.classesFound') : 'classes found'}
               </span>
             </div>
           </div>
@@ -301,7 +334,10 @@ export default function ClassesPage() {
                         cls.level === 'Advanced' ? 'bg-rose-100 text-rose-700 border border-rose-200' :
                         'bg-blue-100 text-blue-700 border border-blue-200'
                       }`}>
-                        {cls.level}
+                        {cls.level === 'Beginner' ? (isMounted ? t('classes.levels.beginner') : 'Beginner')
+                          : cls.level === 'Intermediate' ? (isMounted ? t('classes.levels.intermediate') : 'Intermediate')
+                          : cls.level === 'Advanced' ? (isMounted ? t('classes.levels.advanced') : 'Advanced')
+                          : cls.level}
                       </span>
                       <div className={`px-3 py-1 text-xs rounded-full font-semibold ${
                         availability.status === 'full' ? 'bg-red-50 text-red-700 border border-red-200' :
@@ -309,17 +345,17 @@ export default function ClassesPage() {
                         'bg-green-50 text-green-700 border border-green-200'
                       }`}>
                         <span className="hidden sm:inline">{availability.icon} </span>
-                        {spotsLeft > 0 ? `${spotsLeft} left` : 'Full'}
+                        {spotsLeft > 0 ? (<><span className="font-bold">{spotsLeft}</span> {isMounted ? t('classes.left') : 'left'}</>) : (isMounted ? t('classes.classFull') : 'Full')}
                       </div>
                     </div>
                     
                     {/* Title */}
                     <div className="absolute bottom-4 left-4 right-4">
                       <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2 group-hover:text-indigo-600 transition-colors leading-tight">
-                        {cls.title}
+                        <TranslatedText text={cls.title} />
                       </h3>
                       <p className="text-sm font-medium text-gray-600 uppercase tracking-wide">
-                        {cls.schedule}
+                        <TranslatedText text={cls.schedule} />
                       </p>
                     </div>
                     
@@ -330,7 +366,7 @@ export default function ClassesPage() {
                   <div className="p-6 flex-1 flex flex-col bg-white">
                     {/* Description */}
                     <p className="text-gray-600 mb-4 leading-relaxed text-sm line-clamp-2">
-                      {cls.description}
+                      <TranslatedText text={cls.description} />
                     </p>
                     
                     {/* Details Grid */}
@@ -339,20 +375,20 @@ export default function ClassesPage() {
                         <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center mr-3">
                           <span className="text-blue-600 text-sm">⏱️</span>
                         </div>
-                        <span className="text-sm font-medium">{cls.duration}min</span>
+                        <span className="text-sm font-medium">{isMounted ? t('classes.minutesShort', { count: cls.duration }) : `${cls.duration} min`}</span>
                       </div>
                       <div className="flex items-center text-gray-700">
                         <div className="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center mr-3">
                           <span className="text-green-600 text-sm">📍</span>
                         </div>
-                        <span className="text-sm font-medium truncate">{cls.venue?.name || 'TBD'}</span>
+                        <span className="text-sm font-medium truncate">{cls.venue?.name || (isMounted ? t('classes.tbd') : 'TBD')}</span>
                       </div>
                       <div className="flex items-center text-gray-700 col-span-1 sm:col-span-1">
                         <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center mr-3">
                           <span className="text-purple-600 text-sm">👨‍🏫</span>
                         </div>
                         <span className="text-sm font-medium truncate">
-                          {cls.classInstructors?.[0]?.instructor?.user?.fullName || 'Pro Instructor'}
+                          {cls.classInstructors?.[0]?.instructor?.user?.fullName || (isMounted ? t('classes.proInstructor') : 'Pro Instructor')}
                         </span>
                       </div>
                     </div>
@@ -360,13 +396,13 @@ export default function ClassesPage() {
                     {/* Availability Section */}
                     <div className="mb-6 p-4 bg-gray-50 rounded-lg">
                       <div className="flex justify-between items-center mb-3">
-                        <span className="text-sm font-semibold text-gray-700">Class Availability</span>
+                        <span className="text-sm font-semibold text-gray-700">{isMounted ? t('classes.classAvailability') : 'Class Availability'}</span>
                         <span className={`text-sm font-bold ${
                           availability.status === 'full' ? 'text-red-600' :
                           availability.status === 'few' ? 'text-orange-600' :
                           'text-green-600'
                         }`}>
-                          {spotsLeft > 0 ? `${spotsLeft}/${cls.maxStudents} spots left` : 'Class Full'}
+                          {spotsLeft > 0 ? `${spotsLeft}/${cls.maxStudents} ${isMounted ? t('classes.spotsLeft') : 'spots left'}` : (isMounted ? t('classes.classFull') : 'Class Full')}
                         </span>
                       </div>
                       <div className="w-full rounded-full h-2 overflow-hidden bg-gray-200">
@@ -386,7 +422,7 @@ export default function ClassesPage() {
                       <div className="flex items-center justify-between mb-4 pb-4 border-t border-gray-100">
                         <div className="pt-4">
                           <span className="text-2xl font-bold text-gray-900">${cls.price}</span>
-                          <span className="text-sm text-gray-500 ml-1">/class</span>
+                          <span className="text-sm text-gray-500 ml-1">{isMounted ? t('classes.perClass') : '/class'}</span>
                         </div>
                       </div>
                       
@@ -395,7 +431,7 @@ export default function ClassesPage() {
                           href={`/classes/${cls.id}`}
                           className="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 text-center rounded-lg font-medium transition-all duration-300 hover:transform hover:scale-105"
                         >
-                          View Details
+                          {isMounted ? t('classes.viewDetails') : 'View Details'}
                         </Link>
                         {spotsLeft > 0 ? (
                           <button
@@ -411,15 +447,15 @@ export default function ClassesPage() {
                             {bookingClass === cls.id ? (
                               <div className="flex items-center justify-center">
                                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                                Booking...
+                                {isMounted ? t('classes.booking') : 'Booking...'}
                               </div>
                             ) : (
-                              'Book Now'
+                              isMounted ? t('classes.bookNow') : 'Book Now'
                             )}
                           </button>
                         ) : (
                           <button className="flex-1 px-4 py-3 bg-gray-400 text-white font-semibold rounded-lg cursor-not-allowed">
-                            Class Full
+                            {isMounted ? t('classes.classFull') : 'Class Full'}
                           </button>
                         )}
                       </div>
@@ -429,7 +465,7 @@ export default function ClassesPage() {
                   {/* Popular Badge */}
                   {spotsLeft <= 3 && spotsLeft > 0 && (
                     <div className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full transform rotate-12 shadow-lg">
-                      Almost Full!
+                      {isMounted ? t('classes.almostFull') : 'Almost Full!'}
                     </div>
                   )}
                 </div>
@@ -444,9 +480,9 @@ export default function ClassesPage() {
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl text-gray-400">💃</span>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No Classes Found</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{isMounted ? t('classes.noClassesFound') : 'No Classes Found'}</h3>
               <p className="text-gray-600 mb-6">
-                No classes match your current search criteria. Try adjusting your filters or search terms.
+                {isMounted ? t('classes.noClassesMessage') : 'No classes match your current search criteria. Try adjusting your filters or search terms.'}
               </p>
               <button
                 onClick={() => {
@@ -458,7 +494,7 @@ export default function ClassesPage() {
                 onMouseEnter={(e) => e.currentTarget.style.background = 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose)), linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1))'}
                 onMouseLeave={(e) => e.currentTarget.style.background = 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'}
               >
-                Clear All Filters
+                {isMounted ? t('classes.clearAllFilters') : 'Clear All Filters'}
               </button>
             </div>
           </div>
@@ -468,9 +504,9 @@ export default function ClassesPage() {
           {filteredClasses.length > 0 && (
             <section className="text-center py-20">
               <div className="max-w-2xl mx-auto">
-                <h3 className="text-3xl font-bold mb-4 text-gray-900">🎯 Can't decide which class to choose?</h3>
+                <h3 className="text-3xl font-bold mb-4 text-gray-900">🎯 {isMounted ? t('classes.cantDecide') : "Can't decide which class to choose?"}</h3>
                 <p className="text-lg mb-8 text-gray-600">
-                  Book a free trial class and discover your perfect dance style with our expert instructors
+                  {isMounted ? t('classes.freeTrialDescription') : 'Book a free trial class and discover your perfect dance style with our expert instructors'}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
                   <Link 
@@ -480,7 +516,7 @@ export default function ClassesPage() {
                     onMouseEnter={(e) => e.currentTarget.style.background = 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose)), linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1))'}
                     onMouseLeave={(e) => e.currentTarget.style.background = 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'}
                   >
-                    🎁 Free Trial
+                    🎁 {isMounted ? t('classes.freeTrial') : 'Free Trial'}
                   </Link>
                   <Link 
                     href="/contact" 
@@ -498,21 +534,21 @@ export default function ClassesPage() {
                       e.currentTarget.style.color = 'var(--accent-rose)'
                     }}
                   >
-                    💬 Get Advice
+                    💬 {isMounted ? t('classes.getAdvice') : 'Get Advice'}
                   </Link>
                 </div>
                 <div className="flex flex-wrap justify-center gap-4 mt-6 text-xs sm:text-sm text-gray-600">
                   <div className="flex items-center">
                     <span className="mr-1">✨</span>
-                    <span>Professional guidance</span>
+                    <span>{isMounted ? t('classes.professionalGuidance') : 'Professional guidance'}</span>
                   </div>
                   <div className="flex items-center">
                     <span className="mr-1">🎵</span>
-                    <span>All styles available</span>
+                    <span>{isMounted ? t('classes.allStylesAvailable') : 'All styles available'}</span>
                   </div>
                   <div className="flex items-center">
                     <span className="mr-1">👥</span>
-                    <span>Small group sizes</span>
+                    <span>{isMounted ? t('classes.smallGroupSizes') : 'Small group sizes'}</span>
                   </div>
                 </div>
               </div>

@@ -6,6 +6,50 @@ import prisma from '@/app/lib/db'
 // GET all forum posts
 export async function GET(request: Request) {
   try {
+    // Check authentication for forum access
+    const cookieStore = cookies()
+    const token = cookieStore.get('auth-token')?.value
+    
+    // Allow access in development mode without token
+    if (!token && process.env.NODE_ENV !== 'development') {
+      return NextResponse.json(
+        { error: 'Unauthorized - Please sign in to access the forum' },
+        { status: 401 }
+      )
+    }
+    
+    // Verify token if provided (required in production)
+    if (token && process.env.NODE_ENV === 'production') {
+      const payload = await verifyToken(token)
+      if (!payload) {
+        return NextResponse.json(
+          { error: 'Unauthorized - Invalid session' },
+          { status: 401 }
+        )
+      }
+      
+      // Get user and check role permissions
+      const user = await prisma.user.findUnique({
+        where: { id: payload.userId }
+      })
+      
+      if (!user) {
+        return NextResponse.json(
+          { error: 'User not found' },
+          { status: 404 }
+        )
+      }
+      
+      // Check if user has appropriate role
+      const allowedRoles = ['USER', 'INSTRUCTOR', 'ADMIN']
+      if (!allowedRoles.includes(user.role)) {
+        return NextResponse.json(
+          { error: 'Insufficient permissions to access forum' },
+          { status: 403 }
+        )
+      }
+    }
+
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
     const page = parseInt(searchParams.get('page') || '1')

@@ -19,6 +19,8 @@ import ContentManagement from './sections/ContentManagement'
 import ContactMessages from './sections/ContactMessages'
 import AuditTrail from './sections/AuditTrail'
 import SEOManagement from './sections/SEOManagement'
+import PartnerMatchingManagement from './sections/PartnerMatchingManagement'
+import HostManagement from './sections/HostManagement'
 
 interface Stats {
   totalUsers: number
@@ -36,10 +38,13 @@ interface Stats {
   unreadNotifications: number
   activePartnerRequests: number
   unreadMessages: number
+  totalHosts: number
+  pendingHostApplications: number
   userBreakdown: {
     admins: number
     instructors: number
     students: number
+    hosts: number
   }
 }
 
@@ -54,6 +59,18 @@ export default function AdminPanel() {
   // Require admin privileges - ALL HOOKS MUST BE CALLED BEFORE ANY CONDITIONAL RETURNS
   const { user, logout, loading: authLoading } = useAuth()
   useRequireAdmin()
+
+  // Remove global body top padding while in admin panel
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.body.classList.add('admin-no-padding')
+    }
+    return () => {
+      if (typeof document !== 'undefined') {
+        document.body.classList.remove('admin-no-padding')
+      }
+    }
+  }, [])
   
   // ALL useEffect hooks must be called before conditional returns
   useEffect(() => {
@@ -115,6 +132,7 @@ export default function AdminPanel() {
     { id: 'events', label: 'Events', icon: '🎉', badge: stats?.totalEvents },
     { id: 'bookings', label: 'Bookings', icon: '🎫', badge: stats?.totalBookings },
     { id: 'venues', label: 'Venues', icon: '🏢', badge: stats?.totalVenues },
+    { id: 'hosts', label: 'Hosts', icon: '🏠', badge: stats?.totalHosts, urgent: stats?.pendingHostApplications },
     { id: 'styles', label: 'Dance Styles', icon: '💃', badge: stats?.totalDanceStyles },
     { id: 'transactions', label: 'Transactions', icon: '💰', badge: stats?.totalTransactions },
     { id: 'forum', label: 'Forum', icon: '💬', badge: stats?.totalForumPosts },
@@ -153,7 +171,7 @@ export default function AdminPanel() {
                 <p className="text-blue-100 text-sm">Total Users</p>
                 <p className="text-3xl font-bold">{stats.totalUsers}</p>
                 <p className="text-blue-100 text-sm mt-2">
-                  {stats.userBreakdown.admins} admin, {stats.userBreakdown.instructors} instructors
+                  {stats.userBreakdown.admins} admin, {stats.userBreakdown.instructors} instructors, {stats.userBreakdown.hosts} hosts
                 </p>
               </div>
               <div className="text-4xl opacity-80">👥</div>
@@ -305,6 +323,8 @@ export default function AdminPanel() {
         return <BookingManagement helperData={helperData} />
       case 'venues':
         return <VenueManagement />
+      case 'hosts':
+        return <HostManagement />
       case 'styles':
         return <DanceStyleManagement />
       case 'transactions':
@@ -327,20 +347,7 @@ export default function AdminPanel() {
           </div>
         )
       case 'partners':
-        return (
-          <div>
-            <h2 className="text-3xl font-bold mb-6">Partner Matching System</h2>
-            <div className="bg-white rounded-lg shadow p-6">
-              <p className="text-gray-600">Manage dance partner matching</p>
-              <ul className="mt-4 text-sm text-gray-500">
-                <li>• View partner requests</li>
-                <li>• Manage matches</li>
-                <li>• Monitor matching algorithm</li>
-                <li>• Handle disputes</li>
-              </ul>
-            </div>
-          </div>
-        )
+        return <PartnerMatchingManagement />
       case 'notifications':
         return <NotificationCenter />
       case 'messages':
@@ -520,15 +527,22 @@ export default function AdminPanel() {
                       <span className="text-xl">{item.icon}</span>
                       <span>{item.label}</span>
                     </div>
-                    {item.badge !== undefined && item.badge > 0 && (
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        activeSection === item.id 
-                          ? 'bg-purple-700 text-white' 
-                          : 'bg-gray-200 text-gray-700'
-                      }`}>
-                        {item.badge}
-                      </span>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {item.urgent !== undefined && item.urgent > 0 && (
+                        <span className="px-2 py-1 rounded-full text-xs bg-red-500 text-white animate-pulse">
+                          {item.urgent}
+                        </span>
+                      )}
+                      {item.badge !== undefined && item.badge > 0 && (
+                        <span className={`px-2 py-1 rounded-full text-xs ${
+                          activeSection === item.id 
+                            ? 'bg-purple-700 text-white' 
+                            : 'bg-gray-200 text-gray-700'
+                        }`}>
+                          {item.badge}
+                        </span>
+                      )}
+                    </div>
                   </button>
                 </li>
               ))}

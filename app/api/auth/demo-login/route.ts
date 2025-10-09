@@ -16,7 +16,8 @@ export async function POST(request: NextRequest) {
     const demoAccounts = {
       'ADMIN': { email: 'admin@dev.local', password: 'admin123', fullName: 'Development Admin' },
       'INSTRUCTOR': { email: 'instructor@demo.com', password: 'instructor123', fullName: 'Demo Instructor' },
-      'USER': { email: 'user@demo.com', password: 'user123', fullName: 'Demo User' }
+'USER': { email: 'user@demo.com', password: 'user123', fullName: 'Demo User' },
+      'HOST': { email: 'host@demo.com', password: 'host123', fullName: 'Demo Host' }
     }
 
     const demoAccount = demoAccounts[role as keyof typeof demoAccounts]
@@ -24,7 +25,7 @@ export async function POST(request: NextRequest) {
     if (!demoAccount) {
       return NextResponse.json({
         success: false,
-        error: 'Invalid role. Use ADMIN, INSTRUCTOR, or USER.'
+        error: 'Invalid role. Use ADMIN, INSTRUCTOR, USER, or HOST.'
       }, { status: 400 })
     }
 
@@ -46,7 +47,7 @@ export async function POST(request: NextRequest) {
         isVerified: true
       }
 
-      // If it's an instructor, create the instructor record too
+      // If it's an instructor or host, create the related record too
       if (role === 'INSTRUCTOR') {
         user = await prisma.user.create({
           data: {
@@ -62,6 +63,26 @@ export async function POST(request: NextRequest) {
           },
           include: {
             instructor: true
+          }
+        })
+      } else if (role === 'HOST') {
+        user = await prisma.user.create({
+          data: userData
+        })
+        // Create a richer demo host profile and auto-approve it
+        await prisma.host.create({
+          data: {
+            userId: user.id,
+            businessName: 'Demo Dance Academy',
+            businessType: 'Studio',
+            description: 'A premier dance studio offering classes in salsa, hip hop, ballet, and contemporary for all levels.',
+            experienceYears: 5,
+            country: 'USA',
+            city: 'New York',
+            isVerified: true,
+            isApproved: true,
+            applicationStatus: 'APPROVED',
+            approvedAt: new Date()
           }
         })
       } else {
@@ -131,10 +152,10 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET() {
-  return NextResponse.json({
-    message: 'Demo login endpoint',
-    usage: 'POST with {"role": "ADMIN"|"INSTRUCTOR"|"USER"}',
-    available_roles: ['ADMIN', 'INSTRUCTOR', 'USER'],
-    default_role: 'ADMIN'
-  })
+    return NextResponse.json({
+      message: 'Demo login endpoint',
+      usage: 'POST with {"role": "ADMIN"|"INSTRUCTOR"|"USER"|"HOST"}',
+      available_roles: ['ADMIN', 'INSTRUCTOR', 'USER', 'HOST'],
+      default_role: 'ADMIN'
+    })
 }

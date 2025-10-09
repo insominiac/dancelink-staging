@@ -26,6 +26,7 @@ export default function LoginPage() {
     
     if (isAuthenticated && user) {
       const redirectPath = user.role === 'ADMIN' ? '/admin' : 
+                          user.role === 'HOST' ? '/host' :
                           user.role === 'INSTRUCTOR' ? '/instructor' : 
                           '/dashboard'
       router.push(redirectPath)
@@ -48,18 +49,18 @@ export default function LoginPage() {
     setLoading(false)
   }
 
-  const handleDemoLogin = async (role: 'admin' | 'instructor' | 'user') => {
+  const handleDemoLogin = async (role: 'instructor' | 'user' | 'host') => {
     setLoading(true)
     setError('')
 
     let demoCredentials: { email: string; password: string }
 
     switch (role) {
-      case 'admin':
-        demoCredentials = { email: 'admin@dev.local', password: 'admin123' }
-        break
       case 'instructor':
         demoCredentials = { email: 'instructor@demo.com', password: 'instructor123' }
+        break
+      case 'host':
+        demoCredentials = { email: 'host@demo.com', password: 'host123' }
         break
       case 'user':
         demoCredentials = { email: 'user@demo.com', password: 'user123' }
@@ -76,173 +77,165 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
-            <Link 
-              href="/register" 
-              className="font-medium text-indigo-600 hover:text-indigo-500"
-            >
-              create a new account
-            </Link>
-          </p>
-        </div>
+    <div className="min-h-screen" style={{background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'}}>
+      <div className="relative z-10 flex items-center justify-center py-20 px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-2xl">
+          <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+            <div className="px-8 py-8 md:px-10 md:py-10">
+              <div className="text-center mb-6">
+                <h2 
+                  className="text-3xl md:text-4xl font-extrabold mb-2"
+                  style={{ color: 'var(--primary-dark)' }}
+                >
+                  Sign in to your account
+                </h2>
+                <p className="text-sm" style={{color: 'var(--neutral-gray)'}}>
+                  Or{' '}
+                  <Link href="/register" className="font-semibold" style={{color: 'var(--primary-gold)'}}>
+                    create a new account
+                  </Link>
+                </p>
+              </div>
 
-        {/* Demo Login Buttons */}
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 shadow-sm">
-          <div className="flex items-center mb-3">
-            <span className="text-lg mr-2">🎭</span>
-            <h3 className="text-sm font-semibold text-blue-800">Try Demo Accounts</h3>
-          </div>
-          <p className="text-xs text-blue-600 mb-4">Experience different user roles instantly</p>
-          <div className="space-y-3">
-            <button
-              onClick={() => handleDemoLogin('admin')}
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-red-50 to-red-100 hover:from-red-100 hover:to-red-150 border border-red-200 text-red-800 py-3 px-4 rounded-lg transition-all disabled:opacity-50 group"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <span className="text-lg mr-2">👑</span>
-                  <div className="text-left">
-                    <div className="text-sm font-medium">Admin Dashboard</div>
-                    <div className="text-xs opacity-75">Full system management</div>
+              {/* Demo Login Buttons */}
+              <div className="rounded-xl border border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 p-4 shadow-sm mb-6">
+                <div className="flex items-center mb-3">
+                  <span className="text-lg mr-2">🎭</span>
+                  <h3 className="text-sm font-semibold text-blue-800">Try Demo Accounts</h3>
+                </div>
+                <p className="text-xs text-blue-600 mb-4">Try different user roles - Host, Instructor, or Student</p>
+                <div className="space-y-3">
+                  <button
+                    onClick={() => handleDemoLogin('instructor')}
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-green-50 to-emerald-100 hover:from-green-100 hover:to-emerald-150 border border-green-200 text-green-800 py-3 px-4 rounded-lg transition-all disabled:opacity-50 group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-2">🎓</span>
+                        <div className="text-left">
+                          <div className="text-sm font-medium">Instructor Panel</div>
+                          <div className="text-xs opacity-75">Class & student management</div>
+                        </div>
+                      </div>
+                      <span className="text-xs font-mono bg-green-200 px-2 py-1 rounded text-green-700">instructor@demo.com</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => handleDemoLogin('host')}
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-150 border border-purple-200 text-purple-800 py-3 px-4 rounded-lg transition-all disabled:opacity-50 group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-2">🏠</span>
+                        <div className="text-left">
+                          <div className="text-sm font-medium">Host Dashboard</div>
+                          <div className="text-xs opacity-75">Manage venues & classes</div>
+                        </div>
+                      </div>
+                      <span className="text-xs font-mono bg-purple-200 px-2 py-1 rounded text-purple-700">host@demo.com</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => handleDemoLogin('user')}
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-150 border border-blue-200 text-blue-800 py-3 px-4 rounded-lg transition-all disabled:opacity-50 group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-2">💃</span>
+                        <div className="text-left">
+                          <div className="text-sm font-medium">Student Dashboard</div>
+                          <div className="text-xs opacity-75">Book classes & events</div>
+                        </div>
+                      </div>
+                      <span className="text-xs font-mono bg-blue-200 px-2 py-1 rounded text-blue-700">user@demo.com</span>
+                    </div>
+                  </button>
+                </div>
+                <div className="mt-3 pt-3 border-t border-blue-200">
+                  <p className="text-xs text-blue-600 text-center">💡 Each role offers unique features and capabilities</p>
+                </div>
+              </div>
+
+              <form className="space-y-6" onSubmit={handleSubmit}>
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium" style={{color: 'var(--primary-dark)'}}>
+                      Email Address
+                    </label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="mt-1 block w-full px-4 py-3.5 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                      placeholder="Email address"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="password" className="block text-sm font-medium" style={{color: 'var(--primary-dark)'}}>
+                      Password
+                    </label>
+                    <input
+                      id="password"
+                      name="password"
+                      type="password"
+                      autoComplete="current-password"
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="mt-1 block w-full px-4 py-3.5 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                      placeholder="Password"
+                    />
                   </div>
                 </div>
-                <span className="text-xs font-mono bg-red-200 px-2 py-1 rounded text-red-700">admin@dev.local</span>
-              </div>
-            </button>
-            
-            <button
-              onClick={() => handleDemoLogin('instructor')}
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-green-50 to-emerald-100 hover:from-green-100 hover:to-emerald-150 border border-green-200 text-green-800 py-3 px-4 rounded-lg transition-all disabled:opacity-50 group"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <span className="text-lg mr-2">🎓</span>
-                  <div className="text-left">
-                    <div className="text-sm font-medium">Instructor Panel</div>
-                    <div className="text-xs opacity-75">Class & student management</div>
+
+                {logoutMessage && (
+                  <div className="text-green-600 text-sm text-center bg-green-50 border border-green-200 rounded-xl p-3">
+                    {logoutMessage}
                   </div>
-                </div>
-                <span className="text-xs font-mono bg-green-200 px-2 py-1 rounded text-green-700">instructor@demo.com</span>
-              </div>
-            </button>
-            
-            <button
-              onClick={() => handleDemoLogin('user')}
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-150 border border-blue-200 text-blue-800 py-3 px-4 rounded-lg transition-all disabled:opacity-50 group"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <span className="text-lg mr-2">💃</span>
-                  <div className="text-left">
-                    <div className="text-sm font-medium">Student Dashboard</div>
-                    <div className="text-xs opacity-75">Book classes & events</div>
+                )}
+                {error && (
+                  <div className="text-red-600 text-sm text-center bg-red-50 border border-red-200 rounded-xl p-3">
+                    {error}
                   </div>
+                )}
+
+                <div>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full inline-flex items-center justify-center text-white font-semibold rounded-xl px-6 py-3.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:transform hover:scale-[1.01]"
+                    style={{
+                      background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'
+                    }}
+                  >
+                    {loading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                        Signing in...
+                      </>
+                    ) : (
+                      'Sign in'
+                    )}
+                  </button>
                 </div>
-                <span className="text-xs font-mono bg-blue-200 px-2 py-1 rounded text-blue-700">user@demo.com</span>
-              </div>
-            </button>
-          </div>
-          
-          <div className="mt-3 pt-3 border-t border-blue-200">
-            <p className="text-xs text-blue-600 text-center">
-              💡 Each role has different access levels and features
-            </p>
-          </div>
-        </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="email" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-              />
+                <div className="text-center">
+                  <Link href="/forgot-password" className="text-sm font-medium" style={{color: 'var(--primary-gold)'}}>
+                    Forgot your password?
+                  </Link>
+                </div>
+              </form>
             </div>
           </div>
-
-          {logoutMessage && (
-            <div className="text-green-600 text-sm text-center bg-green-50 border border-green-200 rounded-md p-3">
-              {logoutMessage}
-            </div>
-          )}
-          
-          {error && (
-            <div className="text-red-600 text-sm text-center bg-red-50 border border-red-200 rounded-md p-3">
-              {error}
-            </div>
-          )}
-
-          <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Signing in...
-                </>
-              ) : (
-                'Sign in'
-              )}
-            </button>
-          </div>
-
-          <div className="text-center">
-            <Link 
-              href="/forgot-password" 
-              className="text-sm text-indigo-600 hover:text-indigo-500"
-            >
-              Forgot your password?
-            </Link>
-          </div>
-        </form>
-
-        <div className="mt-6">
-          <div className="text-center text-xs text-gray-500">
-            <Link href="/" className="hover:text-gray-700">
-              ← Back to home
-            </Link>
+          <div className="mt-6 text-center">
+            <Link href="/" className="text-sm font-medium text-white/90 hover:text-white">← Back to home</Link>
           </div>
         </div>
       </div>

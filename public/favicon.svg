@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-label="DanceLink favicon">
+  <!-- Outlined 'DL' monogram in brand color (no font dependency) -->
+  <rect x="0" y="0" width="64" height="64" fill="none"/>
+  <g stroke="#ff6b35" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Script-like D: vertical stem with a flowing rounded bowl -->
+    <path d="M18 18 L18 46 M18 22 C18 20, 20 18, 24 18 C34 18, 40 23, 40 32 C40 41, 34 46, 24 46 C21 46, 19 44, 18 42"/>
+    <!-- Script-like L: descending swash to the right -->
+    <path d="M46 18 L46 42 C46 46, 50 46, 56 46"/>
+  </g>
+</svg>

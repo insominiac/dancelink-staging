@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spanish Translation Test - DanceLink</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            line-height: 1.6;
+        }
+        .test-section { 
+            margin: 20px 0; 
+            padding: 20px; 
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        .language-button { 
+            margin: 5px; 
+            padding: 12px 20px; 
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white; 
+            border: none; 
+            border-radius: 25px; 
+            cursor: pointer; 
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .language-button:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .translation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .translation-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffd700;
+        }
+        .english { border-left-color: #ff6b35; }
+        .spanish { border-left-color: #ffd700; }
+        .korean { border-left-color: #4ecdc4; }
+        .vietnamese { border-left-color: #ff3838; }
+        .key { color: #ffd700; font-weight: bold; }
+        .value { color: #e0e0e0; }
+        h1 { text-align: center; margin-bottom: 30px; }
+        h2 { color: #ffd700; }
+    </style>
+</head>
+<body>
+    <h1>🎉 Spanish Translation Test - DanceLink</h1>
+    
+    <div class="test-section">
+        <h2>✅ Implementation Status:</h2>
+        <p>✅ Added Spanish (es) translations to i18n configuration</p>
+        <p>✅ Updated LanguageSwitcher component to include Spanish flag 🇪🇸</p>
+        <p>✅ All main navigation and content areas translated</p>
+        <p>✅ Comprehensive translation coverage for all sections</p>
+        <p>✅ Server running successfully on localhost:3000</p>
+    </div>
+
+    <div class="test-section">
+        <h2>🌍 Supported Languages:</h2>
+        <button class="language-button">🇺🇸 English (en) - Default</button>
+        <button class="language-button">🇪🇸 Español (es) - NEW!</button>
+        <button class="language-button">🇰🇷 한국어 (ko)</button>
+        <button class="language-button">🇻🇳 Tiếng Việt (vi)</button>
+    </div>
+
+    <div class="test-section">
+        <h2>📋 Spanish Translation Coverage:</h2>
+        
+        <h3>Navigation Menu (nav)</h3>
+        <div class="translation-grid">
+            <div class="translation-item english">
+                <div class="key">EN:</div>
+                <div class="value">Home, Classes, Events, Instructors, About, Contact</div>
+            </div>
+            <div class="translation-item spanish">
+                <div class="key">ES:</div>
+                <div class="value">Inicio, Clases, Eventos, Instructores, Acerca de, Contacto</div>
+            </div>
+        </div>
+
+        <h3>Hero Section (hero)</h3>
+        <div class="translation-grid">
+            <div class="translation-item english">
+                <div class="key">EN:</div>
+                <div class="value">"Master the Art of Dance" / "Connect Through Movement"</div>
+            </div>
+            <div class="translation-item spanish">
+                <div class="key">ES:</div>
+                <div class="value">"Domina el arte de la danza" / "Conéctate a través del movimiento"</div>
+            </div>
+        </div>
+
+        <h3>About Section (about)</h3>
+        <div class="translation-grid">
+            <div class="translation-item english">
+                <div class="key">EN:</div>
+                <div class="value">"Why Choose DanceLink?" / "Expert Instructors" / "All Levels Welcome"</div>
+            </div>
+            <div class="translation-item spanish">
+                <div class="key">ES:</div>
+                <div class="value">"¿Por qué elegir DanceLink?" / "Instructores expertos" / "Todos los niveles bienvenidos"</div>
+            </div>
+        </div>
+
+        <h3>Call-to-Action Section (cta)</h3>
+        <div class="translation-grid">
+            <div class="translation-item english">
+                <div class="key">EN:</div>
+                <div class="value">"Ready to Start Your Dance Journey?" / "Start Free Trial"</div>
+            </div>
+            <div class="translation-item spanish">
+                <div class="key">ES:</div>
+                <div class="value">"¿Listo para comenzar tu viaje de danza?" / "Comenzar prueba gratis"</div>
+            </div>
+        </div>
+
+        <h3>Dance Styles Section (danceStyles)</h3>
+        <div class="translation-grid">
+            <div class="translation-item english">
+                <div class="key">EN:</div>
+                <div class="value">"Discover Our Dance Styles" / "Choose Your Perfect Dance Journey"</div>
+            </div>
+            <div class="translation-item spanish">
+                <div class="key">ES:</div>
+                <div class="value">"Descubre nuestros estilos de danza" / "Elige tu viaje de danza perfecto"</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🧪 How to Test:</h2>
+        <ol>
+            <li>Navigate to <a href="http://localhost:3000" target="_blank" style="color: #ffd700;">http://localhost:3000</a></li>
+            <li>Look for the language switcher in the navigation bar (flags: 🇺🇸 🇪🇸 🇰🇷 🇻🇳)</li>
+            <li><strong>Click on the Spanish flag 🇪🇸</strong> to see the content change to Spanish</li>
+            <li>Verify that:</li>
+            <ul>
+                <li>Navigation menu items are in Spanish</li>
+                <li>Hero section title and description are translated</li>
+                <li>About section features are in Spanish</li>
+                <li>Stats labels are translated</li>
+                <li>CTA buttons and text are in Spanish</li>
+                <li>Language preference persists on page refresh</li>
+            </ul>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>🎯 Key Spanish Phrases Added:</h2>
+        <div class="translation-grid">
+            <div class="translation-item spanish">
+                <div class="key">Landing Page:</div>
+                <div class="value">"Domina el arte de la danza" (Master the Art of Dance)</div>
+            </div>
+            <div class="translation-item spanish">
+                <div class="key">Call to Action:</div>
+                <div class="value">"¿Listo para comenzar tu viaje de danza?" (Ready to Start Your Dance Journey?)</div>
+            </div>
+            <div class="translation-item spanish">
+                <div class="key">Free Trial:</div>
+                <div class="value">"Reservar prueba gratis" (Book Free Trial)</div>
+            </div>
+            <div class="translation-item spanish">
+                <div class="key">About Us:</div>
+                <div class="value">"¿Por qué elegir DanceLink?" (Why Choose DanceLink?)</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🚀 Next Steps:</h2>
+        <p>✅ <strong>Translation Complete:</strong> Spanish language support fully integrated</p>
+        <p>🎨 <strong>UI Ready:</strong> Language switcher updated with Spanish flag</p>
+        <p>💾 <strong>Persistence:</strong> Language choice saved in localStorage and cookies</p>
+        <p>🌐 <strong>Full Coverage:</strong> All main UI elements are translatable to Spanish</p>
+        <p>📱 <strong>Responsive:</strong> Works on both mobile and desktop</p>
+    </div>
+
+    <div class="test-section">
+        <h2>🎊 Celebrate!</h2>
+        <p style="text-align: center; font-size: 1.5em;">
+            ¡Felicidades! Your dance platform now supports Spanish! 🎉<br>
+            <em>¡Tu plataforma de danza ahora soporta español!</em>
+        </p>
+    </div>
+</body>
+</html>

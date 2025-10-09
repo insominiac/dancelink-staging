@@ -1,6 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import '@/lib/i18n'
+import TranslatedText from '../../components/TranslatedText'
 
 interface ContactPageContent {
   heroTitle: string
@@ -36,8 +39,15 @@ interface ContactPageContent {
 }
 
 export default function ContactPage() {
+  const { t } = useTranslation('common')
+  const [isMounted, setIsMounted] = useState(false)
   const [content, setContent] = useState<ContactPageContent | null>(null)
+  const [seo, setSeo] = useState<{ title?: string; description?: string; ogTitle?: string } | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -55,7 +65,26 @@ export default function ContactPage() {
       }
     }
 
+    const fetchSeo = async () => {
+      try {
+        const res = await fetch('/api/seo?path=/contact')
+        if (res.ok) {
+          const data = await res.json()
+          if (data?.seoData) {
+            setSeo({
+              title: data.seoData.title || undefined,
+              description: data.seoData.description || undefined,
+              ogTitle: data.seoData.ogTitle || undefined,
+            })
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching SEO data:', error)
+      }
+    }
+
     fetchContent()
+    fetchSeo()
   }, [])
 
   if (isLoading) {
@@ -85,7 +114,7 @@ export default function ContactPage() {
           <div className="relative z-10 dance-container text-center">
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white mb-5">
               <span className="mr-2">📞</span>
-              <span className="text-sm font-medium">Get in Touch</span>
+              <span className="text-sm font-medium">{isMounted ? (seo?.ogTitle || 'Get in touch with us') : 'Get in touch with us'}</span>
             </div>
             
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-5 dance-font text-white">
@@ -101,7 +130,7 @@ export default function ContactPage() {
         <div className="dance-container py-16 flex-grow flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 mb-4 mx-auto" style={{borderBottomColor: 'var(--primary-gold)'}}></div>
-            <p className="text-gray-600">Loading content...</p>
+            <p className="text-gray-600">{isMounted ? t('ui.loading') : 'Loading...'}</p>
           </div>
         </div>
       </div>
@@ -133,25 +162,23 @@ export default function ContactPage() {
         <div className="relative z-10 dance-container text-center">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white mb-5">
             <span className="mr-2">📞</span>
-            <span className="text-sm font-medium">Get in Touch</span>
+            <span className="text-sm font-medium">{seo?.ogTitle || 'Get in Touch'}</span>
           </div>
           
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-5 dance-font text-white">
-            {content?.heroTitle ? 
-              content.heroTitle.split(' ').map((word, index, array) => 
+            {(content?.heroTitle || seo?.title || 'Contact Us')
+              .split(' ')
+              .map((word, index, array) =>
                 index === array.length - 1 ? (
                   <span key={index} className="text-yellow-100 dance-font">{word}</span>
                 ) : (
                   word + ' '
                 )
-              ) : (
-                <>Contact <span className="text-yellow-100 dance-font">Us</span></>
-              )
-            }
+              )}
           </h1>
           
           <p className="text-base md:text-lg text-white/90 mb-7 max-w-2xl mx-auto leading-relaxed">
-            {content?.heroSubtitle || "Ready to start dancing? We're here to help you find the perfect class!"}
+            {content?.heroSubtitle || seo?.description || 'We are here to help you. Send us a message and we will respond soon.'}
           </p>
           
           {/* Quick Action Buttons */}
@@ -186,17 +213,19 @@ export default function ContactPage() {
             ]).map((option, index) => (
               <div key={index} className="dance-card text-center hover:transform hover:scale-105 transition-all duration-300 h-full flex flex-col">
                 <div className="text-4xl mb-6">{option.icon}</div>
-                <h3 className="text-xl font-bold mb-4" style={{color: 'var(--primary-dark)'}}>{option.title}</h3>
-                <p className="mb-6 flex-1" style={{color: 'var(--neutral-gray)'}}>{option.description}</p>
+<h3 className="text-xl font-bold mb-4" style={{color: 'var(--primary-dark)'}}><TranslatedText text={option.title} /></h3>
+<p className="mb-6 flex-1" style={{color: 'var(--neutral-gray)'}}><TranslatedText text={option.description} /></p>
                 {option.buttonHref.startsWith('#') ? (
                   <button 
                     className="dance-btn dance-btn-secondary" 
                     onClick={() => alert('Chat feature coming soon!')}
                   >
-                    {option.buttonText}
+                    <TranslatedText text={option.buttonText} />
                   </button>
                 ) : (
-                  <a href={option.buttonHref} className="dance-btn dance-btn-primary">{option.buttonText}</a>
+                  <a href={option.buttonHref} className="dance-btn dance-btn-primary">
+                    <TranslatedText text={option.buttonText} />
+                  </a>
                 )}
               </div>
             ))}
@@ -208,8 +237,8 @@ export default function ContactPage() {
       <section className="py-16 md:py-24" style={{background: 'var(--neutral-light)'}}>
         <div className="dance-container">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6" style={{color: 'var(--primary-dark)'}}>{content?.formTitle || "📝 Send Us a Message"}</h2>
-            <p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{color: 'var(--neutral-gray)'}}>{content?.formSubtitle || "Fill out the form below and we'll get back to you within 24 hours"}</p>
+<h2 className="text-3xl md:text-4xl font-bold mb-6" style={{color: 'var(--primary-dark)'}}>{content?.formTitle ? <TranslatedText text={content.formTitle} /> : "📝 Send Us a Message"}</h2>
+<p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{color: 'var(--neutral-gray)'}}>{content?.formSubtitle ? <TranslatedText text={content.formSubtitle} /> : "Fill out the form below and we'll get back to you within 24 hours"}</p>
           </div>
           <div className="dance-card max-w-3xl mx-auto">
             <form className="space-y-8">
@@ -252,9 +281,9 @@ export default function ContactPage() {
               </div>
               <div className="text-center pt-4">
                 <button type="submit" className="dance-btn dance-btn-primary px-12 py-4 text-lg hover:transform hover:scale-105 transition-all duration-300">
-                  {content?.submitButtonText || "🚀 Send Message"}
+{content?.submitButtonText ? <TranslatedText text={content.submitButtonText} /> : "🚀 Send Message"}
                 </button>
-                <p className="text-sm mt-6 opacity-75 max-w-lg mx-auto">{content?.responseTimeText || "We typically respond within 2-4 hours during business hours"}</p>
+<p className="text-sm mt-6 opacity-75 max-w-lg mx-auto">{content?.responseTimeText ? <TranslatedText text={content.responseTimeText} /> : "We typically respond within 2-4 hours during business hours"}</p>
               </div>
             </form>
           </div>
@@ -265,8 +294,8 @@ export default function ContactPage() {
       <section className="py-16 md:py-24 bg-white">
         <div className="dance-container">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6" style={{color: 'var(--primary-dark)'}}>{content?.faqTitle || "❓ Frequently Asked Questions"}</h2>
-            <p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{color: 'var(--neutral-gray)'}}>{content?.faqSubtitle || "Quick answers to common questions"}</p>
+<h2 className="text-3xl md:text-4xl font-bold mb-6" style={{color: 'var(--primary-dark)'}}>{content?.faqTitle ? <TranslatedText text={content.faqTitle} /> : "❓ Frequently Asked Questions"}</h2>
+<p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{color: 'var(--neutral-gray)'}}>{content?.faqSubtitle ? <TranslatedText text={content.faqSubtitle} /> : "Quick answers to common questions"}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
             {(content?.faqs || [
@@ -276,8 +305,8 @@ export default function ContactPage() {
               { question: "How do I book a class?", answer: "Call us at (123) 456-7890, send us an email, or fill out the contact form above. We'll help you find the perfect class!" }
             ]).map((faq, index) => (
               <div key={index} className="dance-card h-full">
-                <h3 className="text-lg font-bold mb-4" style={{color: 'var(--primary-dark)'}}>{faq.question}</h3>
-                <p className="leading-relaxed" style={{color: 'var(--neutral-gray)'}}>{faq.answer}</p>
+<h3 className="text-lg font-bold mb-4" style={{color: 'var(--primary-dark)'}}><TranslatedText text={faq.question} /></h3>
+<p className="leading-relaxed" style={{color: 'var(--neutral-gray)'}}><TranslatedText text={faq.answer} /></p>
               </div>
             ))}
           </div>

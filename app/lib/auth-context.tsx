@@ -36,6 +36,13 @@ interface RegisterData {
   password: string
   fullName: string
   phone?: string
+  registerAsHost?: boolean
+  businessName?: string
+  businessType?: string
+  description?: string
+  experienceYears?: string
+  country?: string
+  city?: string
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)

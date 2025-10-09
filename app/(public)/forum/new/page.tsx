@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '@/app/lib/auth-context'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, MessageSquare } from 'lucide-react'
 import toast from 'react-hot-toast'
+import LoginModal from '@/app/components/LoginModal'
 
 const categories = [
   { value: 'general', label: 'General Discussion' },
@@ -17,12 +18,34 @@ const categories = [
 ]
 
 export default function NewForumPostPage() {
-  const { isAuthenticated, loading } = useAuth()
+  const { isAuthenticated, user, loading } = useAuth()
   const router = useRouter()
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [category, setCategory] = useState('general')
   const [submitting, setSubmitting] = useState(false)
+  const [showLoginModal, setShowLoginModal] = useState(false)
+
+  // Check authentication and role permissions
+  useEffect(() => {
+    if (!loading) {
+      if (!isAuthenticated || !user) {
+        setShowLoginModal(true)
+        return
+      }
+      
+      // Check if user has appropriate role
+      const allowedRoles = ['USER', 'INSTRUCTOR', 'ADMIN']
+      if (!allowedRoles.includes(user.role)) {
+        router.push('/unauthorized')
+        return
+      }
+    }
+  }, [isAuthenticated, user, loading, router])
+
+  const handleLoginSuccess = () => {
+    setShowLoginModal(false)
+  }
 
   if (loading) {
     return (
@@ -32,28 +55,37 @@ export default function NewForumPostPage() {
     )
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !user) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white rounded-lg shadow-sm p-8 text-center max-w-md">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Authentication Required</h1>
-          <p className="text-gray-600 mb-6">You need to be logged in to create a forum post.</p>
-          <div className="space-y-3">
-            <Link
-              href="/login"
-              className="block w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-            >
-              Login
-            </Link>
-            <Link
-              href="/forum"
-              className="block w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              Back to Forum
-            </Link>
+      <>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg shadow-sm p-8 text-center max-w-md">
+            <MessageSquare className="w-12 h-12 text-purple-600 mx-auto mb-4" />
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">Authentication Required</h1>
+            <p className="text-gray-600 mb-6">You need to be logged in to create a forum post.</p>
+            <div className="space-y-3">
+              <button
+                onClick={() => setShowLoginModal(true)}
+                className="block w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              >
+                Sign In
+              </button>
+              <Link
+                href="/forum"
+                className="block w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Back to Forum
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+          onSuccess={handleLoginSuccess}
+          message="Please sign in to create a forum post. Only registered students, instructors, and administrators can participate in discussions."
+        />
+      </>
     )
   }
 

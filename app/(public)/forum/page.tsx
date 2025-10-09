@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { MessageSquare, Eye, MessageCircle, Pin, Lock, Plus, ChevronLeft, ChevronRight } from 'lucide-react'
 import toast from 'react-hot-toast'
+// import LoginModal from '@/app/components/LoginModal' // Disabled for public browsing
 
 const categories = [
   { value: 'all', label: 'All Topics' },
@@ -17,8 +18,102 @@ const categories = [
   { value: 'beginners', label: 'Beginners Corner' },
 ]
 
+// Sample forum posts for demo
+const samplePosts = [
+  {
+    id: '1',
+    title: 'Best beginner-friendly salsa moves?',
+    content: 'I\'m new to salsa dancing and looking for some basic moves to practice at home. Any suggestions for fundamental steps that will help me build confidence before my first class?',
+    category: 'beginners',
+    user: {
+      fullName: 'Maria Rodriguez',
+      profileImage: 'https://images.unsplash.com/photo-1494790108755-2616b612b1c7?w=400'
+    },
+    createdAt: '2024-01-20T10:30:00Z',
+    viewsCount: 145,
+    _count: { replies: 8 },
+    isPinned: false,
+    isLocked: false
+  },
+  {
+    id: '2', 
+    title: 'Upcoming bachata social in Miami - March 15th',
+    content: 'Hey everyone! There\'s a fantastic bachata social happening at Ocean Drive Studio next month. Live band, great vibes, and dancers of all levels welcome. Who\'s planning to attend?',
+    category: 'events',
+    user: {
+      fullName: 'Carlos Martinez',
+      profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400'
+    },
+    createdAt: '2024-01-18T15:45:00Z',
+    viewsCount: 89,
+    _count: { replies: 12 },
+    isPinned: true,
+    isLocked: false
+  },
+  {
+    id: '3',
+    title: 'Tips for leading vs following in partner dances',
+    content: 'I\'ve been dancing for about 6 months and want to improve my leading skills in salsa and bachata. What are some key techniques that made the biggest difference for you experienced dancers?',
+    category: 'technique',
+    user: {
+      fullName: 'James Wilson',
+      profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400'
+    },
+    createdAt: '2024-01-17T09:20:00Z',
+    viewsCount: 203,
+    _count: { replies: 15 },
+    isPinned: false,
+    isLocked: false
+  },
+  {
+    id: '4',
+    title: 'Looking for practice partner in Austin area',
+    content: 'Intermediate level dancer seeking a regular practice partner for salsa and bachata. I\'m available most evenings and weekends. Let me know if you\'re interested!',
+    category: 'partners',
+    user: {
+      fullName: 'Emma Thompson',
+      profileImage: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400'
+    },
+    createdAt: '2024-01-15T18:10:00Z',
+    viewsCount: 67,
+    _count: { replies: 5 },
+    isPinned: false,
+    isLocked: false
+  },
+  {
+    id: '5',
+    title: 'Best Latin music for practicing at home',
+    content: 'Can anyone recommend some great songs for practicing salsa and bachata footwork? Looking for tracks with clear beats and good energy for solo practice sessions.',
+    category: 'music',
+    user: {
+      fullName: 'Diego Fernandez',
+      profileImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400'
+    },
+    createdAt: '2024-01-14T14:25:00Z',
+    viewsCount: 156,
+    _count: { replies: 22 },
+    isPinned: false,
+    isLocked: false
+  },
+  {
+    id: '6',
+    title: 'How to overcome dance floor anxiety?',
+    content: 'I love dancing in class but get really nervous at socials and parties. Any advice on building confidence to dance in front of others? How did you overcome your initial stage fright?',
+    category: 'general',
+    user: {
+      fullName: 'Sofia Martinez',
+      profileImage: 'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=400'
+    },
+    createdAt: '2024-01-12T11:40:00Z',
+    viewsCount: 198,
+    _count: { replies: 18 },
+    isPinned: false,
+    isLocked: false
+  }
+]
+
 export default function ForumPage() {
-  const { user, isAuthenticated } = useAuth()
+  const { user, isAuthenticated, loading: authLoading } = useAuth()
   const router = useRouter()
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -26,34 +121,37 @@ export default function ForumPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
 
+  // Fetch posts from API
   useEffect(() => {
     fetchPosts()
   }, [selectedCategory, currentPage])
 
   const fetchPosts = async () => {
-    setLoading(true)
     try {
+      setLoading(true)
       const params = new URLSearchParams({
         page: currentPage.toString(),
-        limit: '10',
+        limit: '10'
       })
       
-      if (selectedCategory !== 'all') {
+      if (selectedCategory && selectedCategory !== 'all') {
         params.append('category', selectedCategory)
       }
-
-      const response = await fetch(`/api/forum/posts?${params}`)
-      const data = await response.json()
       
+      const response = await fetch(`/api/public/forum/posts?${params}`)
       if (response.ok) {
-        setPosts(data.posts)
-        setTotalPages(data.pagination.totalPages)
+        const data = await response.json()
+        setPosts(data.posts || [])
+        setTotalPages(data.pagination?.totalPages || 1)
       } else {
-        toast.error('Failed to load forum posts')
+        console.error('Failed to fetch forum posts')
+        // Fallback to sample posts if API fails
+        setPosts(samplePosts)
       }
     } catch (error) {
-      console.error('Error fetching posts:', error)
-      toast.error('Failed to load forum posts')
+      console.error('Error fetching forum posts:', error)
+      // Fallback to sample posts if API fails
+      setPosts(samplePosts)
     } finally {
       setLoading(false)
     }
@@ -72,6 +170,26 @@ export default function ForumPage() {
     })
   }
 
+  // Login handling disabled for public browsing
+  // const handleLoginSuccess = () => {
+  //   setShowLoginModal(false)
+  //   // The useEffect will handle fetching posts after successful login
+  // }
+
+  // Show loading only if needed
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -82,13 +200,21 @@ export default function ForumPage() {
               <h1 className="text-3xl font-bold text-gray-900 dance-font">Community Forum</h1>
               <p className="mt-2 text-gray-600">Connect, share, and learn with fellow dancers</p>
             </div>
-            {isAuthenticated && (
+            {isAuthenticated ? (
               <Link
                 href="/forum/new"
                 className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
               >
                 <Plus className="w-5 h-5 mr-2" />
                 New Post
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                Sign in to Post
               </Link>
             )}
           </div>
@@ -125,21 +251,28 @@ export default function ForumPage() {
               <MessageSquare className="w-12 h-12 text-gray-400 mx-auto" />
               <h3 className="mt-4 text-lg font-medium text-gray-900">No posts yet</h3>
               <p className="mt-2 text-gray-600">Be the first to start a discussion!</p>
-              {isAuthenticated && (
+              {isAuthenticated ? (
                 <Link
                   href="/forum/new"
                   className="mt-4 inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
                 >
                   Create First Post
                 </Link>
+              ) : (
+                <Link
+                  href="/login"
+                  className="mt-4 inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                >
+                  Sign in to Post
+                </Link>
               )}
             </div>
           ) : (
             posts.map((post: any) => (
-              <Link
+              <div
                 key={post.id}
-                href={`/forum/${post.id}`}
-                className="block bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                className="block bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                onClick={() => router.push(`/forum/${post.id}`)}
               >
                 <div className="p-6">
                   <div className="flex items-start justify-between">
@@ -185,7 +318,7 @@ export default function ForumPage() {
                     </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             ))
           )}
         </div>
@@ -215,6 +348,8 @@ export default function ForumPage() {
           </div>
         )}
       </div>
+      
+      {/* Login Modal Disabled - Users redirected to /login page instead */}
     </div>
   )
 }

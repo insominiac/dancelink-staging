@@ -1,0 +1,20 @@
+sequenceDiagram
+  participant G as Guest (Browser)
+  participant FE as Next.js App (/booking/payment)
+  participant PUB as POST /api/public/users
+  participant SES as POST /api/payments/create-session (WISE)
+  participant W as Wise
+  participant WH as POST /api/webhooks/wise
+  participant DB as Prisma DB
+  G->>FE: Submit details -> /booking/payment
+  FE->>PUB: Create/find user by email
+  PUB-->>FE: userId
+  FE->>SES: paymentProvider=WISE, itemId, userId, recipientDetails
+  SES->>DB: Create Booking (PENDING) + Transaction (CREATED)
+  SES->>W: Create quote, recipient, transfer
+  W-->>SES: transferId, status=processing
+  SES-->>FE: transferId, booking info
+  G->>FE: Redirect to /booking/wise-payment for instructions
+  W-->>WH: transfer.state-change (funds_converted)
+  WH->>DB: Update Transaction=SUCCEEDED, Booking=CONFIRMED, paymentStatus=succeeded
+  WH-->>W: 200 OK

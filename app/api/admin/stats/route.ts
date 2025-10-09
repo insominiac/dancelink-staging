@@ -18,7 +18,9 @@ export async function GET() {
       totalDanceStyles,
       unreadNotifications,
       activePartnerRequests,
-      unreadMessages
+      unreadMessages,
+      totalHosts,
+      pendingHostApplications
     ] = await Promise.all([
       prisma.user.count(),
       prisma.class.count(),
@@ -33,7 +35,9 @@ export async function GET() {
       prisma.danceStyle.count(),
       prisma.notification.count({ where: { isRead: false } }),
       prisma.matchRequest.count({ where: { status: 'PENDING' } }),
-      prisma.contactMessage.count({ where: { isRead: false } })
+      prisma.contactMessage.count({ where: { isRead: false } }),
+      prisma.host.count(),
+      prisma.host.count({ where: { applicationStatus: 'PENDING' } })
     ])
 
     // Calculate revenue from confirmed bookings
@@ -43,10 +47,11 @@ export async function GET() {
     })
 
     // Get user breakdown by role
-    const [adminCount, instructorCount, studentCount] = await Promise.all([
+    const [adminCount, instructorCount, studentCount, hostCount] = await Promise.all([
       prisma.user.count({ where: { role: 'ADMIN' } }),
       prisma.user.count({ where: { role: 'INSTRUCTOR' } }),
-      prisma.user.count({ where: { role: 'USER' } })
+      prisma.user.count({ where: { role: 'USER' } }),
+      prisma.user.count({ where: { role: 'HOST' } })
     ])
 
     // Get recent activity
@@ -88,10 +93,13 @@ export async function GET() {
         unreadNotifications,
         activePartnerRequests,
         unreadMessages,
+        totalHosts,
+        pendingHostApplications,
         userBreakdown: {
           admins: adminCount,
           instructors: instructorCount,
-          students: studentCount
+          students: studentCount,
+          hosts: hostCount
         }
       },
       recentActivity: {

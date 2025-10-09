@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useTranslation } from 'react-i18next'
+import TranslatedText from '../../components/TranslatedText'
+import '@/lib/i18n'
 
 interface Instructor {
   id: string
@@ -60,10 +63,16 @@ interface InstructorsPageContent {
 }
 
 export default function InstructorsPage() {
+  const { t } = useTranslation('common')
+  const [isMounted, setIsMounted] = useState(false)
   const [instructors, setInstructors] = useState<Instructor[]>([])
   const [pageContent, setPageContent] = useState<InstructorsPageContent | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -134,15 +143,15 @@ export default function InstructorsPage() {
           <div className="relative z-10 dance-container text-center">
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white mb-5">
               <span className="mr-2">👨‍🏫</span>
-              <span className="text-sm font-medium">{pageContent?.heroBadgeText || "Meet Our Expert Team"}</span>
+              <span className="text-sm font-medium">{pageContent?.heroBadgeText ? <TranslatedText text={pageContent.heroBadgeText} /> : (isMounted ? t('instructors.subtitle') : 'Meet our expert professionals')}</span>
             </div>
             
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-5 dance-font text-white">
-              {pageContent?.heroTitle || "Our"} <span className="text-yellow-100 dance-font">Instructors</span>
+              {pageContent?.heroTitle ? <TranslatedText text={pageContent.heroTitle} /> : (isMounted ? t('instructors.title') : 'Our Instructors')}
             </h1>
             
             <p className="text-base md:text-lg text-white/90 mb-7 max-w-2xl mx-auto leading-relaxed">
-              {pageContent?.heroSubtitle || "Meet the talented professionals behind our classes. Experienced, passionate, and dedicated to helping you achieve your dance goals."}
+              {pageContent?.heroSubtitle ? <TranslatedText text={pageContent.heroSubtitle} /> : (isMounted ? t('instructors.description') : 'Our team of certified instructors is here to guide you on your dance journey.')}
             </p>
           </div>
         </section>
@@ -150,7 +159,7 @@ export default function InstructorsPage() {
         <div className="dance-container py-16 flex-grow flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 mb-4 mx-auto" style={{borderBottomColor: 'var(--primary-gold)'}}></div>
-            <p className="text-gray-600">Loading instructors...</p>
+            <p className="text-gray-600">{isMounted ? t('ui.loading') : 'Loading...'}</p>
           </div>
         </div>
       </div>
@@ -339,9 +348,7 @@ export default function InstructorsPage() {
                       {/* Bio */}
                       {instructor.bio && (
                         <p className="text-gray-600 mb-6 leading-relaxed text-sm">
-                          {instructor.bio.length > 120 
-                            ? `${instructor.bio.substring(0, 120)}...` 
-                            : instructor.bio}
+                          <TranslatedText text={instructor.bio.length > 120 ? `${instructor.bio.substring(0, 120)}...` : instructor.bio} />
                         </p>
                       )}
                   
@@ -364,7 +371,7 @@ export default function InstructorsPage() {
                                   key={index} 
                                   className={`px-3 py-1 rounded-full text-xs font-medium border ${colorClass}`}
                                 >
-                                  {specialty}
+                                  <TranslatedText text={specialty} />
                                 </span>
                               )
                             })}
@@ -407,7 +414,7 @@ export default function InstructorsPage() {
                                 className="block p-3 rounded-lg text-sm transition-all duration-300 border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 bg-gray-50 hover:transform hover:translate-x-1"
                               >
                                 <div className="flex items-center justify-between">
-                                  <span className="font-medium text-gray-900">{cls.title}</span>
+                                  <span className="font-medium text-gray-900"><TranslatedText text={cls.title} /></span>
                                   {cls.isPrimary && (
                                     <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full border border-amber-200 font-medium">
                                       ⭐ Lead

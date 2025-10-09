@@ -11,7 +11,7 @@ import { NotificationTriggers } from '@/app/lib/notification-triggers'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { email, password, fullName, phone } = body
+    const { email, password, fullName, phone, registerAsHost, businessName, businessType, description, experienceYears, country, city } = body
 
     // Validate required fields
     if (!email || !password || !fullName) {
@@ -53,6 +53,9 @@ export async function POST(request: NextRequest) {
     // Hash password
     const passwordHash = await hashPassword(password)
 
+    // Determine user role
+    const userRole = registerAsHost ? 'HOST' : 'USER'
+    
     // Create user
     const user = await prisma.user.create({
       data: {
@@ -60,7 +63,7 @@ export async function POST(request: NextRequest) {
         fullName: fullName.trim(),
         phone: phone?.trim() || null,
         passwordHash,
-        role: 'USER',
+        role: userRole,
         isVerified: false,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -75,6 +78,31 @@ export async function POST(request: NextRequest) {
       }
     })
 
+    // If registering as host, create host profile
+    if (registerAsHost) {
+      if (!businessName || !businessType || !country || !city) {
+        // Rollback user creation if host data is incomplete
+        await prisma.user.delete({ where: { id: user.id } })
+        return NextResponse.json(
+          { error: 'Business name, business type, country, and city are required for host registration' },
+          { status: 400 }
+        )
+      }
+      
+      await prisma.host.create({
+        data: {
+          userId: user.id,
+          businessName: businessName.trim(),
+          businessType: businessType.trim(),
+          description: description?.trim() || null,
+          experienceYears: experienceYears ? parseInt(experienceYears) : null,
+          country: country.trim(),
+          city: city.trim(),
+          applicationStatus: 'PENDING'
+        }
+      })
+    }
+
     // Create session
     const token = await createSession(user)
 
@@ -84,10 +112,17 @@ export async function POST(request: NextRequest) {
       console.error('Error sending new user registration notifications:', error)
     })
 
+    const message = registerAsHost 
+      ? 'Host application submitted successfully! Your account is pending admin approval.'
+      : 'Registration successful'
+
     return NextResponse.json(
       {
-        message: 'Registration successful',
-        user,
+        message,
+        user: {
+          ...user,
+          requiresApproval: registerAsHost
+        },
         token
       },
       { status: 201 }

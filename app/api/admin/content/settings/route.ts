@@ -7,15 +7,100 @@ const SETTINGS_FILE = path.join(process.cwd(), 'data', 'site-settings.json')
 
 // Default site settings
 const DEFAULT_SETTINGS = {
-  siteName: "Dance Studio",
-  siteDescription: "Premier dance studio offering classes for all levels",
-  contactEmail: "info@dancestudio.com",
+  siteName: "DanceLink",
+  siteDescription: "Connect, Learn, Dance - Premier dance platform offering classes for all levels",
+  contactEmail: "info@dancelink.com",
   phoneNumber: "+1 (555) 123-4567",
   address: "123 Dance Street, City, State 12345",
   socialMedia: {
-    facebook: "https://facebook.com/dancestudio",
-    instagram: "https://instagram.com/dancestudio",
-    twitter: "https://twitter.com/dancestudio"
+    facebook: "https://facebook.com/dancelink",
+    instagram: "https://instagram.com/dancelink",
+    twitter: "https://twitter.com/dancelink",
+    youtube: "https://youtube.com/@dancelink",
+    tiktok: "https://tiktok.com/@dancelink",
+    linkedin: "https://linkedin.com/company/dancelink"
+  },
+  footer: {
+    enabled: true,
+    layout: "centered",
+    backgroundColor: "gray-900",
+    textColor: "white",
+    copyrightText: "All rights reserved.",
+    copyrightYear: "2024",
+    customCopyrightText: "",
+    tagline: "Connecting dancers worldwide through movement and passion",
+    showTagline: true,
+    showSocialLinks: true,
+    showQuickLinks: true,
+    showContact: true,
+    socialLinksTitle: "Follow Us",
+    quickLinks: [
+      {
+        title: "Classes",
+        url: "/classes",
+        openInNewTab: false
+      },
+      {
+        title: "Events",
+        url: "/events",
+        openInNewTab: false
+      },
+      {
+        title: "Instructors",
+        url: "/instructors",
+        openInNewTab: false
+      },
+      {
+        title: "About Us",
+        url: "/about",
+        openInNewTab: false
+      },
+      {
+        title: "Contact",
+        url: "/contact",
+        openInNewTab: false
+      }
+    ],
+    contactSection: {
+      title: "Get in Touch",
+      showEmail: true,
+      showPhone: true,
+      showAddress: true
+    },
+    additionalSections: [
+      {
+        title: "Dance Styles",
+        links: [
+          {
+            title: "Ballet",
+            url: "/classes?style=ballet",
+            openInNewTab: false
+          },
+          {
+            title: "Hip Hop",
+            url: "/classes?style=hiphop",
+            openInNewTab: false
+          },
+          {
+            title: "Contemporary",
+            url: "/classes?style=contemporary",
+            openInNewTab: false
+          },
+          {
+            title: "Salsa",
+            url: "/classes?style=salsa",
+            openInNewTab: false
+          }
+        ]
+      }
+    ],
+    customHTML: "",
+    newsletter: {
+      enabled: true,
+      title: "Stay Updated",
+      description: "Get the latest updates on classes, events, and dance tips!",
+      buttonText: "Subscribe"
+    }
   }
 }
 
@@ -56,6 +141,45 @@ export async function PUT(request: NextRequest) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(settings.contactEmail)) {
       return NextResponse.json({ error: 'Invalid email format' }, { status: 400 })
+    }
+
+    // Validate footer structure if present
+    if (settings.footer) {
+      // Validate quick links if present
+      if (settings.footer.quickLinks && Array.isArray(settings.footer.quickLinks)) {
+        for (const link of settings.footer.quickLinks) {
+          if (!link.title || !link.url) {
+            return NextResponse.json({ error: 'Invalid quick link: title and url are required' }, { status: 400 })
+          }
+          // Basic URL validation
+          try {
+            new URL(link.url.startsWith('/') ? `https://example.com${link.url}` : link.url)
+          } catch {
+            return NextResponse.json({ error: `Invalid URL in quick links: ${link.url}` }, { status: 400 })
+          }
+        }
+      }
+
+      // Validate additional sections if present
+      if (settings.footer.additionalSections && Array.isArray(settings.footer.additionalSections)) {
+        for (const section of settings.footer.additionalSections) {
+          if (!section.title) {
+            return NextResponse.json({ error: 'Additional section must have a title' }, { status: 400 })
+          }
+          if (section.links && Array.isArray(section.links)) {
+            for (const link of section.links) {
+              if (!link.title || !link.url) {
+                return NextResponse.json({ error: `Invalid link in section '${section.title}': title and url are required` }, { status: 400 })
+              }
+              try {
+                new URL(link.url.startsWith('/') ? `https://example.com${link.url}` : link.url)
+              } catch {
+                return NextResponse.json({ error: `Invalid URL in section '${section.title}': ${link.url}` }, { status: 400 })
+              }
+            }
+          }
+        }
+      }
     }
 
     // Ensure data directory exists

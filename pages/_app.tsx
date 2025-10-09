@@ -6,7 +6,7 @@ import '../lib/i18n'
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     // Initialize i18n on app start
-    import('../lib/i18n')
+import('../lib/i18n')
   }, [])
   
   return <Component {...pageProps} />

@@ -39,29 +39,9 @@ export async function GET(req: NextRequest) {
       ];
     }
 
-    const [matches, totalCount] = await Promise.all([
+    const [matchesData, totalCount] = await Promise.all([
       prisma.match.findMany({
         where,
-        include: {
-          user1: {
-            select: {
-              id: true,
-              fullName: true,
-              email: true,
-              profileImage: true,
-              role: true
-            }
-          },
-          user2: {
-            select: {
-              id: true,
-              fullName: true,
-              email: true,
-              profileImage: true,
-              role: true
-            }
-          }
-        },
         orderBy: {
           createdAt: 'desc'
         },
@@ -70,6 +50,35 @@ export async function GET(req: NextRequest) {
       }),
       prisma.match.count({ where })
     ]);
+
+    // Fetch user data for matches
+    const userIds = [...new Set([
+      ...matchesData.map(match => match.user1Id),
+      ...matchesData.map(match => match.user2Id)
+    ])];
+
+    const users = await prisma.user.findMany({
+      where: {
+        id: {
+          in: userIds
+        }
+      },
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+        profileImage: true,
+        role: true
+      }
+    });
+
+    const userMap = new Map(users.map(user => [user.id, user]));
+
+    const matches = matchesData.map(match => ({
+      ...match,
+      user1: userMap.get(match.user1Id),
+      user2: userMap.get(match.user2Id)
+    }));
 
     return NextResponse.json({
       success: true,

@@ -264,6 +264,11 @@
   transition: all 0.3s ease;
 }
 
+/* Ensure paragraph text in CTA section is white, overriding global p color */
+.danceCtaSection p {
+  color: var(--white);
+}
+
 .danceCtaSection:hover {
   box-shadow: var(--shadow-medium);
   transform: translateY(-2px);

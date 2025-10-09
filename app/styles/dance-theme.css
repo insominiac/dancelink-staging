@@ -39,7 +39,8 @@
   --logo-gradient-1: #ff6b35;
   --logo-gradient-2: #f72585;
   --logo-gradient-3: #ffd23f;
-  --hero-overlay: rgba(26, 15, 31, 0.9);
+  /* Darken overlay but reduce opacity so hero image is more visible */
+  --hero-overlay: rgba(0, 0, 0, 0.5);
 }
 
 /* Option 3: Ocean Breeze (Cool & Calming) */
@@ -130,7 +131,8 @@ body {
   --logo-gradient-1: #ff6b35;
   --logo-gradient-2: #f72585;
   --logo-gradient-3: #ffd23f;
-  --hero-overlay: rgba(26, 15, 31, 0.9);
+  /* Default hero overlay: semi-transparent black for better image visibility */
+  --hero-overlay: rgba(0, 0, 0, 0.5);
 }
 
 html {
@@ -152,11 +154,24 @@ body.banner-hidden {
   padding-top: 0;
 }
 
+/* Admin dashboard pages remove global body top padding */
+body.admin-no-padding {
+  padding-top: 0 !important;
+}
+
 /* Universal font family rule */
 *,
 *::before,
 *::after {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Utility Classes */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* Form elements font family */
@@ -207,6 +222,11 @@ p {
   font-size: 1rem;
   line-height: 1.8;
   color: var(--neutral-gray);
+}
+
+/* Paragraphs inside dance cards: black text */
+.dance-card p {
+  color: #000000;
 }
 
 /* Container */
@@ -398,6 +418,12 @@ p {
   }
 }
 
+/* Contextual overrides: paragraphs inside centered dance containers use black text */
+.dance-container.text-center p,
+.dance-container .text-center p {
+  color: rgb(255, 255, 255);
+}
+
 /* Card Styles */
 .dance-card {
   background: var(--white);
@@ -513,8 +539,8 @@ p {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 20px;
-  max-width: 1200px;
+  padding: 1rem 16px;
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -572,6 +598,40 @@ p {
 
 .dance-nav-link:hover::after {
   width: 100%;
+}
+
+/* Page Content Spacing - Prevent Navigation Overlap */
+body {
+  padding-top: 0;
+  transition: padding-top 0.3s ease;
+}
+
+body.banner-hidden {
+  padding-top: 72px; /* Space for navbar only */
+}
+
+/* Override for hero sections that want full viewport */
+.dance-hero {
+  margin-top: -132px;
+  padding-top: 132px;
+  transition: margin-top 0.3s ease, padding-top 0.3s ease;
+}
+
+body.banner-hidden .dance-hero {
+  margin-top: -72px;
+  padding-top: 72px;
+}
+
+/* Ensure all page sections have proper spacing */
+main > section:first-child,
+.page-content > section:first-child,
+div[style*="minHeight: '100vh'"] {
+  padding-top: 2rem !important;
+}
+
+/* Partner match page specific fix */
+div[style*="background: linear-gradient(135deg, var(--primary-dark)"] {
+  padding-top: 8rem !important;
 }
 
 /* ===== MOBILE RESPONSIVENESS ===== */
@@ -673,11 +733,25 @@ p {
   }
 }
 
-/* Mobile Hero Section */
+/* Mobile Content Spacing */
 @media (max-width: 768px) {
+  body {
+    padding-top: 110px; /* Adjusted for mobile navbar size */
+  }
+  
+  body.banner-hidden {
+    padding-top: 60px;
+  }
+  
   .dance-hero {
     min-height: 90vh;
-    padding-top: 80px; /* Space for navbar - banner handled by body padding */
+    margin-top: -110px;
+    padding-top: 110px;
+  }
+  
+  body.banner-hidden .dance-hero {
+    margin-top: -60px;
+    padding-top: 60px;
   }
   
   .dance-hero-content {
@@ -698,8 +772,22 @@ p {
 }
 
 @media (max-width: 480px) {
+  body {
+    padding-top: 100px;
+  }
+  
+  body.banner-hidden {
+    padding-top: 50px;
+  }
+  
   .dance-hero {
-    padding-top: 70px;
+    margin-top: -100px;
+    padding-top: 100px;
+  }
+  
+  body.banner-hidden .dance-hero {
+    margin-top: -50px;
+    padding-top: 50px;
   }
   
   .dance-hero-content {

@@ -10,7 +10,7 @@ const DEFAULT_CONTENT = {
   heroTitle: "Master the Art of Dance",
   heroSubtitle: "Join our community of passionate dancers and experienced instructors",
   heroButtonText: "Start Your Journey",
-  heroBackgroundImage: null,
+  heroBackgroundImage: "/uploads/hero-backgrounds/hero.svg",
   aboutTitle: "Why Choose Our Studio?",
   aboutDescription: "We offer a wide range of dance classes for all skill levels, with expert instructors and a supportive community.",
   testimonialsEnabled: true,

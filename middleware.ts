@@ -5,14 +5,17 @@ import type { NextRequest } from 'next/server'
 const publicRoutes = [
   '/',
   '/login',
+  '/admin/login',
   '/register',
   '/api/auth/login',
   '/api/auth/register',
   '/api/auth/logout',
+  '/api/auth/admin-token-login',
   '/api/public',
   '/classes',
   '/events',
   '/instructors',
+  '/forum',
   '/about',
   '/contact',
   '/api/swagger',
@@ -29,6 +32,11 @@ const adminRoutes = [
 // Instructor routes (admin or instructor role required)
 const instructorRoutes = [
   '/instructor'
+]
+
+// Host routes (admin or host role required)
+const hostRoutes = [
+  '/host'
 ]
 
 // User routes (any authenticated user)
@@ -117,6 +125,13 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/unauthorized', request.url))
       }
 
+      if (requiredRole === 'HOST' && currentUserRole !== 'ADMIN' && currentUserRole !== 'HOST') {
+        if (path.startsWith('/api/')) {
+          return NextResponse.json({ error: 'Host privileges required' }, { status: 403 })
+        }
+        return NextResponse.redirect(new URL('/unauthorized', request.url))
+      }
+
       if (requiredRole === 'STUDENT_OR_INSTRUCTOR' && currentUserRole !== 'USER' && currentUserRole !== 'INSTRUCTOR') {
         if (path.startsWith('/api/')) {
           return NextResponse.json({ error: 'Student or instructor privileges required' }, { status: 403 })
@@ -135,6 +150,10 @@ export async function middleware(request: NextRequest) {
 
   if (pathStartsWith(path, instructorRoutes)) {
     return handleAuthRedirect(true, 'INSTRUCTOR')
+  }
+
+  if (pathStartsWith(path, hostRoutes)) {
+    return handleAuthRedirect(true, 'HOST')
   }
 
   if (pathStartsWith(path, partnerMatchingRoutes)) {

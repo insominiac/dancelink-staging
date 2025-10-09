@@ -7,15 +7,21 @@ const SETTINGS_FILE = path.join(process.cwd(), 'data', 'site-settings.json')
 
 // Default site settings
 const DEFAULT_SETTINGS = {
-  siteName: "Dance Studio",
-  siteDescription: "Premier dance studio offering classes for all levels",
-  contactEmail: "info@dancestudio.com",
+  siteName: "DanceLink",
+  siteDescription: "Connect, Learn, Dance - Premier dance platform offering classes for all levels",
+  contactEmail: "info@dancelink.com",
   phoneNumber: "+1 (555) 123-4567",
   address: "123 Dance Street, City, State 12345",
   socialMedia: {
-    facebook: "https://facebook.com/dancestudio",
-    instagram: "https://instagram.com/dancestudio",
-    twitter: "https://twitter.com/dancestudio"
+    facebook: "https://facebook.com/dancelink",
+    instagram: "https://instagram.com/dancelink",
+    twitter: "https://twitter.com/dancelink"
+  },
+  footer: {
+    copyrightText: "All rights reserved.",
+    tagline: "Connecting dancers worldwide through movement and passion",
+    showSocialLinks: true,
+    showTagline: true
   }
 }
 

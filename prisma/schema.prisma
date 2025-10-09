@@ -8,36 +8,38 @@ datasource db {
 }
 
 model User {
-  id              String         @id @default(cuid())
-  email           String         @unique
-  passwordHash    String         @map("password_hash")
-  fullName        String         @map("full_name")
-  phone           String?
-  role            UserRole       @default(USER)
-  bio             String?
-  profileImage    String?        @map("profile_image")
-  isVerified      Boolean        @default(false) @map("is_verified")
-  websiteUrl      String?        @map("website_url")
-  instagramHandle String?        @map("instagram_handle")
-  createdAt       DateTime       @default(now()) @map("created_at")
-  updatedAt       DateTime       @updatedAt @map("updated_at")
-  auditLogs       AuditLog[]
-  bookings        Booking[]
-  organizedEvents Event[]
-  forumPosts      ForumPost[]
-  forumReplies    ForumReply[]
-  instructor      Instructor?
-  notifications   Notification[]
-  sessions        Session[]
-  testimonials    Testimonial[]
-  transactions    Transaction[]
-  partnerProfile  UserProfile?
-  userStyles      UserStyle[]
-  attendance      ClassAttendance[]
-  feedback        StudentFeedback[]
-  engagement      StudentEngagement[]
-  createdLoginTokens LoginToken[]    @relation("CreatedLoginTokens")
-  loginAttempts   LoginAttempt[]
+  id                 String              @id @default(cuid())
+  email              String              @unique
+  passwordHash       String              @map("password_hash")
+  fullName           String              @map("full_name")
+  phone              String?
+  role               UserRole            @default(USER)
+  bio                String?
+  profileImage       String?             @map("profile_image")
+  isVerified         Boolean             @default(false) @map("is_verified")
+  websiteUrl         String?             @map("website_url")
+  instagramHandle    String?             @map("instagram_handle")
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @updatedAt @map("updated_at")
+  auditLogs          AuditLog[]
+  bookings           Booking[]
+  attendance         ClassAttendance[]
+  organizedEvents    Event[]
+  forumPosts         ForumPost[]
+  forumReplies       ForumReply[]
+  approvedHosts      Host[]              @relation("ApprovedHosts")
+  instructor         Instructor?
+  loginAttempts      LoginAttempt[]
+  createdLoginTokens LoginToken[]        @relation("CreatedLoginTokens")
+  notifications      Notification[]
+  sessions           Session[]
+  engagement         StudentEngagement[]
+  feedback           StudentFeedback[]
+  testimonials       Testimonial[]
+  transactions       Transaction[]
+  partnerProfile     UserProfile?
+  userStyles         UserStyle[]
+  host               Host?
 
   @@index([role])
   @@index([createdAt])
@@ -45,53 +47,55 @@ model User {
 }
 
 model Instructor {
-  id               String            @id @default(cuid())
-  userId           String            @unique @map("user_id")
-  specialty        String?
-  experienceYears  Int?              @map("experience_years")
-  rating           Decimal?          @db.Decimal(3, 2)
-  isActive         Boolean           @default(true) @map("is_active")
-  createdAt        DateTime          @default(now()) @map("created_at")
-  updatedAt        DateTime          @updatedAt @map("updated_at")
-  classInstructors     ClassInstructor[]
-  user                 User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  attendanceRecords    ClassAttendance[]
-  feedbackReceived     StudentFeedback[]
-  performanceMetrics   InstructorPerformance[]
-  studentEngagement    StudentEngagement[]
-  classAnalytics       ClassAnalytics[]
+  id                 String                  @id @default(cuid())
+  userId             String                  @unique @map("user_id")
+  specialty          String?
+  experienceYears    Int?                    @map("experience_years")
+  rating             Decimal?                @db.Decimal(3, 2)
+  isActive           Boolean                 @default(true) @map("is_active")
+  createdAt          DateTime                @default(now()) @map("created_at")
+  updatedAt          DateTime                @updatedAt @map("updated_at")
+  classAnalytics     ClassAnalytics[]
+  attendanceRecords  ClassAttendance[]
+  classInstructors   ClassInstructor[]
+  performanceMetrics InstructorPerformance[]
+  user               User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  studentEngagement  StudentEngagement[]
+  feedbackReceived   StudentFeedback[]
 
   @@index([userId])
   @@map("instructors")
 }
 
 model Class {
-  id               String            @id @default(cuid())
+  id               String              @id @default(cuid())
   title            String
   description      String
   level            String
-  durationMins     Int               @map("duration_mins")
-  maxCapacity      Int               @map("max_capacity")
-  price            Decimal           @db.Decimal(10, 2)
-  scheduleDays     String?           @map("schedule_days")
-  scheduleTime     String?           @map("schedule_time")
+  durationMins     Int                 @map("duration_mins")
+  maxCapacity      Int                 @map("max_capacity")
+  price            Decimal             @db.Decimal(10, 2)
+  scheduleDays     String?             @map("schedule_days")
+  scheduleTime     String?             @map("schedule_time")
   requirements     String?
-  imageUrl         String?           @map("image_url")
-  isActive         Boolean           @default(true) @map("is_active")
-  createdAt        DateTime          @default(now()) @map("created_at")
-  updatedAt        DateTime          @updatedAt @map("updated_at")
-  endDate          DateTime?         @map("end_date")
-  startDate        DateTime?         @map("start_date")
-  venueId          String?           @map("venue_id")
-  status           ClassStatus       @default(DRAFT)
+  imageUrl         String?             @map("image_url")
+  isActive         Boolean             @default(true) @map("is_active")
+  createdAt        DateTime            @default(now()) @map("created_at")
+  updatedAt        DateTime            @updatedAt @map("updated_at")
+  endDate          DateTime?           @map("end_date")
+  startDate        DateTime?           @map("start_date")
+  venueId          String?             @map("venue_id")
+  status           ClassStatus         @default(DRAFT)
   bookings         Booking[]
+  analytics        ClassAnalytics[]
+  attendance       ClassAttendance[]
   classInstructors ClassInstructor[]
   classStyles      ClassStyle[]
   venue            Venue?              @relation(fields: [venueId], references: [id])
-  attendance       ClassAttendance[]
-  feedback         StudentFeedback[]
   engagement       StudentEngagement[]
-  analytics        ClassAnalytics[]
+  feedback         StudentFeedback[]
+  host             Host?               @relation("HostClasses", fields: [hostId], references: [id])
+  hostId           String?             @map("host_id")
 
   @@index([createdAt])
   @@index([isActive])
@@ -124,6 +128,8 @@ model Event {
   eventStyles      EventStyle[]
   organizer        User?        @relation(fields: [organizerUserId], references: [id])
   venue            Venue        @relation(fields: [venueId], references: [id])
+  host             Host?        @relation("HostEvents", fields: [hostId], references: [id])
+  hostId           String?      @map("host_id")
 
   @@index([venueId])
   @@index([startDate, startTime])
@@ -144,15 +150,61 @@ model Venue {
   longitude    Decimal? @db.Decimal(9, 6)
   phone        String?
   websiteUrl   String?  @map("website_url")
+  status       VenueStatus @default(DRAFT)
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
   classes      Class[]
   events       Event[]
+  host         Host?   @relation("HostVenues", fields: [hostId], references: [id])
+  hostId       String? @map("host_id")
+  competitionRequests CompetitionRequest[]
 
   @@index([name])
   @@index([city])
   @@index([country])
   @@map("venues")
+}
+
+// New models for Host features
+model Academy {
+  id        String      @id @default(cuid())
+  hostId    String      @map("host_id")
+  name      String
+  description String?
+  website   String?
+  city      String?
+  country   String?
+  logoUrl   String?     @map("logo_url")
+  status    VenueStatus @default(PENDING_APPROVAL)
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+
+  host      Host        @relation(fields: [hostId], references: [id], onDelete: Cascade)
+
+  @@index([hostId])
+  @@index([status])
+  @@map("academies")
+}
+
+model CompetitionRequest {
+  id                    String                     @id @default(cuid())
+  hostId                String                     @map("host_id")
+  name                  String
+  startDate             DateTime                   @map("start_date")
+  endDate               DateTime                   @map("end_date")
+  venueId               String?                    @map("venue_id")
+  description           String?
+  expectedParticipants  Int?                       @map("expected_participants")
+  status                CompetitionRequestStatus   @default(PENDING)
+  createdAt             DateTime                   @default(now()) @map("created_at")
+  updatedAt             DateTime                   @updatedAt @map("updated_at")
+
+  host                  Host                       @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  venue                 Venue?                     @relation(fields: [venueId], references: [id])
+
+  @@index([hostId])
+  @@index([status])
+  @@map("competition_requests")
 }
 
 model ClassInstructor {
@@ -170,30 +222,30 @@ model ClassInstructor {
 }
 
 model Booking {
-  id               String        @id @default(cuid())
-  userId           String        @map("user_id")
-  classId          String?       @map("class_id")
-  eventId          String?       @map("event_id")
-  bookingDate      DateTime      @default(now()) @map("booking_date")
-  status           BookingStatus @default(PENDING)
-  amountPaid       Decimal       @map("amount_paid") @db.Decimal(10, 2)
-  paymentMethod    String?       @map("payment_method")
+  id               String             @id @default(cuid())
+  userId           String             @map("user_id")
+  classId          String?            @map("class_id")
+  eventId          String?            @map("event_id")
+  bookingDate      DateTime           @default(now()) @map("booking_date")
+  status           BookingStatus      @default(PENDING)
+  amountPaid       Decimal            @map("amount_paid") @db.Decimal(10, 2)
+  paymentMethod    String?            @map("payment_method")
   notes            String?
-  createdAt        DateTime      @default(now()) @map("created_at")
-  updatedAt        DateTime      @updatedAt @map("updated_at")
-  confirmationCode String?       @map("confirmation_code")
-  discountAmount   Decimal       @default(0) @map("discount_amount") @db.Decimal(10, 2)
-  paymentStatus    String        @default("pending") @map("payment_status")
-  stripeSessionId  String?       @map("stripe_session_id")
-  taxAmount        Decimal       @default(0) @map("tax_amount") @db.Decimal(10, 2)
-  totalAmount      Decimal       @default(0) @map("total_amount") @db.Decimal(10, 2)
-  class            Class?        @relation(fields: [classId], references: [id], onDelete: Cascade)
-  event            Event?        @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+  confirmationCode String?            @map("confirmation_code")
+  discountAmount   Decimal            @default(0) @map("discount_amount") @db.Decimal(10, 2)
+  paymentStatus    String             @default("pending") @map("payment_status")
+  stripeSessionId  String?            @map("stripe_session_id")
+  taxAmount        Decimal            @default(0) @map("tax_amount") @db.Decimal(10, 2)
+  totalAmount      Decimal            @default(0) @map("total_amount") @db.Decimal(10, 2)
+  class            Class?             @relation(fields: [classId], references: [id], onDelete: Cascade)
+  event            Event?             @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attendance       ClassAttendance?   @relation("BookingAttendance")
+  engagement       StudentEngagement? @relation("BookingEngagement")
+  feedback         StudentFeedback?   @relation("BookingFeedback")
   transactions     Transaction[]
-  attendance       ClassAttendance?    @relation("BookingAttendance")
-  feedback         StudentFeedback?    @relation("BookingFeedback")
-  engagement       StudentEngagement?  @relation("BookingEngagement")
 
   @@index([userId])
   @@index([createdAt])
@@ -549,10 +601,240 @@ model SeoPage {
   @@map("seo_pages")
 }
 
+model ClassAttendance {
+  id           String           @id @default(cuid())
+  bookingId    String           @unique @map("booking_id")
+  classId      String           @map("class_id")
+  userId       String           @map("user_id")
+  instructorId String           @map("instructor_id")
+  status       AttendanceStatus @default(PRESENT)
+  checkedInAt  DateTime?        @map("checked_in_at")
+  checkedOutAt DateTime?        @map("checked_out_at")
+  duration     Int?
+  notes        String?
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
+  booking      Booking          @relation("BookingAttendance", fields: [bookingId], references: [id], onDelete: Cascade)
+  class        Class            @relation(fields: [classId], references: [id], onDelete: Cascade)
+  instructor   Instructor       @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([classId])
+  @@index([instructorId])
+  @@index([userId])
+  @@index([status])
+  @@map("class_attendance")
+}
+
+model StudentFeedback {
+  id               String     @id @default(cuid())
+  bookingId        String     @unique @map("booking_id")
+  classId          String     @map("class_id")
+  userId           String     @map("user_id")
+  instructorId     String     @map("instructor_id")
+  overallRating    Int
+  teachingRating   Int
+  contentRating    Int
+  engagementRating Int
+  difficultyRating Int
+  paceRating       Int
+  comment          String?
+  wouldRecommend   Boolean    @default(true) @map("would_recommend")
+  isPublic         Boolean    @default(false) @map("is_public")
+  createdAt        DateTime   @default(now()) @map("created_at")
+  updatedAt        DateTime   @updatedAt @map("updated_at")
+  booking          Booking    @relation("BookingFeedback", fields: [bookingId], references: [id], onDelete: Cascade)
+  class            Class      @relation(fields: [classId], references: [id], onDelete: Cascade)
+  instructor       Instructor @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([classId])
+  @@index([instructorId])
+  @@index([userId])
+  @@index([overallRating])
+  @@map("student_feedback")
+}
+
+model InstructorPerformance {
+  id                 String     @id @default(cuid())
+  instructorId       String     @map("instructor_id")
+  period             String
+  periodStart        DateTime   @map("period_start")
+  periodEnd          DateTime   @map("period_end")
+  totalClasses       Int        @default(0) @map("total_classes")
+  totalStudents      Int        @default(0) @map("total_students")
+  totalHours         Float      @default(0) @map("total_hours")
+  averageRating      Float?     @map("average_rating")
+  attendanceRate     Float      @default(0) @map("attendance_rate")
+  completionRate     Float      @default(0) @map("completion_rate")
+  retentionRate      Float      @default(0) @map("retention_rate")
+  newStudents        Int        @default(0) @map("new_students")
+  returningStudents  Int        @default(0) @map("returning_students")
+  totalRevenue       Decimal    @default(0) @map("total_revenue") @db.Decimal(10, 2)
+  averageClassSize   Float      @default(0) @map("average_class_size")
+  noShows            Int        @default(0) @map("no_shows")
+  cancellations      Int        @default(0) @map("cancellations")
+  feedbackCount      Int        @default(0) @map("feedback_count")
+  recommendationRate Float      @default(0) @map("recommendation_rate")
+  createdAt          DateTime   @default(now()) @map("created_at")
+  updatedAt          DateTime   @updatedAt @map("updated_at")
+  instructor         Instructor @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+
+  @@unique([instructorId, period, periodStart])
+  @@index([instructorId])
+  @@index([period])
+  @@index([periodStart])
+  @@map("instructor_performance")
+}
+
+model StudentEngagement {
+  id                  String          @id @default(cuid())
+  userId              String          @map("user_id")
+  instructorId        String          @map("instructor_id")
+  classId             String          @map("class_id")
+  bookingId           String          @unique @map("booking_id")
+  engagementLevel     EngagementLevel @default(NEUTRAL)
+  participationScore  Int             @default(0) @map("participation_score")
+  attentionScore      Int             @default(0) @map("attention_score")
+  improvementProgress Float           @default(0) @map("improvement_progress")
+  questionsAsked      Int             @default(0) @map("questions_asked")
+  helpRequested       Int             @default(0) @map("help_requested")
+  practiceTime        Int             @default(0) @map("practice_time")
+  strugglingAreas     String?         @map("struggling_areas")
+  strengths           String?
+  notes               String?
+  createdAt           DateTime        @default(now()) @map("created_at")
+  updatedAt           DateTime        @updatedAt @map("updated_at")
+  booking             Booking         @relation("BookingEngagement", fields: [bookingId], references: [id], onDelete: Cascade)
+  class               Class           @relation(fields: [classId], references: [id], onDelete: Cascade)
+  instructor          Instructor      @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+  user                User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([instructorId])
+  @@index([classId])
+  @@index([engagementLevel])
+  @@map("student_engagement")
+}
+
+model ClassAnalytics {
+  id                  String     @id @default(cuid())
+  classId             String     @map("class_id")
+  instructorId        String     @map("instructor_id")
+  date                DateTime
+  totalBookings       Int        @default(0) @map("total_bookings")
+  actualAttendees     Int        @default(0) @map("actual_attendees")
+  noShows             Int        @default(0) @map("no_shows")
+  lateArrivals        Int        @default(0) @map("late_arrivals")
+  earlyDepartures     Int        @default(0) @map("early_departures")
+  averageDuration     Float      @default(0) @map("average_duration")
+  energyLevel         Int        @default(0) @map("energy_level")
+  difficultyLevel     Int        @default(0) @map("difficulty_level")
+  paceRating          Float      @default(0) @map("pace_rating")
+  studentSatisfaction Float      @default(0) @map("student_satisfaction")
+  revenue             Decimal    @default(0) @map("revenue") @db.Decimal(10, 2)
+  notes               String?
+  weatherCondition    String?    @map("weather_condition")
+  specialEvents       String?    @map("special_events")
+  createdAt           DateTime   @default(now()) @map("created_at")
+  updatedAt           DateTime   @updatedAt @map("updated_at")
+  class               Class      @relation(fields: [classId], references: [id], onDelete: Cascade)
+  instructor          Instructor @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+
+  @@unique([classId, date])
+  @@index([classId])
+  @@index([instructorId])
+  @@index([date])
+  @@map("class_analytics")
+}
+
+model LoginToken {
+  id              String         @id @default(cuid())
+  token           String         @unique
+  name            String?
+  purpose         String?
+  createdByUserId String?        @map("created_by_user_id")
+  maxUses         Int?           @map("max_uses")
+  usedCount       Int            @default(0) @map("used_count")
+  expiresAt       DateTime?      @map("expires_at")
+  isActive        Boolean        @default(true) @map("is_active")
+  allowedRoles    String[]       @map("allowed_roles")
+  metadata        String?
+  lastUsedAt      DateTime?      @map("last_used_at")
+  lastUsedIp      String?        @map("last_used_ip")
+  lastUserAgent   String?        @map("last_user_agent")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+  loginAttempts   LoginAttempt[]
+  createdByUser   User?          @relation("CreatedLoginTokens", fields: [createdByUserId], references: [id])
+
+  @@index([token])
+  @@index([createdByUserId])
+  @@index([isActive])
+  @@index([expiresAt])
+  @@index([purpose])
+  @@map("login_tokens")
+}
+
+model LoginAttempt {
+  id            String     @id @default(cuid())
+  tokenId       String     @map("token_id")
+  email         String?
+  success       Boolean
+  failureReason String?    @map("failure_reason")
+  ipAddress     String     @map("ip_address")
+  userAgent     String?    @map("user_agent")
+  userId        String?    @map("user_id")
+  metadata      String?
+  createdAt     DateTime   @default(now()) @map("created_at")
+  token         LoginToken @relation(fields: [tokenId], references: [id], onDelete: Cascade)
+  user          User?      @relation(fields: [userId], references: [id])
+
+  @@index([tokenId])
+  @@index([userId])
+  @@index([success])
+  @@index([createdAt])
+  @@map("login_attempts")
+}
+
+model Host {
+  id                 String              @id @default(cuid())
+  userId             String              @unique @map("user_id")
+  businessName       String              @map("business_name")
+  businessType       String              @map("business_type")
+  description        String?
+  experienceYears    Int?                @map("experience_years")
+  country            String
+  city               String
+  isVerified         Boolean             @default(false) @map("is_verified")
+  isApproved         Boolean             @default(false) @map("is_approved")
+  applicationStatus  HostApplicationStatus @default(PENDING) @map("application_status")
+  rejectionReason    String?             @map("rejection_reason")
+  approvedAt         DateTime?           @map("approved_at")
+  approvedByUserId   String?             @map("approved_by_user_id")
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @updatedAt @map("updated_at")
+  
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  approvedBy         User?               @relation("ApprovedHosts", fields: [approvedByUserId], references: [id])
+  venues             Venue[]             @relation("HostVenues")
+  classes            Class[]             @relation("HostClasses")
+  events             Event[]             @relation("HostEvents")
+  academies          Academy[]
+  competitionRequests CompetitionRequest[]
+  
+  @@index([userId])
+  @@index([isApproved])
+  @@index([applicationStatus])
+  @@index([country, city])
+  @@map("hosts")
+}
+
 enum UserRole {
   USER
   INSTRUCTOR
   ADMIN
+  HOST
 }
 
 enum EventStatus {
@@ -577,7 +859,6 @@ enum BookingStatus {
 
 enum PaymentProvider {
   STRIPE
-  WISE
   PAYPAL
   OTHER
 }
@@ -637,213 +918,22 @@ enum EngagementLevel {
   HIGH
 }
 
-// Performance and Engagement Tracking Models
-model ClassAttendance {
-  id           String              @id @default(cuid())
-  bookingId    String              @unique @map("booking_id")
-  classId      String              @map("class_id")
-  userId       String              @map("user_id")
-  instructorId String              @map("instructor_id")
-  status       AttendanceStatus    @default(PRESENT)
-  checkedInAt  DateTime?           @map("checked_in_at")
-  checkedOutAt DateTime?           @map("checked_out_at")
-  duration     Int?                // Duration in minutes
-  notes        String?
-  createdAt    DateTime            @default(now()) @map("created_at")
-  updatedAt    DateTime            @updatedAt @map("updated_at")
-  booking      Booking             @relation("BookingAttendance", fields: [bookingId], references: [id], onDelete: Cascade)
-  class        Class               @relation(fields: [classId], references: [id], onDelete: Cascade)
-  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  instructor   Instructor          @relation(fields: [instructorId], references: [id], onDelete: Cascade)
-
-  @@index([classId])
-  @@index([instructorId])
-  @@index([userId])
-  @@index([status])
-  @@map("class_attendance")
+enum HostApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
 }
 
-model StudentFeedback {
-  id                String          @id @default(cuid())
-  bookingId         String          @unique @map("booking_id")
-  classId           String          @map("class_id")
-  userId            String          @map("user_id")
-  instructorId      String          @map("instructor_id")
-  overallRating     Int             // 1-5 stars
-  teachingRating    Int             // 1-5 stars
-  contentRating     Int             // 1-5 stars
-  engagementRating  Int             // 1-5 stars
-  difficultyRating  Int             // 1-5 stars (1 = too easy, 3 = just right, 5 = too hard)
-  paceRating        Int             // 1-5 stars (1 = too slow, 3 = just right, 5 = too fast)
-  comment           String?
-  wouldRecommend    Boolean         @default(true) @map("would_recommend")
-  isPublic          Boolean         @default(false) @map("is_public")
-  createdAt         DateTime        @default(now()) @map("created_at")
-  updatedAt         DateTime        @updatedAt @map("updated_at")
-  booking           Booking         @relation("BookingFeedback", fields: [bookingId], references: [id], onDelete: Cascade)
-  class             Class           @relation(fields: [classId], references: [id], onDelete: Cascade)
-  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  instructor        Instructor      @relation(fields: [instructorId], references: [id], onDelete: Cascade)
-
-  @@index([classId])
-  @@index([instructorId])
-  @@index([userId])
-  @@index([overallRating])
-  @@map("student_feedback")
+enum VenueStatus {
+  DRAFT
+  PENDING_APPROVAL
+  PUBLISHED
+  REJECTED
 }
 
-model InstructorPerformance {
-  id                    String      @id @default(cuid())
-  instructorId          String      @map("instructor_id")
-  period                String      // 'daily', 'weekly', 'monthly', 'yearly'
-  periodStart           DateTime    @map("period_start")
-  periodEnd             DateTime    @map("period_end")
-  totalClasses          Int         @default(0) @map("total_classes")
-  totalStudents         Int         @default(0) @map("total_students")
-  totalHours            Float       @default(0) @map("total_hours")
-  averageRating         Float?      @map("average_rating")
-  attendanceRate        Float       @default(0) @map("attendance_rate") // Percentage
-  completionRate        Float       @default(0) @map("completion_rate") // Percentage
-  retentionRate         Float       @default(0) @map("retention_rate") // Percentage
-  newStudents           Int         @default(0) @map("new_students")
-  returningStudents     Int         @default(0) @map("returning_students")
-  totalRevenue          Decimal     @default(0) @map("total_revenue") @db.Decimal(10, 2)
-  averageClassSize      Float       @default(0) @map("average_class_size")
-  noShows               Int         @default(0) @map("no_shows")
-  cancellations         Int         @default(0) @map("cancellations")
-  feedbackCount         Int         @default(0) @map("feedback_count")
-  recommendationRate    Float       @default(0) @map("recommendation_rate") // Percentage
-  createdAt             DateTime    @default(now()) @map("created_at")
-  updatedAt             DateTime    @updatedAt @map("updated_at")
-  instructor            Instructor  @relation(fields: [instructorId], references: [id], onDelete: Cascade)
-
-  @@unique([instructorId, period, periodStart])
-  @@index([instructorId])
-  @@index([period])
-  @@index([periodStart])
-  @@map("instructor_performance")
-}
-
-model StudentEngagement {
-  id                    String          @id @default(cuid())
-  userId                String          @map("user_id")
-  instructorId          String          @map("instructor_id")
-  classId               String          @map("class_id")
-  bookingId             String          @unique @map("booking_id")
-  engagementLevel       EngagementLevel @default(NEUTRAL)
-  participationScore    Int             @default(0) @map("participation_score") // 0-100
-  attentionScore        Int             @default(0) @map("attention_score") // 0-100
-  improvementProgress   Float           @default(0) @map("improvement_progress") // 0-100 percentage
-  questionsAsked        Int             @default(0) @map("questions_asked")
-  helpRequested         Int             @default(0) @map("help_requested")
-  practiceTime          Int             @default(0) @map("practice_time") // Minutes
-  strugglingAreas       String?         @map("struggling_areas") // JSON array of areas
-  strengths             String?         // JSON array of strengths
-  notes                 String?
-  createdAt             DateTime        @default(now()) @map("created_at")
-  updatedAt             DateTime        @updatedAt @map("updated_at")
-  user                  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  instructor            Instructor      @relation(fields: [instructorId], references: [id], onDelete: Cascade)
-  class                 Class           @relation(fields: [classId], references: [id], onDelete: Cascade)
-  booking               Booking         @relation("BookingEngagement", fields: [bookingId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([instructorId])
-  @@index([classId])
-  @@index([engagementLevel])
-  @@map("student_engagement")
-}
-
-model ClassAnalytics {
-  id                  String      @id @default(cuid())
-  classId             String      @map("class_id")
-  instructorId        String      @map("instructor_id")
-  date                DateTime
-  totalBookings       Int         @default(0) @map("total_bookings")
-  actualAttendees     Int         @default(0) @map("actual_attendees")
-  noShows             Int         @default(0) @map("no_shows")
-  lateArrivals        Int         @default(0) @map("late_arrivals")
-  earlyDepartures     Int         @default(0) @map("early_departures")
-  averageDuration     Float       @default(0) @map("average_duration") // Minutes
-  energyLevel         Int         @default(0) @map("energy_level") // 1-10
-  difficultyLevel     Int         @default(0) @map("difficulty_level") // 1-10
-  paceRating          Float       @default(0) @map("pace_rating") // Average from feedback
-  studentSatisfaction Float       @default(0) @map("student_satisfaction") // Average rating
-  revenue             Decimal     @default(0) @map("revenue") @db.Decimal(10, 2)
-  notes               String?
-  weatherCondition    String?     @map("weather_condition")
-  specialEvents       String?     @map("special_events") // JSON array
-  createdAt           DateTime    @default(now()) @map("created_at")
-  updatedAt           DateTime    @updatedAt @map("updated_at")
-  class               Class       @relation(fields: [classId], references: [id], onDelete: Cascade)
-  instructor          Instructor  @relation(fields: [instructorId], references: [id], onDelete: Cascade)
-
-  @@unique([classId, date])
-  @@index([classId])
-  @@index([instructorId])
-  @@index([date])
-  @@map("class_analytics")
-}
-
-// Login Token Model for Unique Login URLs
-model LoginToken {
-  id              String     @id @default(cuid())
-  token           String     @unique // Unique token for the login URL
-  name            String?    // Optional name/description for the token
-  purpose         String?    // Purpose: 'marketing', 'campaign', 'referral', 'admin', etc.
-  createdByUserId String?    @map("created_by_user_id") // Admin who created this token
-  
-  // Usage restrictions
-  maxUses         Int?       @map("max_uses") // Maximum number of uses (null = unlimited)
-  usedCount       Int        @default(0) @map("used_count") // How many times it's been used
-  expiresAt       DateTime?  @map("expires_at") // Optional expiration date
-  
-  // Access control
-  isActive        Boolean    @default(true) @map("is_active")
-  allowedRoles    String[]   @map("allowed_roles") // Roles allowed to use this token
-  
-  // Tracking fields
-  metadata        String?    // JSON metadata (campaign info, utm params, etc.)
-  lastUsedAt      DateTime?  @map("last_used_at")
-  lastUsedIp      String?    @map("last_used_ip")
-  lastUserAgent   String?    @map("last_user_agent")
-  
-  // Timestamps
-  createdAt       DateTime   @default(now()) @map("created_at")
-  updatedAt       DateTime   @updatedAt @map("updated_at")
-  
-  // Relations
-  createdByUser   User?      @relation("CreatedLoginTokens", fields: [createdByUserId], references: [id], onDelete: SetNull)
-  loginAttempts   LoginAttempt[]
-  
-  @@index([token])
-  @@index([createdByUserId])
-  @@index([isActive])
-  @@index([expiresAt])
-  @@index([purpose])
-  @@map("login_tokens")
-}
-
-// Track login attempts via unique URLs
-model LoginAttempt {
-  id           String      @id @default(cuid())
-  tokenId      String      @map("token_id")
-  email        String?
-  success      Boolean
-  failureReason String?    @map("failure_reason")
-  ipAddress    String      @map("ip_address")
-  userAgent    String?     @map("user_agent")
-  userId       String?     @map("user_id") // Set if login was successful
-  metadata     String?     // Additional tracking data (referrer, utm params, etc.)
-  createdAt    DateTime    @default(now()) @map("created_at")
-  
-  // Relations
-  token        LoginToken  @relation(fields: [tokenId], references: [id], onDelete: Cascade)
-  user         User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
-  
-  @@index([tokenId])
-  @@index([userId])
-  @@index([success])
-  @@index([createdAt])
-  @@map("login_attempts")
+enum CompetitionRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
