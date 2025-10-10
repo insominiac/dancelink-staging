@@ -100,8 +100,7 @@ export default function EnhancedGuestBookingForm({ item, isAvailable }: Enhanced
       <div>
         <button
           onClick={() => setShowForm(true)}
-          className="w-full py-4 rounded-full font-semibold bg-white hover:transform hover:-translate-y-1 hover:shadow-lg transition-all"
-          style={{ color: 'var(--primary-dark)' }}
+          className="dance-btn dance-btn-primary w-full"
         >
           Book {item.type === 'class' ? 'Class' : 'Event'} Now
         </button>
@@ -114,12 +113,12 @@ export default function EnhancedGuestBookingForm({ item, isAvailable }: Enhanced
 
   // Booking Information Step
   return (
-      <div className="guest-booking-form">
+      <div className="guest-booking-form bg-white border border-gray-200 rounded-2xl p-5">
         <div className="mb-4">
-          <h3 className="text-lg font-semibold mb-2">Book {item.title}</h3>
-          <p className="text-sm opacity-80">Price: ${item.price}</p>
+          <h3 className="text-lg font-semibold mb-2" style={{color: 'var(--primary-dark)'}}>Book {item.title}</h3>
+          <p className="text-sm text-gray-600">Price: ${item.price}</p>
           {item.spotsLeft && (
-            <p className="text-sm opacity-80">{item.spotsLeft} spots remaining</p>
+            <p className="text-sm text-gray-600">{item.spotsLeft} spots remaining</p>
           )}
         </div>
 
@@ -133,14 +132,14 @@ export default function EnhancedGuestBookingForm({ item, isAvailable }: Enhanced
           {/* Personal Information */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1 opacity-90">Full Name *</label>
+              <label className="block text-sm font-medium mb-1" style={{color: 'var(--primary-dark)'}}>Full Name *</n
               <input
                 type="text"
                 name="name"
                 required
                 value={formData.name}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 rounded-lg border bg-white/10 border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
+                className="mt-1 w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
                 placeholder="Your full name"
               />
             </div>
@@ -152,7 +151,7 @@ export default function EnhancedGuestBookingForm({ item, isAvailable }: Enhanced
                 required
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 rounded-lg border bg-white/10 border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
+                className="mt-1 w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
                 placeholder="your.email@example.com"
               />
             </div>
@@ -167,7 +166,7 @@ export default function EnhancedGuestBookingForm({ item, isAvailable }: Enhanced
                 required
                 value={formData.phone}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 rounded-lg border bg-white/10 border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
+                className="mt-1 w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
                 placeholder="(555) 123-4567"
               />
             </div>
@@ -177,7 +176,7 @@ export default function EnhancedGuestBookingForm({ item, isAvailable }: Enhanced
                 name="experience"
                 value={formData.experience}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 rounded-lg border bg-white/10 border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-white/50"
+                className="mt-1 w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
               >
                 <option value="beginner" className="text-black">Beginner</option>
                 <option value="intermediate" className="text-black">Intermediate</option>
@@ -197,7 +196,7 @@ export default function EnhancedGuestBookingForm({ item, isAvailable }: Enhanced
                 required
                 value={formData.emergencyContact}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 rounded-lg border bg-white/10 border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
+                className="mt-1 w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
                 placeholder="Emergency contact name"
               />
             </div>
@@ -209,7 +208,7 @@ export default function EnhancedGuestBookingForm({ item, isAvailable }: Enhanced
                 required
                 value={formData.emergencyPhone}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 rounded-lg border bg-white/10 border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
+                className="mt-1 w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
                 placeholder="Emergency contact phone"
               />
             </div>
@@ -223,7 +222,7 @@ export default function EnhancedGuestBookingForm({ item, isAvailable }: Enhanced
               rows={3}
               value={formData.notes}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 rounded-lg border bg-white/10 border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
+              className="mt-1 w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
               placeholder="Any special requirements, dietary restrictions, or questions..."
             />
           </div>
@@ -236,15 +235,15 @@ export default function EnhancedGuestBookingForm({ item, isAvailable }: Enhanced
               name="agreeToTerms"
               checked={formData.agreeToTerms}
               onChange={handleInputChange}
-              className="rounded border-white/20 bg-white/10 text-white focus:ring-white/50"
+              className="rounded border-gray-300 text-yellow-500 focus:ring-yellow-400"
             />
-            <label htmlFor="agreeToTerms" className="text-sm opacity-90">
+            <label htmlFor="agreeToTerms" className="text-sm text-gray-700">
               I agree to the{' '}
-              <a href="/terms" target="_blank" className="underline hover:opacity-80">
+              <a href="/terms" target="_blank" className="underline text-purple-600 hover:text-purple-700">
                 terms and conditions
               </a>{' '}
               and{' '}
-              <a href="/privacy" target="_blank" className="underline hover:opacity-80">
+              <a href="/privacy" target="_blank" className="underline text-purple-600 hover:text-purple-700">
                 privacy policy
               </a>
             </label>
@@ -254,15 +253,14 @@ export default function EnhancedGuestBookingForm({ item, isAvailable }: Enhanced
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className="flex-1 py-3 rounded-full font-semibold bg-white/20 hover:bg-white/30 transition-colors"
+              className="dance-btn dance-btn-secondary flex-1 text-center"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 py-3 rounded-full font-semibold bg-white hover:bg-white/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ color: 'var(--primary-dark)' }}
+              className="dance-btn dance-btn-primary flex-1 text-center disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <div className="flex items-center justify-center">
