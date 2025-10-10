@@ -10,11 +10,14 @@ sequenceDiagram
   FE->>PUB: Create/find user by email
   PUB-->>FE: userId
   FE->>SES: paymentProvider=WISE, itemId, userId, recipientDetails
-  SES->>DB: Create Booking (PENDING) + Transaction (CREATED)
+  SES->>DB: Create Booking (PENDING)
+  SES->>DB: Create Transaction (CREATED)
   SES->>W: Create quote, recipient, transfer
   W-->>SES: transferId, status=processing
   SES-->>FE: transferId, booking info
   G->>FE: Redirect to /booking/wise-payment for instructions
   W-->>WH: transfer.state-change (funds_converted)
-  WH->>DB: Update Transaction=SUCCEEDED, Booking=CONFIRMED, paymentStatus=succeeded
+  WH->>DB: Update Transaction to SUCCEEDED
+  WH->>DB: Update Booking to CONFIRMED
+  WH->>DB: Set paymentStatus to succeeded
   WH-->>W: 200 OK

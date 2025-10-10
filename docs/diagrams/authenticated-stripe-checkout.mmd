@@ -7,12 +7,16 @@ sequenceDiagram
   participant DB as Prisma DB
   U->>FE: Click Book on class/event
   FE->>API: bookingType, itemId, userId, successUrl, cancelUrl
-  API->>DB: Create Booking (PENDING), Transaction (CREATED)
+  API->>DB: Create Booking (PENDING)
+  API->>DB: Create Transaction (CREATED)
   API->>S: Create Checkout Session
   S-->>API: session.id, session.url
   API-->>FE: Return sessionUrl
   FE->>S: Redirect to Stripe Checkout
   S-->>WH: checkout.session.completed
-  WH->>DB: Update Booking=CONFIRMED, paymentStatus=succeeded; Transaction=SUCCEEDED; increment counts
+  WH->>DB: Update Booking to CONFIRMED
+  WH->>DB: Set paymentStatus to succeeded
+  WH->>DB: Update Transaction to SUCCEEDED
+  WH->>DB: Increment attendance counts
   WH-->>S: 200 OK
   U->>FE: Redirect to /booking/confirmation/{CHECKOUT_SESSION_ID}
