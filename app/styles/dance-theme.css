@@ -1178,6 +1178,35 @@ html {
   transform: translateY(-2px);
 }
 
+/* Compact button variants for better spacing */
+.dance-btn.text-sm {
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  min-height: auto;
+  line-height: 1.2;
+}
+
+/* Ensure proper button spacing in flex containers */
+.dance-btn + .dance-btn {
+  margin-left: 0.5rem;
+}
+
+/* Mobile responsive adjustments for compact buttons */
+@media (max-width: 768px) {
+  .dance-btn.text-sm {
+    font-size: 0.8rem;
+    padding: 10px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dance-btn.text-sm {
+    font-size: 0.75rem;
+    padding: 8px 12px;
+  }
+}
+
 /* Reusable gradient background block for CTA/Newsletter */
 .dance-hero-gradient {
   background: linear-gradient(135deg, var(--primary-gold), var(--accent-rose));

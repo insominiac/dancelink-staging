@@ -263,7 +263,7 @@ export default function EventsClient({
                           <span className="text-3xl font-bold" style={{color: 'var(--primary-dark)'}}>${event.price}</span>
                           <span className="text-sm ml-1" style={{color: 'var(--neutral-gray)'}}>{isMounted ? t('events.perPerson') : '/person'}</span>
                         </div>
-                        <Link href={`/events/${event.id}`} className="dance-btn dance-btn-accent hover:transform hover:scale-105 transition-all duration-300 px-8 py-3">
+                        <Link href={`/events/${event.id}`} className="dance-btn dance-btn-accent hover:transform hover:scale-105 transition-all duration-300 px-4 py-2 text-sm">
                           {isMounted ? t('ui.viewDetails') : 'View Details'}
                         </Link>
                       </div>
@@ -290,7 +290,7 @@ export default function EventsClient({
                   className="dance-search-input"
                 />
               </div>
-              <button onClick={() => {}} className="dance-btn dance-btn-accent hover:transform hover:scale-105 transition-all duration-300">
+              <button onClick={() => {}} className="dance-btn dance-btn-accent hover:transform hover:scale-105 transition-all duration-300 px-4 py-2 text-sm">
                 {isMounted ? t('events.searchEvents') : 'Search Events'}
               </button>
             </div>
@@ -311,7 +311,7 @@ export default function EventsClient({
                 <option value="50-100">{isMounted ? t('events.priceRanges.from50to100') : '$50 - $100'}</option>
                 <option value="100-9999">{isMounted ? t('events.priceRanges.over100') : 'Over $100'}</option>
               </select>
-              <button onClick={() => { setFilters({ eventType: 'all', month: 'all', priceRange: 'all' }); setSearchTerm('') }} className="dance-btn dance-btn-secondary hover:transform hover:scale-105 transition-all duration-300">
+              <button onClick={() => { setFilters({ eventType: 'all', month: 'all', priceRange: 'all' }); setSearchTerm('') }} className="dance-btn dance-btn-secondary hover:transform hover:scale-105 transition-all duration-300 px-4 py-2 text-sm">
                 Clear Filters
               </button>
             </div>
@@ -400,12 +400,12 @@ export default function EventsClient({
                         <span className="text-3xl font-bold" style={{color: 'var(--primary-dark)'}}>${event.price}</span>
                         <span className="text-sm ml-1" style={{color: 'var(--neutral-gray)'}}>/person</span>
                       </div>
-                      <div className="flex gap-3">
-                        <Link href={`/events/${event.id}`} className="dance-btn dance-btn-secondary hover:transform hover:scale-105 transition-all duration-300 px-6 py-3">{isMounted ? t('ui.viewDetails') : 'Details'}</Link>
+                      <div className="flex gap-2">
+                        <Link href={`/events/${event.id}`} className="dance-btn dance-btn-secondary hover:transform hover:scale-105 transition-all duration-300 px-3 py-2 text-sm">{isMounted ? t('ui.viewDetails') : 'Details'}</Link>
                         {spotsLeft > 0 ? (
-                          <Link href={`/events/${event.id}`} className="dance-btn dance-btn-accent hover:transform hover:scale-105 transition-all duration-300 px-6 py-3">{isMounted ? t('ui.bookNow') : 'Book Now'}</Link>
+                          <Link href={`/events/${event.id}`} className="dance-btn dance-btn-accent hover:transform hover:scale-105 transition-all duration-300 px-4 py-2 text-sm">{isMounted ? t('ui.bookNow') : 'Book Now'}</Link>
                         ) : (
-                          <button className="dance-btn px-6 py-3" style={{backgroundColor: 'var(--neutral-gray)', color: 'white', cursor: 'not-allowed'}}>{isMounted ? t('events.soldOut') : 'Sold Out'}</button>
+                          <button className="dance-btn px-4 py-2 text-sm" style={{backgroundColor: 'var(--neutral-gray)', color: 'white', cursor: 'not-allowed'}}>{isMounted ? t('events.soldOut') : 'Sold Out'}</button>
                         )}
                       </div>
                     </div>
@@ -424,7 +424,7 @@ export default function EventsClient({
                 <div className="text-6xl mb-4">🎉</div>
                 <h3 className="text-2xl font-bold mb-4" style={{color: 'var(--primary-dark)'}}>No events found</h3>
                 <p className="text-lg mb-6" style={{color: 'var(--neutral-gray)'}}>No events match your search criteria. Try adjusting your filters or search terms.</p>
-                <button onClick={() => { setFilters({ eventType: 'all', month: 'all', priceRange: 'all' }); setSearchTerm('') }} className="dance-btn dance-btn-accent hover:transform hover:scale-105 transition-all duration-300">Clear All Filters</button>
+                <button onClick={() => { setFilters({ eventType: 'all', month: 'all', priceRange: 'all' }); setSearchTerm('') }} className="dance-btn dance-btn-accent hover:transform hover:scale-105 transition-all duration-300 px-4 py-2 text-sm">Clear All Filters</button>
               </div>
             </div>
           )}
@@ -444,8 +444,8 @@ export default function EventsClient({
               <h3 className="text-4xl sm:text-5xl font-bold text-white mb-6 dance-font">{pageContent.ctaTitle ? <TranslatedText text={pageContent.ctaTitle} /> : null}</h3>
               <p className="text-xl sm:text-2xl mb-8 max-w-3xl mx-auto leading-relaxed" style={{color: 'var(--neutral-light)'}}>{pageContent.ctaDescription ? <TranslatedText text={pageContent.ctaDescription} /> : null}</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                <Link href={pageContent.ctaButtons.primary.href} className="dance-btn dance-btn-accent hover:transform hover:scale-105 hover:shadow-2xl transition-all duration-300">{pageContent.ctaButtons.primary.text ? <TranslatedText text={pageContent.ctaButtons.primary.text} /> : null}</Link>
-                <Link href={pageContent.ctaButtons.secondary.href} className="dance-btn dance-btn-outline hover:transform hover:scale-105 hover:shadow-2xl transition-all duration-300">{pageContent.ctaButtons.secondary.text ? <TranslatedText text={pageContent.ctaButtons.secondary.text} /> : null}</Link>
+                <Link href={pageContent.ctaButtons.primary.href} className="dance-btn dance-btn-accent hover:transform hover:scale-105 hover:shadow-2xl transition-all duration-300 px-6 py-3">{pageContent.ctaButtons.primary.text ? <TranslatedText text={pageContent.ctaButtons.primary.text} /> : null}</Link>
+                <Link href={pageContent.ctaButtons.secondary.href} className="dance-btn dance-btn-outline hover:transform hover:scale-105 hover:shadow-2xl transition-all duration-300 px-6 py-3">{pageContent.ctaButtons.secondary.text ? <TranslatedText text={pageContent.ctaButtons.secondary.text} /> : null}</Link>
               </div>
               <div className="dance-card-grid">
                 {pageContent.ctaFeatures.map((feature, index) => (
