@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
 import { Search, Filter, Users, MapPin, Calendar, Star, Heart, ArrowRight, X } from 'lucide-react'
 import '@/lib/i18n' // Initialize i18n
+import TranslatedText from '@/app/components/TranslatedText'
 
 interface DanceStyle {
   id: string
@@ -249,19 +250,19 @@ export default function PartnerMatchPage() {
   })
 
   const experienceLevels = [
-    { value: '', label: 'All Experience Levels' },
-    { value: 'BEGINNER', label: 'Beginner' },
-    { value: 'INTERMEDIATE', label: 'Intermediate' },
-    { value: 'ADVANCED', label: 'Advanced' },
-    { value: 'PROFESSIONAL', label: 'Professional' }
+    { value: '', label: t('All Experience Levels') || 'All Experience Levels' },
+    { value: 'BEGINNER', label: t('Beginner') || 'Beginner' },
+    { value: 'INTERMEDIATE', label: t('Intermediate') || 'Intermediate' },
+    { value: 'ADVANCED', label: t('Advanced') || 'Advanced' },
+    { value: 'PROFESSIONAL', label: t('Professional') || 'Professional' }
   ]
 
   const lookingForOptions = [
-    { value: '', label: 'All Partnership Types' },
-    { value: 'PRACTICE_PARTNER', label: 'Practice Partner' },
-    { value: 'COMPETITION_PARTNER', label: 'Competition Partner' },
-    { value: 'SOCIAL_PARTNER', label: 'Social Dancing Partner' },
-    { value: 'LEARNING_BUDDY', label: 'Learning Partner' }
+    { value: '', label: t('All Partnership Types') || 'All Partnership Types' },
+    { value: 'PRACTICE_PARTNER', label: t('Practice Partner') || 'Practice Partner' },
+    { value: 'COMPETITION_PARTNER', label: t('Competition Partner') || 'Competition Partner' },
+    { value: 'SOCIAL_PARTNER', label: t('Social Dancing Partner') || 'Social Dancing Partner' },
+    { value: 'LEARNING_BUDDY', label: t('Learning Partner') || 'Learning Partner' }
   ]
 
   useEffect(() => {
@@ -437,7 +438,7 @@ export default function PartnerMatchPage() {
   }
 
   const getLookingForDisplay = (lookingForArray: string[]) => {
-    if (!lookingForArray || lookingForArray.length === 0) return 'Not specified'
+    if (!lookingForArray || lookingForArray.length === 0) return t('Not specified') || 'Not specified'
     
     return lookingForArray.map(item => {
       const option = lookingForOptions.find(l => l.value === item)
@@ -466,10 +467,10 @@ export default function PartnerMatchPage() {
         <div className="dance-container text-center">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6" style={{ fontFamily: 'Dancing Script, cursive' }}>
-              Find Your Perfect Dance Partner
+              <TranslatedText text="Find Your Perfect Dance Partner" />
             </h1>
             <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
-              Connect with passionate dancers in your area. Whether you're looking for a practice partner, competition partner, or social dancing buddy, find your perfect match here.
+              <TranslatedText text="Connect with passionate dancers in your area. Whether you're looking for a practice partner, competition partner, or social dancing buddy, find your perfect match here." />
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
@@ -480,7 +481,7 @@ export default function PartnerMatchPage() {
                   color: 'var(--primary-dark)'
                 }}
               >
-                Create Your Profile
+                <TranslatedText text="Create Your Profile" />
               </Link>
               <button
                 onClick={() => document.getElementById('search-section')?.scrollIntoView({ behavior: 'smooth' })}
@@ -493,7 +494,7 @@ export default function PartnerMatchPage() {
                   e.currentTarget.style.color = 'white'
                 }}
               >
-                Browse Partners
+                <TranslatedText text="Browse Partners" />
               </button>
             </div>
           </div>
@@ -515,7 +516,7 @@ export default function PartnerMatchPage() {
                   <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <input
                     type="text"
-                    placeholder="🔍 Search by name, style, or location..."
+                    placeholder={t('Search by name, style, or location...') || '🔍 Search by name, style, or location...'}
                     value={filters.search}
                     onChange={(e) => setFilters({ ...filters, search: e.target.value })}
                     onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
@@ -549,7 +550,7 @@ export default function PartnerMatchPage() {
                     e.currentTarget.style.boxShadow = 'none'
                   }}
                 >
-                  Search Partners
+                  <TranslatedText text="Search Partners" />
                 </button>
               </div>
               
@@ -561,7 +562,7 @@ export default function PartnerMatchPage() {
                   style={{ borderColor: 'var(--neutral-light)' }}
                 >
                   <Filter className="h-4 w-4" />
-                  Advanced Filters
+                  <TranslatedText text="Advanced Filters" />
                   {Object.values(filters).some(v => v) && (
                     <span 
                       className="text-white rounded-full px-2 py-1 text-xs font-bold"
@@ -579,7 +580,7 @@ export default function PartnerMatchPage() {
               <div className="bg-gray-50 rounded-lg p-6 mb-6" style={{ border: '1px solid var(--neutral-light)' }}>
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="font-semibold text-lg" style={{ color: 'var(--primary-dark)' }}>
-                    Search Filters
+                    <TranslatedText text="Search Filters" />
                   </h3>
                   <button
                     onClick={() => setShowFilters(false)}
@@ -591,7 +592,7 @@ export default function PartnerMatchPage() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Experience Level</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2"><TranslatedText text="Experience Level" /></label>
                     <select
                       value={filters.experienceLevel}
                       onChange={(e) => handleFilterChange('experienceLevel', e.target.value)}
@@ -604,10 +605,10 @@ export default function PartnerMatchPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2"><TranslatedText text="Location" /></label>
                     <input
                       type="text"
-                      placeholder="City, State or Country"
+                      placeholder={t('City, State or Country') || 'City, State or Country'}
                       value={filters.location}
                       onChange={(e) => handleFilterChange('location', e.target.value)}
                       className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
@@ -615,13 +616,13 @@ export default function PartnerMatchPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Dance Style</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2"><TranslatedText text="Dance Style" /></label>
                     <select
                       value={filters.danceStyleId}
                       onChange={(e) => handleFilterChange('danceStyleId', e.target.value)}
                       className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
                     >
-                      <option value="">All Dance Styles</option>
+                      <option value="">{t('All Dance Styles') || 'All Dance Styles'}</option>
                       {availableDanceStyles.map(style => (
                         <option key={style.id} value={style.id}>{style.name}</option>
                       ))}
@@ -629,7 +630,7 @@ export default function PartnerMatchPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Looking For</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2"><TranslatedText text="Looking For" /></label>
                     <select
                       value={filters.lookingFor}
                       onChange={(e) => handleFilterChange('lookingFor', e.target.value)}
@@ -642,10 +643,10 @@ export default function PartnerMatchPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Age Range</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2"><TranslatedText text="Age Range" /></label>
                     <input
                       type="text"
-                      placeholder="e.g., 25-40"
+                      placeholder={t('e.g., 25-40') || 'e.g., 25-40'}
                       value={filters.ageRange}
                       onChange={(e) => handleFilterChange('ageRange', e.target.value)}
                       className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
@@ -658,7 +659,7 @@ export default function PartnerMatchPage() {
                     onClick={clearFilters}
                     className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
                   >
-                    Clear All Filters
+                    <TranslatedText text="Clear All Filters" />
                   </button>
                 </div>
               </div>
@@ -678,10 +679,10 @@ export default function PartnerMatchPage() {
             <>
               <div className="text-center mb-8">
                 <h2 className="text-3xl font-bold mb-2" style={{ color: 'var(--primary-dark)' }}>
-                  Dance Partners
+                  <TranslatedText text="Dance Partners" />
                 </h2>
                 <p className="text-gray-600">
-                  Found {profiles.length} amazing dancers looking for partners
+                  <TranslatedText text={`Found ${profiles.length} amazing dancers looking for partners`} />
                 </p>
               </div>
 
@@ -704,7 +705,7 @@ export default function PartnerMatchPage() {
                         className="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold text-white"
                         style={{ background: '#4CAF50' }}
                       >
-                        Available
+                        <TranslatedText text="Available" />
                       </span>
                       
                       {/* Profile Info Overlay */}
@@ -747,17 +748,17 @@ export default function PartnerMatchPage() {
 
                       {/* Bio */}
                       <p className="text-gray-700 text-sm mb-4 line-clamp-3">
-                        "{profile.bio}"
+                        "<TranslatedText text={profile.bio} />"
                       </p>
 
                       {/* Additional Info */}
                       <div className="mb-4 space-y-1">
                         <p className="text-sm text-gray-600">
-                          <strong>Looking for:</strong> {getLookingForDisplay(profile.lookingFor)}
+                          <strong><TranslatedText text="Looking for:" /></strong> <TranslatedText text={getLookingForDisplay(profile.lookingFor)} />
                         </p>
                         {profile.ageRange && (
                           <p className="text-sm text-gray-600">
-                            <strong>Age range:</strong> {profile.ageRange}
+                            <strong><TranslatedText text="Age range:" /></strong> {profile.ageRange}
                           </p>
                         )}
                       </div>
@@ -786,7 +787,7 @@ export default function PartnerMatchPage() {
                             className="px-5 py-2 rounded-lg font-semibold text-white transition-all duration-300 hover:transform hover:scale-105"
                             style={{ background: 'var(--primary-gold)' }}
                           >
-                            Connect
+                            <TranslatedText text="Connect" />
                           </Link>
                         </div>
                       </div>
@@ -807,11 +808,11 @@ export default function PartnerMatchPage() {
                     {loadingMore ? (
                       <div className="flex items-center gap-2">
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                        Loading...
+                        <TranslatedText text="Loading..." />
                       </div>
                     ) : (
                       <div className="flex items-center gap-2">
-                        Load More Partners
+                        <TranslatedText text="Load More Partners" />
                         <ArrowRight className="h-4 w-4" />
                       </div>
                     )}
@@ -823,24 +824,24 @@ export default function PartnerMatchPage() {
             <div className="text-center py-20">
               <Users className="h-20 w-20 mx-auto mb-6" style={{ color: 'var(--neutral-gray)' }} />
               <h3 className="text-2xl font-semibold mb-4" style={{ color: 'var(--primary-dark)' }}>
-                No dance partners found
+                <TranslatedText text="No dance partners found" />
               </h3>
               <p className="text-gray-600 mb-8 max-w-md mx-auto">
-                We couldn't find any partners matching your criteria. Try adjusting your filters or check back later for new members.
+                <TranslatedText text="We couldn't find any partners matching your criteria. Try adjusting your filters or check back later for new members." />
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
                   onClick={clearFilters}
                   className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                 >
-                  Clear Filters
+                  <TranslatedText text="Clear Filters" />
                 </button>
                 <Link
                   href="/login?redirect=/dashboard/partner-matching/profile"
                   className="px-6 py-3 rounded-lg font-semibold text-white transition-all duration-300 hover:transform hover:scale-105"
                   style={{ background: 'var(--primary-gold)' }}
                 >
-                  Create Your Profile
+                  <TranslatedText text="Create Your Profile" />
                 </Link>
               </div>
             </div>
@@ -863,7 +864,7 @@ export default function PartnerMatchPage() {
                 >
                   500+
                 </div>
-                <div className="text-gray-600 font-medium">Active Dancers</div>
+                <div className="text-gray-600 font-medium"><TranslatedText text="Active Dancers" /></div>
               </div>
               <div>
                 <div 
@@ -872,7 +873,7 @@ export default function PartnerMatchPage() {
                 >
                   85%
                 </div>
-                <div className="text-gray-600 font-medium">Match Success Rate</div>
+                <div className="text-gray-600 font-medium"><TranslatedText text="Match Success Rate" /></div>
               </div>
               <div>
                 <div 
@@ -881,7 +882,7 @@ export default function PartnerMatchPage() {
                 >
                   50+
                 </div>
-                <div className="text-gray-600 font-medium">Dance Styles</div>
+                <div className="text-gray-600 font-medium"><TranslatedText text="Dance Styles" /></div>
               </div>
               <div>
                 <div 
@@ -890,7 +891,7 @@ export default function PartnerMatchPage() {
                 >
                   24/7
                 </div>
-                <div className="text-gray-600 font-medium">Community Support</div>
+                <div className="text-gray-600 font-medium"><TranslatedText text="Community Support" /></div>
               </div>
             </div>
           </div>
@@ -901,10 +902,10 @@ export default function PartnerMatchPage() {
       <section className="py-20" style={{ background: 'linear-gradient(135deg, var(--accent-rose) 0%, var(--primary-dark) 100%)' }}>
         <div className="dance-container text-center">
           <h2 className="text-4xl font-bold text-white mb-4" style={{ fontFamily: 'Dancing Script, cursive' }}>
-            Ready to Start Dancing?
+            <TranslatedText text="Ready to Start Dancing?" />
           </h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Join our community of passionate dancers and find your perfect partner today. Create your profile and start connecting with dancers in your area.
+            <TranslatedText text="Join our community of passionate dancers and find your perfect partner today. Create your profile and start connecting with dancers in your area." />
           </p>
           <Link
             href="/login?redirect=/dashboard/partner-matching/profile"
@@ -914,7 +915,7 @@ export default function PartnerMatchPage() {
               color: 'var(--primary-dark)'
             }}
           >
-            Create Your Profile
+            <TranslatedText text="Create Your Profile" />
             <ArrowRight className="h-5 w-5" />
           </Link>
         </div>

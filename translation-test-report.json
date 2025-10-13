@@ -1,0 +1,368 @@
+{
+  "timestamp": "2025-10-12T13:56:29.178Z",
+  "summary": {
+    "totalTests": 52,
+    "passed": 52,
+    "failed": 0,
+    "successRate": 100
+  },
+  "details": {
+    "/": {
+      "en": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "es": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "fr": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "de": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      }
+    },
+    "/classes": {
+      "en": {
+        "pageLoaded": true,
+        "apiWorking": true,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "es": {
+        "pageLoaded": true,
+        "apiWorking": true,
+        "translationEvidence": [
+          "Class title/description available for translation"
+        ],
+        "errors": []
+      },
+      "fr": {
+        "pageLoaded": true,
+        "apiWorking": true,
+        "translationEvidence": [
+          "Class title/description available for translation"
+        ],
+        "errors": []
+      },
+      "de": {
+        "pageLoaded": true,
+        "apiWorking": true,
+        "translationEvidence": [
+          "Class title/description available for translation"
+        ],
+        "errors": []
+      }
+    },
+    "/events": {
+      "en": {
+        "pageLoaded": true,
+        "apiWorking": true,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "es": {
+        "pageLoaded": true,
+        "apiWorking": true,
+        "translationEvidence": [
+          "Event title/description available for translation"
+        ],
+        "errors": []
+      },
+      "fr": {
+        "pageLoaded": true,
+        "apiWorking": true,
+        "translationEvidence": [
+          "Event title/description available for translation"
+        ],
+        "errors": []
+      },
+      "de": {
+        "pageLoaded": true,
+        "apiWorking": true,
+        "translationEvidence": [
+          "Event title/description available for translation"
+        ],
+        "errors": []
+      }
+    },
+    "/instructors": {
+      "en": {
+        "pageLoaded": true,
+        "apiWorking": true,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "es": {
+        "pageLoaded": true,
+        "apiWorking": true,
+        "translationEvidence": [
+          "Instructor bio/specialty available for translation"
+        ],
+        "errors": []
+      },
+      "fr": {
+        "pageLoaded": true,
+        "apiWorking": true,
+        "translationEvidence": [
+          "Instructor bio/specialty available for translation"
+        ],
+        "errors": []
+      },
+      "de": {
+        "pageLoaded": true,
+        "apiWorking": true,
+        "translationEvidence": [
+          "Instructor bio/specialty available for translation"
+        ],
+        "errors": []
+      }
+    },
+    "/about": {
+      "en": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "es": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "fr": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "de": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      }
+    },
+    "/contact": {
+      "en": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "es": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "fr": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "de": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      }
+    },
+    "/pricing": {
+      "en": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "es": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "fr": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "de": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      }
+    },
+    "/faq": {
+      "en": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "es": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "fr": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "de": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      }
+    },
+    "/terms": {
+      "en": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "es": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "fr": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "de": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      }
+    },
+    "/privacy": {
+      "en": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "es": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "fr": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "de": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      }
+    },
+    "/become-a-host": {
+      "en": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "es": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "fr": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "de": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      }
+    },
+    "/partner-match": {
+      "en": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "es": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "fr": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "de": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      }
+    },
+    "/booking-success": {
+      "en": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "es": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "fr": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      },
+      "de": {
+        "pageLoaded": true,
+        "apiWorking": false,
+        "translationEvidence": [],
+        "errors": []
+      }
+    }
+  },
+  "errors": []
+}

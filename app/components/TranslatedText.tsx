@@ -1,9 +1,10 @@
 "use client"
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000 // 24 hours
+const BATCH_DELAY_MS = 50 // Delay for batching translation requests
 
 function readCache(key: string): string | null {
   try {

@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
+import { useTranslation } from 'react-i18next'
+import TranslatedText from '@/app/components/TranslatedText'
+import '@/lib/i18n'
 
 interface BookingData {
   classId: string
@@ -23,6 +26,7 @@ interface BookingData {
 export default function BookClassPage() {
   const router = useRouter()
   const params = useParams()
+  const { t } = useTranslation('common')
   const [bookingData, setBookingData] = useState<BookingData | null>(null)
   const [formData, setFormData] = useState({
     name: '',
@@ -72,7 +76,7 @@ export default function BookClassPage() {
     try {
       // Validate form
       if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim()) {
-        throw new Error('Please fill in all required fields')
+        throw new Error(t?.('booking.fillRequiredFields') || 'Please fill in all required fields')
       }
 
       // Update booking data with form details
@@ -109,8 +113,12 @@ export default function BookClassPage() {
         <div className="max-w-4xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Book Your Class</h1>
-              <p className="text-gray-600 mt-1">Complete your booking for {bookingData.className}</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                <TranslatedText text="Book Your Class" fallback="Book Your Class" />
+              </h1>
+              <p className="text-gray-600 mt-1">
+                <TranslatedText text={`Complete your booking for ${bookingData.className}`} fallback={`Complete your booking for ${bookingData.className}`} />
+              </p>
             </div>
             <Link 
               href="/classes" 
@@ -119,7 +127,7 @@ export default function BookClassPage() {
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
-              Back to Classes
+              <TranslatedText text="Back to Classes" fallback="Back to Classes" />
             </Link>
           </div>
         </div>
@@ -131,8 +139,12 @@ export default function BookClassPage() {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
               <div className="mb-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Your Information</h2>
-                <p className="text-gray-600">Please provide your details to complete the booking</p>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  <TranslatedText text="Your Information" fallback="Your Information" />
+                </h2>
+                <p className="text-gray-600">
+                  <TranslatedText text="Please provide your details to complete the booking" fallback="Please provide your details to complete the booking" />
+                </p>
               </div>
 
               {error && (

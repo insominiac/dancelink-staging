@@ -132,7 +132,7 @@ export default function EnhancedGuestBookingForm({ item, isAvailable }: Enhanced
           {/* Personal Information */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1" style={{color: 'var(--primary-dark)'}}>Full Name *</n
+              <label className="block text-sm font-medium mb-1" style={{color: 'var(--primary-dark)'}}>Full Name *</label>
               <input
                 type="text"
                 name="name"

@@ -286,10 +286,14 @@ export default function HomePage() {
         <div className="dance-container">
           <div className="dance-section-header reveal active">
             <h2 className="dance-section-title">
-              {homepageContent?.aboutTitle || (isMounted ? t('about.title') : 'Why Choose DanceLink?')}
+              {homepageContent?.aboutTitle 
+                ? <TranslatedText text={homepageContent.aboutTitle} />
+                : (isMounted ? t('about.title') : 'Why Choose DanceLink?')}
             </h2>
             <p>
-              {homepageContent?.aboutDescription || (isMounted ? t('about.description') : 'Experience the difference of professional instruction and passionate community')}
+              {homepageContent?.aboutDescription 
+                ? <TranslatedText text={homepageContent.aboutDescription} />
+                : (isMounted ? t('about.description') : 'Experience the difference of professional instruction and passionate community')}
             </p>
           </div>
           <div className="dance-card-grid text-black">

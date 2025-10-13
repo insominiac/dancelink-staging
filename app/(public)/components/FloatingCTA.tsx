@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import TranslatedText from '../../components/TranslatedText'
 
 export default function FloatingCTA() {
   const [isVisible, setIsVisible] = useState(false)
@@ -48,10 +49,10 @@ export default function FloatingCTA() {
           <div className="text-center">
             <div className="text-4xl mb-3">🎉</div>
             <h3 className="text-lg font-bold mb-2" style={{color: 'var(--primary-dark)'}}>
-              Ready to Dance?
+              <TranslatedText text="Ready to Dance?" />
             </h3>
             <p className="text-sm mb-4" style={{color: 'var(--neutral-gray)'}}>
-              Book your FREE trial class today!
+              <TranslatedText text="Book your FREE trial class today!" />
             </p>
             
             <div className="space-y-2">
@@ -59,7 +60,7 @@ export default function FloatingCTA() {
                 href="/contact"
                 className="block w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-bold text-sm hover:transform hover:scale-105 hover:shadow-lg transition-all duration-300"
               >
-                🎁 Book Free Trial
+                🎁 <TranslatedText text="Book Free Trial" />
               </Link>
               
               <div className="flex gap-2">
@@ -67,21 +68,21 @@ export default function FloatingCTA() {
                   href="tel:+1234567890"
                   className="flex-1 px-3 py-2 border border-purple-300 text-purple-600 rounded-full text-xs font-semibold hover:bg-purple-50 transition-colors"
                 >
-                  📞 Call
+                  📞 <TranslatedText text="Call" />
                 </a>
                 <Link
                   href="/classes"
                   className="flex-1 px-3 py-2 border border-purple-300 text-purple-600 rounded-full text-xs font-semibold hover:bg-purple-50 transition-colors"
                 >
-                  👀 Browse
+                  👀 <TranslatedText text="Browse" />
                 </Link>
               </div>
             </div>
             
             <div className="flex items-center justify-center gap-1 mt-3 text-xs opacity-75">
-              <span>✅ No commitment</span>
+              <span>✅ <TranslatedText text="No commitment" /></span>
               <span>•</span>
-              <span>✅ All levels</span>
+              <span>✅ <TranslatedText text="All levels" /></span>
             </div>
           </div>
         </div>

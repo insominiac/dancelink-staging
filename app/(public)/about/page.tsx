@@ -2,73 +2,18 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-
-// Define interfaces for type safety
-interface AboutContent {
-  heroTitle: string
-  heroSubtitle: string
-  heroBadgeText: string
-  heroFeatures: Array<{ icon: string; text: string }>
-  statsTitle: string
-  statsDescription: string
-  stats: Array<{
-    number: string
-    label: string
-    description: string
-    color: string
-  }>
-  storyTitle: string
-  storyDescription1: string
-  storyDescription2: string
-  whyChooseUsTitle: string
-  features: Array<{
-    icon: string
-    title: string
-    description: string
-    bgColor: string
-  }>
-  newsletterTitle: string
-  newsletterDescription: string
-  newsletterBenefits: Array<{ icon: string; text: string }>
-  ctaTitle: string
-  ctaDescription: string
-  ctaBadgeText: string
-  ctaButtons: {
-    primary: { text: string; href: string }
-    secondary: { text: string; href: string }
-  }
-  ctaFeatures: Array<{
-    icon: string
-    title: string
-    description: string
-  }>
-}
+import { useTranslation } from 'react-i18next'
+import TranslatedText from '../../components/TranslatedText'
+import '@/lib/i18n'
 
 export default function AboutPage() {
+  const { t } = useTranslation('common')
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
-  const [content, setContent] = useState<AboutContent | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isMounted, setIsMounted] = useState(false)
 
-  // Fetch content from API
   useEffect(() => {
-    const fetchContent = async () => {
-      try {
-        const response = await fetch('/api/public/content/about')
-        if (response.ok) {
-          const data = await response.json()
-          setContent(data)
-        } else {
-          console.error('Failed to fetch about content')
-        }
-      } catch (error) {
-        console.error('Error fetching about content:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchContent()
+    setIsMounted(true)
   }, [])
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
@@ -79,103 +24,6 @@ export default function AboutPage() {
       // Here you would typically send the email to your backend
       setTimeout(() => setSubscribed(false), 3000)
     }
-  }
-
-  // Show loading state
-  if (isLoading) {
-    return (
-      <div className="min-h-[calc(100vh-200px)]" style={{background: 'var(--neutral-light)'}}>
-        {/* Hero Section - Loading State */}
-        <section 
-          className="relative py-16 md:py-20 overflow-hidden mt-20"
-          style={{
-            background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'
-          }}
-        >
-          <div 
-            className="absolute inset-0 opacity-20"
-            style={{
-              backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M30 5 L35 15 L45 15 L37.5 22.5 L40 32.5 L30 25 L20 32.5 L22.5 22.5 L15 15 L25 15 Z" fill="%23ffffff" fill-opacity="0.3"/%3E%3C/svg%3E")',
-              backgroundSize: '30px 30px'
-            }}
-          ></div>
-          
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-8 left-10 text-2xl opacity-20 text-white animate-pulse">ℹ️</div>
-            <div className="absolute top-12 right-10 text-2xl opacity-20 text-white animate-pulse" style={{animationDelay: '1s'}}>✨</div>
-            <div className="absolute bottom-8 left-1/2 text-2xl opacity-20 text-white animate-pulse" style={{animationDelay: '2s'}}>🎆</div>
-          </div>
-          
-          <div className="relative z-10 dance-container text-center">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white mb-5">
-              <span className="mr-2">ℹ️</span>
-              <span className="text-sm font-medium">About Our Studio</span>
-            </div>
-            
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-5 dance-font text-white">
-              About <span className="text-yellow-100 dance-font">Us</span>
-            </h1>
-            
-            <p className="text-base md:text-lg text-white/90 mb-7 max-w-2xl mx-auto leading-relaxed">
-              Discover our story, mission, and the passionate team behind our dance studio.
-            </p>
-          </div>
-        </section>
-        
-        <div className="dance-container py-16 flex-grow flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 mb-4 mx-auto" style={{borderBottomColor: 'var(--primary-gold)'}}></div>
-            <p className="text-gray-600">Loading content...</p>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // Show error state if no content
-  if (!content) {
-    return (
-      <div className="min-h-[calc(100vh-200px)]" style={{background: 'var(--neutral-light)'}}>
-        {/* Hero Section - Error State */}
-        <section 
-          className="relative py-16 md:py-20 overflow-hidden mt-20"
-          style={{
-            background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'
-          }}
-        >
-          <div 
-            className="absolute inset-0 opacity-20"
-            style={{
-              backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M30 5 L35 15 L45 15 L37.5 22.5 L40 32.5 L30 25 L20 32.5 L22.5 22.5 L15 15 L25 15 Z" fill="%23ffffff" fill-opacity="0.3"/%3E%3C/svg%3E")',
-              backgroundSize: '30px 30px'
-            }}
-          ></div>
-          
-          <div className="relative z-10 dance-container text-center">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white mb-5">
-              <span className="mr-2">ℹ️</span>
-              <span className="text-sm font-medium">About Our Studio</span>
-            </div>
-            
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-5 dance-font text-white">
-              About <span className="text-yellow-100 dance-font">Us</span>
-            </h1>
-            
-            <p className="text-base md:text-lg text-white/90 mb-7 max-w-2xl mx-auto leading-relaxed">
-              Discover our story, mission, and the passionate team behind our dance studio.
-            </p>
-          </div>
-        </section>
-        
-        <div className="dance-container py-16 flex-grow flex items-center justify-center">
-          <div className="text-center">
-            <div className="text-6xl mb-4">⚠️</div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Content Unavailable</h2>
-            <p className="text-gray-600">Unable to load page content. Please try again later.</p>
-          </div>
-        </div>
-      </div>
-    )
   }
 
   return (
@@ -204,30 +52,30 @@ export default function AboutPage() {
         <div className="relative z-10 dance-container text-center">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white mb-5">
             <span className="mr-2">ℹ️</span>
-            <span className="text-sm font-medium">{content.heroBadgeText}</span>
+            <span className="text-sm font-medium"><TranslatedText text={isMounted ? t('aboutPage.heroBadgeText') : 'Our Story & Mission'} /></span>
           </div>
           
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-5 dance-font text-white">
-            {content.heroTitle.split(' ').map((word, index) => 
-              index === content.heroTitle.split(' ').length - 1 ? (
-                <span key={index} className="text-yellow-100 dance-font">{word}</span>
-              ) : (
-                word + ' '
-              )
-            )}
+            <TranslatedText text={isMounted ? t('aboutPage.heroTitle') : 'About DanceLink'} />
           </h1>
           
           <p className="text-base md:text-lg text-white/90 mb-7 max-w-2xl mx-auto leading-relaxed">
-            {content.heroSubtitle}
+            <TranslatedText text={isMounted ? t('aboutPage.heroSubtitle') : 'Connecting dancers through the universal language of movement. Discover our passion for dance and commitment to excellence.'} />
           </p>
           
           <div className="flex gap-4 justify-center flex-wrap">
-            {content.heroFeatures.map((feature, index) => (
-              <div key={index} className="flex items-center text-white/90">
-                <span className="mr-2">{feature.icon}</span>
-                <span>{feature.text}</span>
-              </div>
-            ))}
+            <div className="flex items-center text-white/90">
+              <span className="mr-2">🌟</span>
+              <span><TranslatedText text={isMounted ? t('aboutPage.heroFeatures.awardWinning') : 'Award-winning platform'} /></span>
+            </div>
+            <div className="flex items-center text-white/90">
+              <span className="mr-2">💃</span>
+              <span><TranslatedText text={isMounted ? t('aboutPage.heroFeatures.expertInstructors') : 'Expert instructors'} /></span>
+            </div>
+            <div className="flex items-center text-white/90">
+              <span className="mr-2">❤️</span>
+              <span><TranslatedText text={isMounted ? t('aboutPage.heroFeatures.passionateCommunity') : 'Passionate community'} /></span>
+            </div>
           </div>
         </div>
       </section>
@@ -236,23 +84,54 @@ export default function AboutPage() {
       <section className="py-20" style={{background: 'var(--neutral-light)'}}>
         <div className="dance-container">
           <div className="dance-section-header">
-            <h2 className="dance-section-title">{content.statsTitle}</h2>
-            <p>{content.statsDescription}</p>
+            <h2 className="dance-section-title"><TranslatedText text={isMounted ? t('aboutPage.statsTitle') : 'Our Impact in Numbers'} /></h2>
+            <p><TranslatedText text={isMounted ? t('aboutPage.statsDescription') : 'See how we\'re making a difference in the dance community with our platform and dedicated instructors'} /></p>
           </div>
           <div className="dance-card-grid">
-            {content.stats.map((stat, index) => (
-              <div key={index} className="dance-card text-center">
-                <div className="text-5xl font-bold mb-2" style={{
-                  background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent'
-                }}>
-                  {stat.number}
-                </div>
-                <div className="font-medium mb-1" style={{color: 'var(--primary-dark)'}}>{stat.label}</div>
-                <div className="text-sm" style={{color: 'var(--neutral-gray)'}}>{stat.description}</div>
+            <div className="dance-card text-center">
+              <div className="text-5xl font-bold mb-2" style={{
+                background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}>
+                500+
               </div>
-            ))}
+              <div className="font-medium mb-1" style={{color: 'var(--primary-dark)'}}><TranslatedText text={isMounted ? t('aboutPage.stats.happyStudents') : 'Happy Students'} /></div>
+              <div className="text-sm" style={{color: 'var(--neutral-gray)'}}><TranslatedText text={isMounted ? t('aboutPage.stats.happyStudentsDesc') : 'And growing daily'} /></div>
+            </div>
+            <div className="dance-card text-center">
+              <div className="text-5xl font-bold mb-2" style={{
+                background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}>
+                15+
+              </div>
+              <div className="font-medium mb-1" style={{color: 'var(--primary-dark)'}}><TranslatedText text={isMounted ? t('aboutPage.stats.danceStyles') : 'Dance Styles'} /></div>
+              <div className="text-sm" style={{color: 'var(--neutral-gray)'}}><TranslatedText text={isMounted ? t('aboutPage.stats.danceStylesDesc') : 'From ballet to hip-hop'} /></div>
+            </div>
+            <div className="dance-card text-center">
+              <div className="text-5xl font-bold mb-2" style={{
+                background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}>
+                20+
+              </div>
+              <div className="font-medium mb-1" style={{color: 'var(--primary-dark)'}}><TranslatedText text={isMounted ? t('aboutPage.stats.expertInstructorsCount') : 'Expert Instructors'} /></div>
+              <div className="text-sm" style={{color: 'var(--neutral-gray)'}}><TranslatedText text={isMounted ? t('aboutPage.stats.expertInstructorsDesc') : 'Professional & certified'} /></div>
+            </div>
+            <div className="dance-card text-center">
+              <div className="text-5xl font-bold mb-2" style={{
+                background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}>
+                5
+              </div>
+              <div className="font-medium mb-1" style={{color: 'var(--primary-dark)'}}><TranslatedText text={isMounted ? t('aboutPage.stats.studioLocations') : 'Studio Locations'} /></div>
+              <div className="text-sm" style={{color: 'var(--neutral-gray)'}}><TranslatedText text={isMounted ? t('aboutPage.stats.studioLocationsDesc') : 'Across the city'} /></div>
+            </div>
           </div>
         </div>
       </section>
@@ -264,49 +143,86 @@ export default function AboutPage() {
             <div>
               <div className="text-center lg:text-left mb-8">
                 <div className="text-6xl mb-4">💃</div>
-                <h2 className="text-4xl font-bold mb-6" style={{color: 'var(--primary-dark)'}}>{content.storyTitle}</h2>
+                <h2 className="text-4xl font-bold mb-6" style={{color: 'var(--primary-dark)'}}><TranslatedText text={isMounted ? t('aboutPage.ourStory') : 'Our Story'} /></h2>
               </div>
               <p className="text-lg leading-relaxed mb-6" style={{color: 'var(--neutral-gray)'}}>
-                {content.storyDescription1}
+                <TranslatedText text={isMounted ? t('aboutPage.storyDescription1') : 'DanceLink was founded with a simple belief: everyone deserves to experience the joy and connection that comes from dance. We started as a small community of passionate dancers and have grown into a thriving platform that connects thousands of students with world-class instructors.'} />
               </p>
               <p className="text-lg leading-relaxed mb-8" style={{color: 'var(--neutral-gray)'}}>
-                {content.storyDescription2}
+                <TranslatedText text={isMounted ? t('aboutPage.storyDescription2') : 'Our mission is to make dance accessible, welcoming, and transformative for people of all backgrounds and skill levels. Whether you\'re taking your first steps or perfecting advanced techniques, we\'re here to support your dance journey.'} />
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link 
                   href="/classes" 
                   className="dance-btn dance-btn-primary hover:transform hover:scale-105 transition-all duration-300"
                 >
-                  💃 Explore Classes
+                  <TranslatedText text={isMounted ? t('aboutPage.exploreClasses') : '💃 Explore Classes'} />
                 </Link>
                 <Link 
                   href="/contact" 
                   className="dance-btn dance-btn-secondary hover:transform hover:scale-105 transition-all duration-300"
                 >
-                  📞 Contact Us
+                  <TranslatedText text={isMounted ? t('aboutPage.contactUs') : '📞 Contact Us'} />
                 </Link>
               </div>
             </div>
             
             <div>
               <div className="dance-card">
-                <h3 className="text-2xl font-bold mb-8 text-center" style={{color: 'var(--primary-dark)'}}>✨ {content.whyChooseUsTitle}</h3>
+                <h3 className="text-2xl font-bold mb-8 text-center" style={{color: 'var(--primary-dark)'}}>✨ <TranslatedText text={isMounted ? t('aboutPage.whyChooseUsTitle') : 'Why Choose DanceLink?'} /></h3>
                 <div className="space-y-6">
-                  {content.features.map((feature, index) => (
-                    <div key={index} className="dance-card" style={{marginBottom: '1rem'}}>
-                      <div className="flex items-start">
-                        <div className="text-2xl mr-4 mt-1" style={{
-                          background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))',
-                          WebkitBackgroundClip: 'text',
-                          WebkitTextFillColor: 'transparent'
-                        }}>{feature.icon}</div>
-                        <div>
-                          <h4 className="font-semibold mb-1" style={{color: 'var(--primary-dark)'}}>{feature.title}</h4>
-                          <p className="text-sm" style={{color: 'var(--neutral-gray)'}}>{feature.description}</p>
-                        </div>
+                  <div className="dance-card" style={{marginBottom: '1rem'}}>
+                    <div className="flex items-start">
+                      <div className="text-2xl mr-4 mt-1" style={{
+                        background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent'
+                      }}>🏅️</div>
+                      <div>
+                        <h4 className="font-semibold mb-1" style={{color: 'var(--primary-dark)'}}><TranslatedText text={isMounted ? t('aboutPage.features.awardWinningInstructors.title') : 'Award-winning instructors'} /></h4>
+                        <p className="text-sm" style={{color: 'var(--neutral-gray)'}}><TranslatedText text={isMounted ? t('aboutPage.features.awardWinningInstructors.description') : 'Learn from certified professionals with years of experience'} /></p>
                       </div>
                     </div>
-                  ))}
+                  </div>
+                  <div className="dance-card" style={{marginBottom: '1rem'}}>
+                    <div className="flex items-start">
+                      <div className="text-2xl mr-4 mt-1" style={{
+                        background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent'
+                      }}>🏢</div>
+                      <div>
+                        <h4 className="font-semibold mb-1" style={{color: 'var(--primary-dark)'}}><TranslatedText text={isMounted ? t('aboutPage.features.stateOfTheArtStudios.title') : 'State-of-the-art studios'} /></h4>
+                        <p className="text-sm" style={{color: 'var(--neutral-gray)'}}><TranslatedText text={isMounted ? t('aboutPage.features.stateOfTheArtStudios.description') : 'Modern facilities equipped with the latest technology'} /></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="dance-card" style={{marginBottom: '1rem'}}>
+                    <div className="flex items-start">
+                      <div className="text-2xl mr-4 mt-1" style={{
+                        background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent'
+                      }}>👥</div>
+                      <div>
+                        <h4 className="font-semibold mb-1" style={{color: 'var(--primary-dark)'}}><TranslatedText text={isMounted ? t('aboutPage.features.welcomingCommunity.title') : 'Welcoming community'} /></h4>
+                        <p className="text-sm" style={{color: 'var(--neutral-gray)'}}><TranslatedText text={isMounted ? t('aboutPage.features.welcomingCommunity.description') : 'Join a supportive network of fellow dance enthusiasts'} /></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="dance-card" style={{marginBottom: '1rem'}}>
+                    <div className="flex items-start">
+                      <div className="text-2xl mr-4 mt-1" style={{
+                        background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent'
+                      }}>📈</div>
+                      <div>
+                        <h4 className="font-semibold mb-1" style={{color: 'var(--primary-dark)'}}><TranslatedText text={isMounted ? t('aboutPage.features.provenResults.title') : 'Proven results'} /></h4>
+                        <p className="text-sm" style={{color: 'var(--neutral-gray)'}}><TranslatedText text={isMounted ? t('aboutPage.features.provenResults.description') : 'Track your progress and celebrate your achievements'} /></p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -321,16 +237,16 @@ export default function AboutPage() {
             <div className="max-w-2xl mx-auto text-center">
               <div className="dance-hero-gradient p-8 text-white">
                 <div className="text-6xl mb-4">📧</div>
-                <h2 className="text-3xl font-bold mb-4 dance-font">{content.newsletterTitle}</h2>
+                <h2 className="text-3xl font-bold mb-4 dance-font"><TranslatedText text={isMounted ? t('aboutPage.newsletterTitle') : 'Stay in the Loop!'} /></h2>
                 <p className="text-lg mb-8" style={{color: 'var(--neutral-light)'}}>
-                  {content.newsletterDescription}
+                  <TranslatedText text={isMounted ? t('aboutPage.newsletterDescription') : 'Get exclusive access to new classes, special events, and dance tips delivered to your inbox weekly.'} />
                 </p>
                 
                 {subscribed ? (
                   <div className="dance-card" style={{background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255, 255, 255, 0.2)'}}>
                     <div className="text-4xl mb-2">✅</div>
-                    <p className="text-lg font-semibold">Thanks for subscribing!</p>
-                    <p style={{color: 'var(--neutral-light)'}}>Check your email for confirmation</p>
+                    <p className="text-lg font-semibold"><TranslatedText text={isMounted ? t('aboutPage.subscriptionSuccess') : 'Thanks for subscribing!'} /></p>
+                    <p style={{color: 'var(--neutral-light)'}}><TranslatedText text={isMounted ? t('aboutPage.checkEmail') : 'Check your email for confirmation'} /></p>
                   </div>
                 ) : (
                   <form onSubmit={handleNewsletterSubmit} className="max-w-lg mx-auto">
@@ -339,7 +255,7 @@ export default function AboutPage() {
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Enter your email address"
+                        placeholder={isMounted ? t('aboutPage.newsletterPlaceholder') : 'Enter your email address'}
                         className="flex-1 px-6 py-4 rounded-xl focus:outline-none focus:ring-2 border-0"
                         style={{color: 'var(--primary-dark)', backgroundColor: 'var(--neutral-light)', focusRingColor: 'rgba(255, 255, 255, 0.5)'}}
                         required
@@ -348,19 +264,25 @@ export default function AboutPage() {
                         type="submit"
                         className="dance-btn dance-btn-accent hover:transform hover:scale-105 transition-all duration-300"
                       >
-                        🚀 Subscribe
+                        <TranslatedText text={isMounted ? t('aboutPage.subscribeButton') : '🚀 Subscribe'} />
                       </button>
                     </div>
                   </form>
                 )}
                 
                 <div className="dance-card-grid" style={{gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', marginTop: '2rem'}}>
-                  {content.newsletterBenefits.map((benefit, index) => (
-                    <div key={index} className="dance-card text-center" style={{background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)'}}>
-                      <span className="text-2xl mb-2 block">{benefit.icon}</span>
-                      <span className="text-sm font-medium">{benefit.text}</span>
-                    </div>
-                  ))}
+                  <div className="dance-card text-center" style={{background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)'}}>
+                    <span className="text-2xl mb-2 block">🎁</span>
+                    <span className="text-sm font-medium"><TranslatedText text={isMounted ? t('aboutPage.newsletterBenefits.weeklyTips') : 'Weekly Tips'} /></span>
+                  </div>
+                  <div className="dance-card text-center" style={{background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)'}}>
+                    <span className="text-2xl mb-2 block">🎉</span>
+                    <span className="text-sm font-medium"><TranslatedText text={isMounted ? t('aboutPage.newsletterBenefits.exclusiveEvents') : 'Exclusive Events'} /></span>
+                  </div>
+                  <div className="dance-card text-center" style={{background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)'}}>
+                    <span className="text-2xl mb-2 block">💰</span>
+                    <span className="text-sm font-medium"><TranslatedText text={isMounted ? t('aboutPage.newsletterBenefits.specialDiscounts') : 'Special Discounts'} /></span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -381,38 +303,46 @@ export default function AboutPage() {
           <div className="text-center">
             <div className="dance-badge mb-6">
               <span className="mr-2">🎆</span>
-              <span className="text-sm font-medium">{content.ctaBadgeText}</span>
+              <span className="text-sm font-medium"><TranslatedText text={isMounted ? t('aboutPage.ctaBadgeText') : 'Start Your Journey'} /></span>
             </div>
             <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6 dance-font">
-              {content.ctaTitle.split(' ').slice(0, -2).join(' ')} <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent dance-font">{content.ctaTitle.split(' ').slice(-2).join(' ')}</span>
+              <TranslatedText text={isMounted ? t('aboutPage.ctaTitle') : 'Ready to Begin Your Dance Journey?'} />
             </h2>
             <p className="text-xl sm:text-2xl mb-8 max-w-3xl mx-auto leading-relaxed" style={{color: 'var(--neutral-light)'}}>
-              {content.ctaDescription}
+              <TranslatedText text={isMounted ? t('aboutPage.ctaDescription') : 'Join hundreds of dancers who have transformed their lives through movement at DanceLink. Start your adventure today!'} />
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Link 
-                href={content.ctaButtons.primary.href}
+                href="/contact"
                 className="dance-btn dance-btn-accent hover:transform hover:scale-105 hover:shadow-2xl transition-all duration-300"
               >
-                {content.ctaButtons.primary.text}
+                <TranslatedText text={isMounted ? t('aboutPage.ctaButtons.startFreeTrial') : '🎁 Start Free Trial'} />
               </Link>
               <Link 
-                href={content.ctaButtons.secondary.href}
+                href="/classes"
                 className="dance-btn dance-btn-outline hover:transform hover:scale-105 hover:shadow-2xl transition-all duration-300"
               >
-                {content.ctaButtons.secondary.text}
+                <TranslatedText text={isMounted ? t('aboutPage.ctaButtons.browseAllClasses') : '👀 Browse All Classes'} />
               </Link>
             </div>
             
             <div className="dance-card-grid">
-              {content.ctaFeatures.map((feature, index) => (
-                <div key={index} className="group text-center">
-                  <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">{feature.icon}</div>
-                  <h4 className="font-bold text-white mb-2">{feature.title}</h4>
-                  <p className="text-sm" style={{color: 'var(--neutral-light)'}}>{feature.description}</p>
-                </div>
-              ))}
+              <div className="group text-center">
+                <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">✅</div>
+                <h4 className="font-bold text-white mb-2"><TranslatedText text={isMounted ? t('aboutPage.ctaFeatures.noExperienceNeeded.title') : 'No Experience Needed'} /></h4>
+                <p className="text-sm" style={{color: 'var(--neutral-light)'}}><TranslatedText text={isMounted ? t('aboutPage.ctaFeatures.noExperienceNeeded.description') : 'Perfect for beginners and seasoned dancers alike'} /></p>
+              </div>
+              <div className="group text-center">
+                <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">📅</div>
+                <h4 className="font-bold text-white mb-2"><TranslatedText text={isMounted ? t('aboutPage.ctaFeatures.flexibleScheduling.title') : 'Flexible Scheduling'} /></h4>
+                <p className="text-sm" style={{color: 'var(--neutral-light)'}}><TranslatedText text={isMounted ? t('aboutPage.ctaFeatures.flexibleScheduling.description') : 'Choose classes that fit your busy lifestyle'} /></p>
+              </div>
+              <div className="group text-center">
+                <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">💰</div>
+                <h4 className="font-bold text-white mb-2"><TranslatedText text={isMounted ? t('aboutPage.ctaFeatures.moneyBackGuarantee.title') : 'Money-back Guarantee'} /></h4>
+                <p className="text-sm" style={{color: 'var(--neutral-light)'}}><TranslatedText text={isMounted ? t('aboutPage.ctaFeatures.moneyBackGuarantee.description') : '100% satisfaction or your money back'} /></p>
+              </div>
             </div>
           </div>
         </div>

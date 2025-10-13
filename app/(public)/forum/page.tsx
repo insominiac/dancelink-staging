@@ -1,22 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useAuth } from '@/app/lib/auth-context'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { MessageSquare, Eye, MessageCircle, Pin, Lock, Plus, ChevronLeft, ChevronRight } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
+import TranslatedText from '../../components/TranslatedText'
+import '@/lib/i18n'
 // import LoginModal from '@/app/components/LoginModal' // Disabled for public browsing
-
-const categories = [
-  { value: 'all', label: 'All Topics' },
-  { value: 'general', label: 'General Discussion' },
-  { value: 'technique', label: 'Dance Techniques' },
-  { value: 'events', label: 'Events & Socials' },
-  { value: 'partners', label: 'Partner Search' },
-  { value: 'music', label: 'Music & Playlists' },
-  { value: 'beginners', label: 'Beginners Corner' },
-]
 
 // Sample forum posts for demo
 const samplePosts = [
@@ -115,11 +108,36 @@ const samplePosts = [
 export default function ForumPage() {
   const { user, isAuthenticated, loading: authLoading } = useAuth()
   const router = useRouter()
+  const { t } = useTranslation('common')
+  const [isMounted, setIsMounted] = useState(false)
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+
+  // Helper function to prevent showing raw translation keys
+  const getTranslation = useCallback((key: string, fallback: string) => {
+    if (!isMounted) return fallback
+    const translated = t(key)
+    // Ensure we don't show raw translation keys by checking if translation is the same as key
+    return translated && translated !== key ? translated : fallback
+  }, [isMounted, t])
+
+  // Dynamic categories with translations - using useMemo to prevent re-rendering issues
+  const categories = useMemo(() => [
+    { value: 'all', label: getTranslation('forum.categories.all', 'All Topics') },
+    { value: 'general', label: getTranslation('forum.categories.general', 'General Discussion') },
+    { value: 'technique', label: getTranslation('forum.categories.technique', 'Dance Techniques') },
+    { value: 'events', label: getTranslation('forum.categories.events', 'Events & Socials') },
+    { value: 'partners', label: getTranslation('forum.categories.partners', 'Partner Search') },
+    { value: 'music', label: getTranslation('forum.categories.music', 'Music & Playlists') },
+    { value: 'beginners', label: getTranslation('forum.categories.beginners', 'Beginners Corner') },
+  ], [isMounted, t, getTranslation])
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   // Fetch posts from API
   useEffect(() => {
@@ -176,8 +194,8 @@ export default function ForumPage() {
   //   // The useEffect will handle fetching posts after successful login
   // }
 
-  // Show loading only if needed
-  if (loading) {
+  // Show loading only if not mounted yet
+  if (!isMounted) {
     return (
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -197,8 +215,12 @@ export default function ForumPage() {
         <div className="bg-white rounded-lg shadow-sm mb-6 p-6">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dance-font">Community Forum</h1>
-              <p className="mt-2 text-gray-600">Connect, share, and learn with fellow dancers</p>
+              <h1 className="text-3xl font-bold text-gray-900 dance-font">
+                {getTranslation('forum.title', 'Community Forum')}
+              </h1>
+              <p className="mt-2 text-gray-600">
+                {getTranslation('forum.subtitle', 'Connect, share, and learn with fellow dancers')}
+              </p>
             </div>
             {isAuthenticated ? (
               <Link
@@ -206,7 +228,7 @@ export default function ForumPage() {
                 className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
               >
                 <Plus className="w-5 h-5 mr-2" />
-                New Post
+                {getTranslation('forum.newPost', 'New Post')}
               </Link>
             ) : (
               <Link
@@ -214,7 +236,7 @@ export default function ForumPage() {
                 className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
               >
                 <Plus className="w-5 h-5 mr-2" />
-                Sign in to Post
+                {getTranslation('forum.signInToPost', 'Sign in to Post')}
               </Link>
             )}
           </div>
@@ -244,26 +266,32 @@ export default function ForumPage() {
           {loading ? (
             <div className="bg-white rounded-lg shadow-sm p-8 text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
-              <p className="mt-4 text-gray-600">Loading posts...</p>
+              <p className="mt-4 text-gray-600">
+                {getTranslation('forum.loadingPosts', 'Loading posts...')}
+              </p>
             </div>
           ) : posts.length === 0 ? (
             <div className="bg-white rounded-lg shadow-sm p-8 text-center">
               <MessageSquare className="w-12 h-12 text-gray-400 mx-auto" />
-              <h3 className="mt-4 text-lg font-medium text-gray-900">No posts yet</h3>
-              <p className="mt-2 text-gray-600">Be the first to start a discussion!</p>
+              <h3 className="mt-4 text-lg font-medium text-gray-900">
+                {getTranslation('forum.noPosts', 'No posts yet')}
+              </h3>
+              <p className="mt-2 text-gray-600">
+                {getTranslation('forum.beFirst', 'Be the first to start a discussion!')}
+              </p>
               {isAuthenticated ? (
                 <Link
                   href="/forum/new"
                   className="mt-4 inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
                 >
-                  Create First Post
+                  {getTranslation('forum.createFirst', 'Create First Post')}
                 </Link>
               ) : (
                 <Link
                   href="/login"
                   className="mt-4 inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
                 >
-                  Sign in to Post
+                  {getTranslation('forum.signInToPost', 'Sign in to Post')}
                 </Link>
               )}
             </div>
@@ -289,10 +317,10 @@ export default function ForumPage() {
                         </span>
                       </div>
                       <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                        {post.title}
+                        <TranslatedText text={post.title} />
                       </h2>
                       <p className="text-gray-600 line-clamp-2 mb-3">
-                        {post.content}
+                        <TranslatedText text={post.content} />
                       </p>
                       <div className="flex items-center gap-4 text-sm text-gray-500">
                         <div className="flex items-center gap-1">
@@ -335,7 +363,7 @@ export default function ForumPage() {
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <span className="px-4 py-2 text-sm font-medium">
-                Page {currentPage} of {totalPages}
+                {getTranslation('forum.page', 'Page')} {currentPage} {getTranslation('forum.of', 'of')} {totalPages}
               </span>
               <button
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}

@@ -1,11 +1,14 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import db from '../../../lib/db'
+import { resolveLocale } from '@/app/lib/locale'
+import { translationService } from '@/lib/translation-service'
 
 // Enable ISR with 30 minute revalidation
 export const revalidate = 1800 // 30 minutes
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const locale = resolveLocale(request, 'en')
     const instructors = await db.instructor.findMany({
       where: {
         isActive: true
@@ -85,9 +88,56 @@ export async function GET() {
         : []
     }))
 
+    // Server-side translation for dynamic fields
+    let translatedInstructors = instructorsWithDetails
+    if (locale && locale !== 'en') {
+      const texts: string[] = []
+      const positions: { idx: number, key: 'bio'|'specialty'|'title', classIdx?: number }[] = []
+      
+      instructorsWithDetails.forEach((instructor, idx) => {
+        if (instructor.bio) { 
+          texts.push(instructor.bio)
+          positions.push({ idx, key: 'bio' })
+        }
+        if (instructor.specialty) { 
+          texts.push(instructor.specialty)
+          positions.push({ idx, key: 'specialty' })
+        }
+        instructor.activeClasses.forEach((cls, classIdx) => {
+          if (cls.title) {
+            texts.push(cls.title)
+            positions.push({ idx, key: 'title', classIdx })
+          }
+        })
+      })
+      
+      if (texts.length) {
+        const translated = await translationService.translateBatch(texts, locale, 'en')
+        let p = 0
+        translatedInstructors = instructorsWithDetails.map((instructor, idx) => {
+          const clone: any = { 
+            ...instructor, 
+            activeClasses: instructor.activeClasses.map(cls => ({ ...cls }))
+          }
+          
+          positions.forEach(pos => {
+            if (pos.idx === idx) {
+              const val = translated[p++]
+              if (pos.key === 'bio') clone.bio = val
+              else if (pos.key === 'specialty') clone.specialty = val
+              else if (pos.key === 'title' && pos.classIdx !== undefined) {
+                clone.activeClasses[pos.classIdx].title = val
+              }
+            }
+          })
+          return clone
+        })
+      }
+    }
+
     return NextResponse.json({
-      instructors: instructorsWithDetails,
-      total: instructorsWithDetails.length,
+      instructors: translatedInstructors,
+      total: translatedInstructors.length,
       lastUpdated: new Date().toISOString()
     })
 

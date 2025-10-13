@@ -2,8 +2,12 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import TranslatedText from '../../components/TranslatedText'
+import '@/lib/i18n'
 
 export default function BecomeHostPage() {
+  const { t } = useTranslation('common')
   const [activeTab, setActiveTab] = useState('benefits')
 
   const benefits = [
@@ -113,25 +117,24 @@ export default function BecomeHostPage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-              Become a <span className="text-yellow-400">Host</span>
+              <TranslatedText text="Become a" /> <span className="text-yellow-400"><TranslatedText text="Host" /></span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto">
-              Transform your passion into a thriving dance business. Create your academy, 
-              manage venues, and inspire dancers worldwide.
+              <TranslatedText text="Transform your passion into a thriving dance business. Create your academy, manage venues, and inspire dancers worldwide." />
             </p>
             <div className="space-x-4">
               <Link
                 href="/register"
                 className="inline-flex items-center px-8 py-4 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded-full text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
-                Start Your Application
+                <TranslatedText text="Start Your Application" />
                 <span className="ml-2">→</span>
               </Link>
               <button
                 onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
                 className="inline-flex items-center px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-gray-900 font-bold rounded-full text-lg transition-all duration-300"
               >
-                Learn More
+                <TranslatedText text="Learn More" />
               </button>
             </div>
           </div>
@@ -157,7 +160,7 @@ export default function BecomeHostPage() {
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                {tab.label}
+                <TranslatedText text={tab.label} />
               </button>
             ))}
           </nav>
@@ -171,9 +174,9 @@ export default function BecomeHostPage() {
           <div id="benefits" className="py-16">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-16">
-                <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Become a Host?</h2>
+                <h2 className="text-4xl font-bold text-gray-900 mb-4"><TranslatedText text="Why Become a Host?" /></h2>
                 <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                  Join our community of dance professionals and take your business to the next level
+                  <TranslatedText text="Join our community of dance professionals and take your business to the next level" />
                 </p>
               </div>
 
@@ -184,8 +187,8 @@ export default function BecomeHostPage() {
                     className="bg-white rounded-xl shadow-lg p-8 text-center hover:shadow-xl transition-shadow duration-300 border border-gray-100"
                   >
                     <div className="text-4xl mb-4">{benefit.icon}</div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3">{benefit.title}</h3>
-                    <p className="text-gray-600">{benefit.description}</p>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3"><TranslatedText text={benefit.title} /></h3>
+                    <p className="text-gray-600"><TranslatedText text={benefit.description} /></p>
                   </div>
                 ))}
               </div>
@@ -198,21 +201,21 @@ export default function BecomeHostPage() {
           <div id="features" className="py-16 bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-16">
-                <h2 className="text-4xl font-bold text-gray-900 mb-4">Powerful Tools for Success</h2>
+                <h2 className="text-4xl font-bold text-gray-900 mb-4"><TranslatedText text="Powerful Tools for Success" /></h2>
                 <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                  Everything you need to manage and grow your dance business
+                  <TranslatedText text="Everything you need to manage and grow your dance business" />
                 </p>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 {features.map((feature, index) => (
                   <div key={index} className="bg-white rounded-xl shadow-lg p-8">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-6">{feature.category}</h3>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-6"><TranslatedText text={feature.category} /></h3>
                     <ul className="space-y-3">
                       {feature.items.map((item, itemIndex) => (
                         <li key={itemIndex} className="flex items-center text-gray-700">
                           <span className="text-green-500 mr-3">✓</span>
-                          {item}
+                          <TranslatedText text={item} />
                         </li>
                       ))}
                     </ul>
@@ -228,9 +231,9 @@ export default function BecomeHostPage() {
           <div id="process" className="py-16">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-16">
-                <h2 className="text-4xl font-bold text-gray-900 mb-4">How to Get Started</h2>
+                <h2 className="text-4xl font-bold text-gray-900 mb-4"><TranslatedText text="How to Get Started" /></h2>
                 <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                  Simple steps to become a verified host on our platform
+                  <TranslatedText text="Simple steps to become a verified host on our platform" />
                 </p>
               </div>
 
@@ -245,8 +248,8 @@ export default function BecomeHostPage() {
                         {step.step}
                       </div>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3">{step.title}</h3>
-                    <p className="text-gray-600">{step.description}</p>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3"><TranslatedText text={step.title} /></h3>
+                    <p className="text-gray-600"><TranslatedText text={step.description} /></p>
                   </div>
                 ))}
               </div>
@@ -259,9 +262,9 @@ export default function BecomeHostPage() {
           <div id="faq" className="py-16 bg-gray-50">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-16">
-                <h2 className="text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+                <h2 className="text-4xl font-bold text-gray-900 mb-4"><TranslatedText text="Frequently Asked Questions" /></h2>
                 <p className="text-xl text-gray-600">
-                  Everything you need to know about becoming a host
+                  <TranslatedText text="Everything you need to know about becoming a host" />
                 </p>
               </div>
 
@@ -293,8 +296,8 @@ export default function BecomeHostPage() {
                   }
                 ].map((faq, index) => (
                   <div key={index} className="bg-white rounded-xl shadow-md p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-3">{faq.question}</h3>
-                    <p className="text-gray-600">{faq.answer}</p>
+                    <h3 className="text-lg font-bold text-gray-900 mb-3"><TranslatedText text={faq.question} /></h3>
+                    <p className="text-gray-600"><TranslatedText text={faq.answer} /></p>
                   </div>
                 ))}
               </div>
@@ -307,20 +310,20 @@ export default function BecomeHostPage() {
       <div className="bg-gradient-to-r from-purple-600 to-indigo-600 py-16">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold text-white mb-4">
-            Ready to Share Your Passion?
+            <TranslatedText text="Ready to Share Your Passion?" />
           </h2>
           <p className="text-xl text-gray-200 mb-8">
-            Join hundreds of dance professionals who trust our platform to grow their business
+            <TranslatedText text="Join hundreds of dance professionals who trust our platform to grow their business" />
           </p>
           <Link
             href="/register"
             className="inline-flex items-center px-8 py-4 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded-full text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
           >
-            Start Your Host Application
+            <TranslatedText text="Start Your Host Application" />
             <span className="ml-2">🚀</span>
           </Link>
           <p className="text-sm text-gray-300 mt-4">
-            No setup fees • Quick approval process • Professional support
+            <TranslatedText text="No setup fees • Quick approval process • Professional support" />
           </p>
         </div>
       </div>

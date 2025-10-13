@@ -8,6 +8,7 @@ import FloatingCTA from './components/FloatingCTA'
 import UrgencyBanner from './components/UrgencyBanner'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import ForumLink from '../components/ForumLink'
+import TranslatedText from '../components/TranslatedText'
 import { useAuth } from '../lib/auth-context'
 import '@/lib/i18n'
 import { LogIn as LogInIcon, UserPlus } from 'lucide-react'
@@ -121,7 +122,7 @@ export default function PublicLayout({
               <li><Link href="/classes" className="dance-nav-link">{isMounted ? t('nav.classes') : 'Classes'}</Link></li>
               <li><Link href="/events" className="dance-nav-link">{isMounted ? t('nav.events') : 'Events'}</Link></li>
               <li><Link href="/instructors" className="dance-nav-link">{isMounted ? t('nav.instructors') : 'Instructors'}</Link></li>
-              <li><Link href="/partner-match" className="dance-nav-link">Partner Match</Link></li>
+              <li><Link href="/partner-match" className="dance-nav-link">{isMounted ? t('nav.partnerMatch') : 'Partner Match'}</Link></li>
               <li><ForumLink className="dance-nav-link">{isMounted ? t('nav.forum') : 'Forum'}</ForumLink></li>
               <li><Link href="/about" className="dance-nav-link">{isMounted ? t('nav.about') : 'About'}</Link></li>
               <li><Link href="/contact" className="dance-nav-link">{isMounted ? t('nav.contact') : 'Contact'}</Link></li>
@@ -255,10 +256,10 @@ export default function PublicLayout({
             {siteSettings?.footer?.newsletter?.enabled && siteSettings?.footer?.layout === 'columns' && (
               <div className="footer-section">
                 <h3 className="text-lg font-semibold mb-4" style={{color: 'var(--primary-gold)'}}>
-                  {siteSettings.footer.newsletter.title}
+                  <TranslatedText text={siteSettings.footer.newsletter.title} fallback={siteSettings.footer.newsletter.title} />
                 </h3>
                 <p className="text-gray-300 text-sm mb-4">
-                  {siteSettings.footer.newsletter.description}
+                  <TranslatedText text={siteSettings.footer.newsletter.description} fallback={siteSettings.footer.newsletter.description} />
                 </p>
                 <div className="flex">
                   <input
@@ -267,7 +268,7 @@ export default function PublicLayout({
                     className="flex-1 px-3 py-2 bg-gray-800 border border-gray-600 rounded-l text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500"
                   />
                   <button className="px-4 py-2 bg-yellow-500 text-black rounded-r hover:bg-yellow-400 transition-colors">
-                    {siteSettings.footer.newsletter.buttonText}
+                    <TranslatedText text={siteSettings.footer.newsletter.buttonText} fallback={siteSettings.footer.newsletter.buttonText} />
                   </button>
                 </div>
               </div>
@@ -288,7 +289,7 @@ export default function PublicLayout({
                         rel={link.openInNewTab ? 'noopener noreferrer' : undefined}
                         className="text-gray-300 hover:text-yellow-300 transition-colors duration-300 text-sm"
                       >
-                        {link.title}
+                        <TranslatedText text={link.title} fallback={link.title} />
                       </Link>
                     </li>
                   ))}
@@ -300,7 +301,9 @@ export default function PublicLayout({
             {siteSettings?.footer?.showContact && siteSettings?.footer?.layout === 'columns' && (
               <div className="footer-section">
                 <h3 className="text-lg font-semibold mb-4" style={{color: 'var(--primary-gold)'}}>
-                  {siteSettings?.footer?.contactSection?.title || (isMounted ? t('footer.getInTouch') : 'Get in Touch')}
+                  {siteSettings?.footer?.contactSection?.title 
+                    ? <TranslatedText text={siteSettings.footer.contactSection.title} fallback={siteSettings.footer.contactSection.title} />
+                    : (isMounted ? t('footer.getInTouch') : 'Get in Touch')}
                 </h3>
                 <div className="space-y-2 text-sm text-gray-300">
                   {siteSettings?.footer?.contactSection?.showEmail && siteSettings?.contactEmail && (
@@ -336,7 +339,9 @@ export default function PublicLayout({
             {siteSettings?.footer?.showSocialLinks && siteSettings?.footer?.layout === 'columns' && (
               <div className="footer-section">
                 <h3 className="text-lg font-semibold mb-4" style={{color: 'var(--primary-gold)'}}>
-                  {siteSettings?.footer?.socialLinksTitle || (isMounted ? t('footer.followUs') : 'Follow Us')}
+                  {siteSettings?.footer?.socialLinksTitle 
+                    ? <TranslatedText text={siteSettings.footer.socialLinksTitle} fallback={siteSettings.footer.socialLinksTitle} />
+                    : (isMounted ? t('footer.followUs') : 'Follow Us')}
                 </h3>
                 <div className="flex flex-wrap gap-4">
                   {siteSettings?.socialMedia?.facebook && (
@@ -403,7 +408,7 @@ export default function PublicLayout({
                 {/* Tagline */}
                 {siteSettings?.footer?.showTagline && siteSettings?.footer?.tagline && (
                   <p className="text-lg mb-6" style={{color: 'var(--primary-gold)'}}>
-                    {siteSettings.footer.tagline}
+                    <TranslatedText text={siteSettings.footer.tagline} fallback={siteSettings.footer.tagline} />
                   </p>
                 )}
                 
@@ -478,7 +483,7 @@ export default function PublicLayout({
                         rel={link.openInNewTab ? 'noopener noreferrer' : undefined}
                         className="text-gray-300 hover:text-yellow-300 transition-colors duration-300 text-sm"
                       >
-                        {link.title}
+                        <TranslatedText text={link.title} fallback={link.title} />
                       </Link>
                     ))}
                   </div>

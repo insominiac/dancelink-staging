@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect, useMemo } from 'react'
+import TranslatedText from '../../components/TranslatedText'
 
 interface UrgencyBannerProps {
   onVisibilityChange?: (visible: boolean) => void
@@ -47,7 +48,7 @@ export default function UrgencyBanner({ onVisibilityChange }: UrgencyBannerProps
         
         setTimeLeft(`${days}d ${hours}h ${minutes}m`)
       } else {
-        setTimeLeft('Expired')
+        setTimeLeft('Expired') // This will be translated in the JSX
       }
     }
 
@@ -64,10 +65,12 @@ export default function UrgencyBanner({ onVisibilityChange }: UrgencyBannerProps
           <div className="flex items-center gap-4">
             <div className="text-2xl animate-bounce">🔥</div>
             <div>
-              <span className="font-bold text-lg">LIMITED TIME OFFER: </span>
-              <span className="text-yellow-300">50% OFF Your First Month!</span>
+              <span className="font-bold text-lg"><TranslatedText text="LIMITED TIME OFFER:" /> </span>
+              <span className="text-yellow-300"><TranslatedText text="50% OFF Your First Month!" /></span>
               <div className="text-sm opacity-90 mt-1">
-                ⏰ Ends in: <span className="font-mono font-bold">{timeLeft}</span>
+                ⏰ <TranslatedText text="Ends in:" /> <span className="font-mono font-bold">
+                  {timeLeft === 'Expired' ? <TranslatedText text="Expired" /> : timeLeft}
+                </span>
               </div>
             </div>
           </div>
@@ -77,7 +80,7 @@ export default function UrgencyBanner({ onVisibilityChange }: UrgencyBannerProps
               href="/contact"
               className="px-6 py-2 bg-white text-red-600 rounded-full font-bold text-sm hover:transform hover:scale-105 transition-all duration-300 whitespace-nowrap relative z-20"
             >
-              🎁 Claim Offer
+              🎁 <TranslatedText text="Claim Offer" />
             </Link>
             <button
               onClick={() => {

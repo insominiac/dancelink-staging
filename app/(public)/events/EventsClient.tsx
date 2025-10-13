@@ -401,11 +401,11 @@ export default function EventsClient({
                         <span className="text-sm ml-1" style={{color: 'var(--neutral-gray)'}}>/person</span>
                       </div>
                       <div className="flex gap-3">
-                        <Link href={`/events/${event.id}`} className="dance-btn dance-btn-secondary hover:transform hover:scale-105 transition-all duration-300 px-6 py-3">Details</Link>
+                        <Link href={`/events/${event.id}`} className="dance-btn dance-btn-secondary hover:transform hover:scale-105 transition-all duration-300 px-6 py-3">{isMounted ? t('ui.viewDetails') : 'Details'}</Link>
                         {spotsLeft > 0 ? (
-                          <Link href={`/events/${event.id}`} className="dance-btn dance-btn-accent hover:transform hover:scale-105 transition-all duration-300 px-6 py-3">Book Now</Link>
+                          <Link href={`/events/${event.id}`} className="dance-btn dance-btn-accent hover:transform hover:scale-105 transition-all duration-300 px-6 py-3">{isMounted ? t('ui.bookNow') : 'Book Now'}</Link>
                         ) : (
-                          <button className="dance-btn px-6 py-3" style={{backgroundColor: 'var(--neutral-gray)', color: 'white', cursor: 'not-allowed'}}>Sold Out</button>
+                          <button className="dance-btn px-6 py-3" style={{backgroundColor: 'var(--neutral-gray)', color: 'white', cursor: 'not-allowed'}}>{isMounted ? t('events.soldOut') : 'Sold Out'}</button>
                         )}
                       </div>
                     </div>

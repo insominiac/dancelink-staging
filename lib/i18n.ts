@@ -13,6 +13,7 @@ const resources = {
         events: 'Events',
         instructors: 'Instructors',
         forum: 'Forum',
+        partnerMatch: 'Partner Match',
         about: 'About',
         contact: 'Contact',
         becomeHost: 'Become a Host',
@@ -98,6 +99,24 @@ const resources = {
           subscribe: 'Subscribe',
           placeholder: 'Enter your email'
         }
+      },
+      // Urgency Banner
+      urgencyBanner: {
+        limitedTimeOffer: 'LIMITED TIME OFFER:',
+        fiftyPercentOff: '50% OFF Your First Month!',
+        endsIn: 'Ends in:',
+        expired: 'Expired',
+        claimOffer: 'Claim Offer'
+      },
+      // Floating CTA
+      floatingCta: {
+        readyToDance: 'Ready to Dance?',
+        bookFreeTrialToday: 'Book your FREE trial class today!',
+        bookFreeTrial: 'Book Free Trial',
+        call: 'Call',
+        browse: 'Browse',
+        noCommitment: 'No commitment',
+        allLevels: 'All levels'
       },
       // Common UI Elements
       ui: {
@@ -209,6 +228,9 @@ const resources = {
         featured: 'Featured Events',
         viewAll: 'View All Events',
         free: 'Free',
+        noUpcoming: 'No Upcoming Events',
+        stayTuned: "Stay tuned! We're planning some amazing dance events for you.",
+        getNotified: 'Get Notified',
         perPerson: '/person',
         spotsLeftCount: '{{count}} spots left',
         soldOut: 'Sold out',
@@ -267,15 +289,157 @@ const resources = {
       aboutPage: {
         title: 'About Us',
         subtitle: 'Our passion for dance',
+        heroTitle: 'About DanceLink',
+        heroSubtitle: 'Connecting dancers through the universal language of movement. Discover our passion for dance and commitment to excellence.',
+        heroBadgeText: 'Our Story & Mission',
+        heroFeatures: {
+          awardWinning: 'Award-winning platform',
+          expertInstructors: 'Expert instructors',
+          passionateCommunity: 'Passionate community'
+        },
+        statsTitle: 'Our Impact in Numbers',
+        statsDescription: 'See how we\'re making a difference in the dance community with our platform and dedicated instructors',
+        stats: {
+          happyStudents: 'Happy Students',
+          happyStudentsDesc: 'And growing daily',
+          danceStyles: 'Dance Styles',
+          danceStylesDesc: 'From ballet to hip-hop',
+          expertInstructorsCount: 'Expert Instructors',
+          expertInstructorsDesc: 'Professional & certified',
+          studioLocations: 'Studio Locations',
+          studioLocationsDesc: 'Across the city'
+        },
         ourStory: 'Our Story',
-        ourMission: 'Our Mission',
-        ourVision: 'Our Vision',
-        ourValues: 'Our Values',
-        meetTheTeam: 'Meet the Team',
-        facilities: 'Our Facilities',
-        testimonials: 'Testimonials'
+        storyDescription1: 'DanceLink was founded with a simple belief: everyone deserves to experience the joy and connection that comes from dance. We started as a small community of passionate dancers and have grown into a thriving platform that connects thousands of students with world-class instructors.',
+        storyDescription2: 'Our mission is to make dance accessible, welcoming, and transformative for people of all backgrounds and skill levels. Whether you\'re taking your first steps or perfecting advanced techniques, we\'re here to support your dance journey.',
+        whyChooseUsTitle: 'Why Choose DanceLink?',
+        features: {
+          awardWinningInstructors: {
+            title: 'Award-winning instructors',
+            description: 'Learn from certified professionals with years of experience'
+          },
+          stateOfTheArtStudios: {
+            title: 'State-of-the-art studios',
+            description: 'Modern facilities equipped with the latest technology'
+          },
+          welcomingCommunity: {
+            title: 'Welcoming community',
+            description: 'Join a supportive network of fellow dance enthusiasts'
+          },
+          provenResults: {
+            title: 'Proven results',
+            description: 'Track your progress and celebrate your achievements'
+          }
+        },
+        newsletterTitle: 'Stay in the Loop!',
+        newsletterDescription: 'Get exclusive access to new classes, special events, and dance tips delivered to your inbox weekly.',
+        newsletterBenefits: {
+          weeklyTips: 'Weekly Tips',
+          exclusiveEvents: 'Exclusive Events',
+          specialDiscounts: 'Special Discounts'
+        },
+        newsletterPlaceholder: 'Enter your email address',
+        subscribeButton: '🚀 Subscribe',
+        subscriptionSuccess: 'Thanks for subscribing!',
+        checkEmail: 'Check your email for confirmation',
+        ctaTitle: 'Ready to Begin Your Dance Journey?',
+        ctaDescription: 'Join hundreds of dancers who have transformed their lives through movement at DanceLink. Start your adventure today!',
+        ctaBadgeText: 'Start Your Journey',
+        ctaButtons: {
+          startFreeTrial: '🎁 Start Free Trial',
+          browseAllClasses: '👀 Browse All Classes'
+        },
+        ctaFeatures: {
+          noExperienceNeeded: {
+            title: 'No Experience Needed',
+            description: 'Perfect for beginners and seasoned dancers alike'
+          },
+          flexibleScheduling: {
+            title: 'Flexible Scheduling',
+            description: 'Choose classes that fit your busy lifestyle'
+          },
+          moneyBackGuarantee: {
+            title: 'Money-back Guarantee',
+            description: '100% satisfaction or your money back'
+          }
+        },
+        exploreClasses: '💃 Explore Classes',
+        contactUs: '📞 Contact Us'
       },
-      // Contact Page
+      // Forum Page
+      forum: {
+        title: 'Community Forum',
+        subtitle: 'Connect, share, and learn with fellow dancers',
+        newPost: 'New Post',
+        signInToPost: 'Sign in to Post',
+        categories: {
+          all: 'All Topics',
+          general: 'General Discussion',
+          technique: 'Dance Techniques',
+          events: 'Events & Socials',
+          partners: 'Partner Search',
+          music: 'Music & Playlists',
+          beginners: 'Beginners Corner'
+        },
+        noPosts: 'No posts yet',
+        beFirst: 'Be the first to start a discussion!',
+        createFirst: 'Create First Post',
+        loading: 'Loading...',
+        loadingPosts: 'Loading posts...',
+        pinned: 'Pinned',
+        locked: 'Locked',
+        views: 'views',
+        replies: 'replies',
+        page: 'Page',
+        of: 'of'
+      },
+      // Contact Page  
+      contactPage: {
+        getInTouchWithUs: 'Get in touch with us',
+        getInTouch: 'Get in Touch',
+        readyToStartDancing: "Ready to start dancing? We're here to help you find the perfect class!",
+        weAreHereToHelp: 'We are here to help you. Send us a message and we will respond soon.',
+        contactUs: 'Contact Us',
+        callNow: '📱 Call Now: (123) 456-7890',
+        emailUs: '✉️ Email Us',
+        bookFreeTrial: 'Book Free Trial',
+        tryAnyClassFree: 'Try any class for free and see if it\'s right for you',
+        bookNow: 'Book Now',
+        liveChat: 'Live Chat',
+        getInstantAnswers: 'Get instant answers to your questions',
+        chatNow: 'Chat Now',
+        scheduleVisit: 'Schedule Visit',
+        visitOurStudio: 'Visit our studio and meet our instructors',
+        schedule: 'Schedule',
+        sendUsAMessage: '📝 Send Us a Message',
+        fillOutForm: 'Fill out the form below and we\'ll get back to you within 24 hours',
+        nameRequired: 'Name *',
+        yourName: 'Your name',
+        phone: 'Phone',
+        emailRequired: 'Email *',
+        youAtExample: 'you@example.com',
+        interestedIn: 'I\'m interested in:',
+        selectAnOption: 'Select an option',
+        freeTrialClass: '🎁 Free Trial Class',
+        regularClasses: '💃 Regular Classes',
+        eventsWorkshops: '🎉 Events & Workshops',
+        privateLessons: '👨‍🏫 Private Lessons',
+        other: '❓ Other',
+        message: 'Message',
+        tellUsAboutGoals: 'Tell us about your dance goals, experience level, or any questions you have...',
+        sendMessage: '🚀 Send Message',
+        responseTime: 'We typically respond within 2-4 hours during business hours',
+        frequentlyAskedQuestions: '❓ Frequently Asked Questions',
+        quickAnswers: 'Quick answers to common questions',
+        doINeedExperience: 'Do I need experience to start?',
+        noExperienceNeeded: 'Not at all! We have beginner-friendly classes for all dance styles. Our instructors are experienced in teaching complete beginners.',
+        whatShouldIWear: 'What should I wear?',
+        comfortableClothing: 'Comfortable clothing that allows you to move freely. Most students wear athletic wear or casual clothes with supportive shoes.',
+        canITryBeforeCommit: 'Can I try before I commit?',
+        freeTrialAvailable: 'Yes! We offer a free trial class for all new students. This lets you experience our teaching style and see if the class is right for you.',
+        howDoIBookClass: 'How do I book a class?',
+        bookingInstructions: 'Call us at (123) 456-7890, send us an email, or fill out the contact form above. We\'ll help you find the perfect class!'
+      },
       contact: {
         title: 'Contact Us',
         subtitle: 'Get in touch with us',
@@ -367,6 +531,82 @@ const resources = {
         support: 'Support',
         choosePlan: 'Choose Plan'
       },
+      // Become Host Page
+      becomeHost: {
+        becomeA: 'Become a',
+        host: 'Host',
+        heroDescription: 'Transform your passion into a thriving dance business. Create your academy, manage venues, and inspire dancers worldwide.',
+        startYourApplication: 'Start Your Application',
+        learnMore: 'Learn More',
+        benefits: 'Benefits',
+        features: 'Features',
+        howItWorks: 'How It Works',
+        faq: 'FAQ',
+        whyBecomeHost: 'Why Become a Host?',
+        joinCommunity: 'Join our community of dance professionals and take your business to the next level',
+        buildDanceCommunity: 'Build Your Dance Community',
+        buildDanceCommunityDesc: 'Create and manage your own dance academy with multiple venues, classes, and events all in one platform.',
+        professionalTools: 'Professional Management Tools',
+        professionalToolsDesc: 'Get access to professional-grade tools for managing bookings, student communications, and business analytics.',
+        growBusiness: 'Grow Your Business',
+        growBusinessDesc: 'Reach more students, increase bookings, and track your performance with detailed analytics and insights.',
+        globalReach: 'Global Reach',
+        globalReachDesc: 'Connect with dancers worldwide and expand your audience beyond your local area.',
+        qualityAssurance: 'Quality Assurance',
+        qualityAssuranceDesc: 'All host applications are carefully reviewed to maintain high standards and build trust with students.',
+        marketingSupport: 'Marketing Support',
+        marketingSupportDesc: 'Get featured in our directory and benefit from our marketing efforts to attract more students.',
+        powerfulTools: 'Powerful Tools for Success',
+        everythingYouNeed: 'Everything you need to manage and grow your dance business',
+        venueManagement: 'Venue Management',
+        createMultipleVenues: 'Create and manage multiple venues',
+        addVenueDetails: 'Add detailed venue information with photos',
+        setLocation: 'Set location with country and city details',
+        trackVenueUtilization: 'Track venue utilization and bookings',
+        classManagement: 'Class Management',
+        designCurriculums: 'Design comprehensive class curriculums',
+        flexibleScheduling: 'Set flexible scheduling and pricing',
+        manageEnrollments: 'Manage student enrollments',
+        trackClassPerformance: 'Track class performance and attendance',
+        eventPlanning: 'Event Planning',
+        organizeWorkshops: 'Organize workshops and performances',
+        createSpecialEvents: 'Create special events and masterclasses',
+        manageEventRegistrations: 'Manage event registrations',
+        buildCommunity: 'Build community through events',
+        businessAnalytics: 'Business Analytics',
+        trackRevenue: 'Track revenue and booking trends',
+        monitorEngagement: 'Monitor student engagement',
+        analyzePopularity: 'Analyze class popularity',
+        generateReports: 'Generate performance reports',
+        howToGetStarted: 'How to Get Started',
+        simpleSteps: 'Simple steps to become a verified host on our platform',
+        submitApplication: 'Submit Application',
+        submitApplicationDesc: 'Fill out the host registration form with your business information.',
+        adminReview: 'Admin Review',
+        adminReviewDesc: 'Our team carefully reviews your application to ensure quality standards.',
+        getApproved: 'Get Approved',
+        getApprovedDesc: 'Receive approval notification and gain access to your host dashboard.',
+        startCreating: 'Start Creating',
+        startCreatingDesc: 'Begin creating venues, classes, and events for your dance community.',
+        frequentlyAskedQuestions: 'Frequently Asked Questions',
+        everythingToKnow: 'Everything you need to know about becoming a host',
+        requirementsQuestion: 'What are the requirements to become a host?',
+        requirementsAnswer: 'You need to have experience in dance instruction or academy management, provide business information, and pass our quality review process.',
+        approvalTimeQuestion: 'How long does the approval process take?',
+        approvalTimeAnswer: 'Our admin team typically reviews applications within 3-5 business days. You\'ll receive an email notification once your application is processed.',
+        createBeforeApprovalQuestion: 'Can I create content before approval?',
+        createBeforeApprovalAnswer: 'Yes, you can create venues, classes, and events, but they won\'t be visible to students until admin approval. This allows you to prepare your content in advance.',
+        feesQuestion: 'What fees are associated with hosting?',
+        feesAnswer: 'We take a small commission from successful bookings. There are no upfront fees or monthly charges to become a host.',
+        multipleVenuesQuestion: 'Can I manage multiple venues?',
+        multipleVenuesAnswer: 'Absolutely! You can create and manage multiple venues across different locations, making it perfect for dance academies with multiple branches.',
+        rejectionQuestion: 'What happens if my application is rejected?',
+        rejectionAnswer: 'If your application doesn\'t meet our current requirements, you\'ll receive feedback on areas for improvement and can reapply after addressing the concerns.',
+        readyToShare: 'Ready to Share Your Passion?',
+        joinHundreds: 'Join hundreds of dance professionals who trust our platform to grow their business',
+        startHostApplication: 'Start Your Host Application',
+        noSetupFees: 'No setup fees • Quick approval process • Professional support'
+      },
       // Error Messages
       errors: {
         pageNotFound: 'Page not found',
@@ -421,6 +661,7 @@ const resources = {
         events: '이벤트',
         instructors: '강사',
         forum: '포럼',
+        partnerMatch: '파트너 매칭',
         about: '소개',
         contact: '연락처',
         becomeHost: '호스트 신청',
@@ -507,6 +748,24 @@ const resources = {
           placeholder: '이메일을 입력하세요'
         }
       },
+      // Urgency Banner
+      urgencyBanner: {
+        limitedTimeOffer: '한정 시간 제공:',
+        fiftyPercentOff: '첫 달 50% 할인!',
+        endsIn: '종료까지:',
+        expired: '만료됨',
+        claimOffer: '제공 받기'
+      },
+      // Floating CTA
+      floatingCta: {
+        readyToDance: '배운 준비가 되셈나요?',
+        bookFreeTrialToday: '오늘 무료 체험 수업을 예약하세요!',
+        bookFreeTrial: '무료 체험 예약',
+        call: '전화',
+        browse: '둘러보기',
+        noCommitment: '약정 없음',
+        allLevels: '모든 레벨'
+      },
       // Classes Page (partial)
       classes: {
         minutesShort: '{{count}}분',
@@ -553,6 +812,7 @@ const resources = {
         events: 'Sự kiện',
         instructors: 'Giảng viên',
         forum: 'Diễn đàn',
+        partnerMatch: 'Ghép cặp Đối tác',
         about: 'Giới thiệu',
         contact: 'Liên hệ',
         becomeHost: 'Trở thành Host',
@@ -639,6 +899,24 @@ const resources = {
           placeholder: 'Nhập email của bạn'
         }
       },
+      // Urgency Banner
+      urgencyBanner: {
+        limitedTimeOffer: 'UU ĐÁI THỜI GIAN CÓ HẠN:',
+        fiftyPercentOff: 'GIẢM 50% THÁNG ĐẦU TIÊN!',
+        endsIn: 'Kết thúc trong:',
+        expired: 'Hết hạn',
+        claimOffer: 'Nhận Uu đái'
+      },
+      // Floating CTA
+      floatingCta: {
+        readyToDance: 'Sẵn sàng Khiêu Vũ?',
+        bookFreeTrialToday: 'Đặt lớp học thử MIỄN PHÍ hôm nay!',
+        bookFreeTrial: 'Đặt Học Thử Miễn Phí',
+        call: 'Gọi Điện',
+        browse: 'Duyệt',
+        noCommitment: 'Không cam kết',
+        allLevels: 'Mọi trình độ'
+      },
       // Classes Page (partial)
       classes: {
         minutesShort: '{{count}} phút',
@@ -685,6 +963,7 @@ const resources = {
         events: 'Eventos',
         instructors: 'Instructores',
         forum: 'Foro',
+        partnerMatch: 'Buscar Pareja',
         about: 'Acerca de',
         contact: 'Contacto',
         becomeHost: 'Conviértete en Host',
@@ -766,6 +1045,24 @@ const resources = {
           subscribe: 'Suscribirse',
           placeholder: 'Ingresa tu email'
         }
+      },
+      // Urgency Banner
+      urgencyBanner: {
+        limitedTimeOffer: '¡OFERTA POR TIEMPO LIMITADO:',
+        fiftyPercentOff: '¡50% DE DESCUENTO en tu Primer Mes!',
+        endsIn: 'Termina en:',
+        expired: 'Expirado',
+        claimOffer: 'Reclamar Oferta'
+      },
+      // Floating CTA
+      floatingCta: {
+        readyToDance: '¿Listo para Bailar?',
+        bookFreeTrialToday: '¡Reserva tu clase de prueba GRATUITA hoy!',
+        bookFreeTrial: 'Reservar Prueba Gratis',
+        call: 'Llamar',
+        browse: 'Explorar',
+        noCommitment: 'Sin compromiso',
+        allLevels: 'Todos los niveles'
       },
       // Common UI Elements
       ui: {
@@ -875,6 +1172,11 @@ const resources = {
         upcoming: 'Próximos eventos',
         past: 'Eventos pasados',
         featured: 'Eventos destacados',
+        viewAll: 'Ver Todos los Eventos',
+        free: 'Gratis',
+        noUpcoming: 'No Hay Eventos Próximos',
+        stayTuned: '¡Mantente atento! Estamos planeando algunos eventos de danza increíbles para ti.',
+        getNotified: 'Ser Notificado',
         perPerson: '/persona',
         spotsLeftCount: '{{count}} cupos disponibles',
         soldOut: 'Agotado',
@@ -909,15 +1211,157 @@ const resources = {
       aboutPage: {
         title: 'Acerca de Nosotros',
         subtitle: 'Nuestra pasión por la danza',
+        heroTitle: 'Acerca de DanceLink',
+        heroSubtitle: 'Conectando bailarines a través del lenguaje universal del movimiento. Descubre nuestra pasión por la danza y compromiso con la excelencia.',
+        heroBadgeText: 'Nuestra Historia y Misión',
+        heroFeatures: {
+          awardWinning: 'Plataforma galardonada',
+          expertInstructors: 'Instructores expertos',
+          passionateCommunity: 'Comunidad apasionada'
+        },
+        statsTitle: 'Nuestro Impacto en Números',
+        statsDescription: 'Ve cómo estamos marcando la diferencia en la comunidad de danza con nuestra plataforma e instructores dedicados',
+        stats: {
+          happyStudents: 'Estudiantes Felices',
+          happyStudentsDesc: 'Y creciendo diariamente',
+          danceStyles: 'Estilos de Danza',
+          danceStylesDesc: 'Del ballet al hip-hop',
+          expertInstructorsCount: 'Instructores Expertos',
+          expertInstructorsDesc: 'Profesionales y certificados',
+          studioLocations: 'Ubicaciones de Estudio',
+          studioLocationsDesc: 'Por toda la ciudad'
+        },
         ourStory: 'Nuestra Historia',
-        ourMission: 'Nuestra Misión',
-        ourVision: 'Nuestra Visión',
-        ourValues: 'Nuestros Valores',
-        meetTheTeam: 'Conoce al Equipo',
-        facilities: 'Nuestras Instalaciones',
-        testimonials: 'Testimonios'
+        storyDescription1: 'DanceLink fue fundado con una simple creencia: todos merecen experimentar la alegría y conexión que proviene de la danza. Comenzamos como una pequeña comunidad de bailarines apasionados y hemos crecido hasta convertirnos en una plataforma próspera que conecta a miles de estudiantes con instructores de clase mundial.',
+        storyDescription2: 'Nuestra misión es hacer que la danza sea accesible, acogedora y transformadora para personas de todos los orígenes y niveles de habilidad. Ya sea que estés dando tus primeros pasos o perfeccionando técnicas avanzadas, estamos aquí para apoyar tu viaje de danza.',
+        whyChooseUsTitle: '¿Por qué elegir DanceLink?',
+        features: {
+          awardWinningInstructors: {
+            title: 'Instructores galardonados',
+            description: 'Aprende de profesionales certificados con años de experiencia'
+          },
+          stateOfTheArtStudios: {
+            title: 'Estudios de vanguardia',
+            description: 'Instalaciones modernas equipadas con la última tecnología'
+          },
+          welcomingCommunity: {
+            title: 'Comunidad acogedora',
+            description: 'Únete a una red de apoyo de entusiastas de la danza'
+          },
+          provenResults: {
+            title: 'Resultados comprobados',
+            description: 'Rastrea tu progreso y celebra tus logros'
+          }
+        },
+        newsletterTitle: '¡Mantente al Día!',
+        newsletterDescription: 'Obtén acceso exclusivo a nuevas clases, eventos especiales y consejos de danza entregados a tu bandeja de entrada semanalmente.',
+        newsletterBenefits: {
+          weeklyTips: 'Consejos Semanales',
+          exclusiveEvents: 'Eventos Exclusivos',
+          specialDiscounts: 'Descuentos Especiales'
+        },
+        newsletterPlaceholder: 'Ingresa tu dirección de email',
+        subscribeButton: '🚀 Suscribirse',
+        subscriptionSuccess: '¡Gracias por suscribirte!',
+        checkEmail: 'Revisa tu email para confirmación',
+        ctaTitle: '¿Listo para Comenzar tu Viaje de Danza?',
+        ctaDescription: 'Únete a cientos de bailarines que han transformado sus vidas a través del movimiento en DanceLink. ¡Comienza tu aventura hoy!',
+        ctaBadgeText: 'Inicia tu Viaje',
+        ctaButtons: {
+          startFreeTrial: '🎁 Comenzar Prueba Gratis',
+          browseAllClasses: '👀 Explorar Todas las Clases'
+        },
+        ctaFeatures: {
+          noExperienceNeeded: {
+            title: 'No se Necesita Experiencia',
+            description: 'Perfecto para principiantes y bailarines experimentados por igual'
+          },
+          flexibleScheduling: {
+            title: 'Horarios Flexibles',
+            description: 'Elige clases que se adapten a tu estilo de vida ocupado'
+          },
+          moneyBackGuarantee: {
+            title: 'Garantía de Devolución',
+            description: '100% satisfacción o te devolvemos tu dinero'
+          }
+        },
+        exploreClasses: '💃 Explorar Clases',
+        contactUs: '📞 Contáctanos'
       },
-      // Contact Page
+      // Forum Page
+      forum: {
+        title: 'Foro de la Comunidad',
+        subtitle: 'Conéctate, comparte y aprende con otros bailarines',
+        newPost: 'Nueva Publicación',
+        signInToPost: 'Iniciar Sesión para Publicar',
+        categories: {
+          all: 'Todos los Temas',
+          general: 'Discusión General',
+          technique: 'Técnicas de Danza',
+          events: 'Eventos y Sociales',
+          partners: 'Búsqueda de Pareja',
+          music: 'Música y Listas',
+          beginners: 'Rincón de Principiantes'
+        },
+        noPosts: 'Aún no hay publicaciones',
+        beFirst: '¡Sé el primero en iniciar una discusión!',
+        createFirst: 'Crear Primera Publicación',
+        loading: 'Cargando...',
+        loadingPosts: 'Cargando publicaciones...',
+        pinned: 'Fijado',
+        locked: 'Bloqueado',
+        views: 'vistas',
+        replies: 'respuestas',
+        page: 'Página',
+        of: 'de'
+      },
+      // Contact Page  
+      contactPage: {
+        getInTouchWithUs: 'Ponte en contacto con nosotros',
+        getInTouch: 'Contacto',
+        readyToStartDancing: '¿Listo para empezar a bailar? Estamos aquí para ayudarte a encontrar la clase perfecta!',
+        weAreHereToHelp: 'Estamos aquí para ayudarte. Envíanos un mensaje y te responderemos pronto.',
+        contactUs: 'Contáctanos',
+        callNow: '📱 Llamar Ahora: (123) 456-7890',
+        emailUs: '✉️ Envíanos un Email',
+        bookFreeTrial: 'Reservar Prueba Gratis',
+        tryAnyClassFree: 'Prueba cualquier clase gratis y ve si es adecuada para ti',
+        bookNow: 'Reservar Ahora',
+        liveChat: 'Chat en Vivo',
+        getInstantAnswers: 'Obtén respuestas instantáneas a tus preguntas',
+        chatNow: 'Chatear Ahora',
+        scheduleVisit: 'Programar Visita',
+        visitOurStudio: 'Visita nuestro estudio y conoce a nuestros instructores',
+        schedule: 'Programar',
+        sendUsAMessage: '📝 Envíanos un Mensaje',
+        fillOutForm: 'Completa el formulario a continuación y te responderemos en 24 horas',
+        nameRequired: 'Nombre *',
+        yourName: 'Tu nombre',
+        phone: 'Teléfono',
+        emailRequired: 'Email *',
+        youAtExample: 'tu@ejemplo.com',
+        interestedIn: 'Estoy interesado en:',
+        selectAnOption: 'Selecciona una opción',
+        freeTrialClass: '🎁 Clase de Prueba Gratis',
+        regularClasses: '💃 Clases Regulares',
+        eventsWorkshops: '🎉 Eventos y Talleres',
+        privateLessons: '👨‍🏫 Lecciones Privadas',
+        other: '❓ Otro',
+        message: 'Mensaje',
+        tellUsAboutGoals: 'Cuéntanos sobre tus objetivos de baile, nivel de experiencia o cualquier pregunta que tengas...',
+        sendMessage: '🚀 Enviar Mensaje',
+        responseTime: 'Normalmente respondemos en 2-4 horas durante el horario comercial',
+        frequentlyAskedQuestions: '❓ Preguntas Frecuentes',
+        quickAnswers: 'Respuestas rápidas a preguntas comunes',
+        doINeedExperience: '¿Necesito experiencia para empezar?',
+        noExperienceNeeded: '¡Para nada! Tenemos clases para principiantes en todos los estilos de baile. Nuestros instructores tienen experiencia enseñando a principiantes completos.',
+        whatShouldIWear: '¿Qué debo usar?',
+        comfortableClothing: 'Ropa cómoda que te permita moverte libremente. La mayoría de los estudiantes usan ropa deportiva o casual con zapatos cómodos.',
+        canITryBeforeCommit: '¿Puedo probar antes de comprometerme?',
+        freeTrialAvailable: '¡Sí! Ofrecemos una clase de prueba gratuita para todos los nuevos estudiantes. Esto te permite experimentar nuestro estilo de enseñanza y ver si la clase es adecuada para ti.',
+        howDoIBookClass: '¿Cómo reservo una clase?',
+        bookingInstructions: 'Llámanos al (123) 456-7890, envíanos un email, o completa el formulario de contacto arriba. ¡Te ayudaremos a encontrar la clase perfecta!'
+      },
       contact: {
         title: 'Contáctanos',
         subtitle: 'Ponte en contacto con nosotros',
@@ -1008,6 +1452,82 @@ const resources = {
         unlimited: 'Ilimitado',
         support: 'Soporte',
         choosePlan: 'Elegir Plan'
+      },
+      // Become Host Page
+      becomeHost: {
+        becomeA: 'Convértete en',
+        host: 'Anfitrión',
+        heroDescription: 'Transforma tu pasión en un próspero negocio de danza. Crea tu academia, gestiona sedes e inspira a bailarines de todo el mundo.',
+        startYourApplication: 'Inicia tu Solicitud',
+        learnMore: 'Saber Más',
+        benefits: 'Beneficios',
+        features: 'Características',
+        howItWorks: 'Cómo Funciona',
+        faq: 'Preguntas Frecuentes',
+        whyBecomeHost: '¿Por qué ser Anfitrión?',
+        joinCommunity: 'Únete a nuestra comunidad de profesionales de la danza y lleva tu negocio al siguiente nivel',
+        buildDanceCommunity: 'Construye tu Comunidad de Danza',
+        buildDanceCommunityDesc: 'Crea y gestiona tu propia academia de danza con múltiples sedes, clases y eventos en una sola plataforma.',
+        professionalTools: 'Herramientas de Gestión Profesional',
+        professionalToolsDesc: 'Obtén acceso a herramientas de nivel profesional para gestionar reservas, comunicaciones con estudiantes y análisis de negocio.',
+        growBusiness: 'Haz Crecer tu Negocio',
+        growBusinessDesc: 'Alcanza más estudiantes, aumenta las reservas y rastrea tu rendimiento con análisis detallados e insights.',
+        globalReach: 'Alcance Global',
+        globalReachDesc: 'Conéctate con bailarines de todo el mundo y expande tu audiencia más allá de tu área local.',
+        qualityAssurance: 'Garantía de Calidad',
+        qualityAssuranceDesc: 'Todas las solicitudes de anfitrión son revisadas cuidadosamente para mantener altos estándares y generar confianza con los estudiantes.',
+        marketingSupport: 'Apoyo de Marketing',
+        marketingSupportDesc: 'Apapérece destacado en nuestro directorio y benéficate de nuestros esfuerzos de marketing para atraer más estudiantes.',
+        powerfulTools: 'Herramientas Poderosas para el Éxito',
+        everythingYouNeed: 'Todo lo que necesitas para gestionar y hacer crecer tu negocio de danza',
+        venueManagement: 'Gestión de Sedes',
+        createMultipleVenues: 'Crear y gestionar múltiples sedes',
+        addVenueDetails: 'Añadir información detallada de sedes con fotos',
+        setLocation: 'Establecer ubicación con detalles de país y ciudad',
+        trackVenueUtilization: 'Rastrear utilización de sedes y reservas',
+        classManagement: 'Gestión de Clases',
+        designCurriculums: 'Diseñar currículos integrales de clases',
+        flexibleScheduling: 'Establecer horarios flexibles y precios',
+        manageEnrollments: 'Gestionar inscripciones de estudiantes',
+        trackClassPerformance: 'Rastrear rendimiento y asistencia de clases',
+        eventPlanning: 'Planificación de Eventos',
+        organizeWorkshops: 'Organizar talleres y presentaciones',
+        createSpecialEvents: 'Crear eventos especiales y masterclasses',
+        manageEventRegistrations: 'Gestionar registros de eventos',
+        buildCommunity: 'Construir comunidad a través de eventos',
+        businessAnalytics: 'Análisis de Negocio',
+        trackRevenue: 'Rastrear ingresos y tendencias de reservas',
+        monitorEngagement: 'Monitorear compromiso de estudiantes',
+        analyzePopularity: 'Analizar popularidad de clases',
+        generateReports: 'Generar reportes de rendimiento',
+        howToGetStarted: 'Cómo Comenzar',
+        simpleSteps: 'Pasos simples para convertirse en un anfitrión verificado en nuestra plataforma',
+        submitApplication: 'Enviar Solicitud',
+        submitApplicationDesc: 'Completa el formulario de registro de anfitrión con la información de tu negocio.',
+        adminReview: 'Revisión de Admin',
+        adminReviewDesc: 'Nuestro equipo revisa cuidadosamente tu solicitud para asegurar estándares de calidad.',
+        getApproved: 'Obtener Aprobación',
+        getApprovedDesc: 'Recibe notificación de aprobación y obtén acceso a tu panel de anfitrión.',
+        startCreating: 'Comenzar a Crear',
+        startCreatingDesc: 'Empieza a crear sedes, clases y eventos para tu comunidad de danza.',
+        frequentlyAskedQuestions: 'Preguntas Frecuentes',
+        everythingToKnow: 'Todo lo que necesitas saber sobre convertirte en anfitrión',
+        requirementsQuestion: '¿Cuáles son los requisitos para ser anfitrión?',
+        requirementsAnswer: 'Necesitas tener experiencia en instrucción de danza o gestión de academias, proporcionar información del negocio y pasar nuestro proceso de revisión de calidad.',
+        approvalTimeQuestion: '¿Cuánto tarda el proceso de aprobación?',
+        approvalTimeAnswer: 'Nuestro equipo administrativo típicamente revisa solicitudes en 3-5 días hábiles. Recibirás una notificación por email una vez que tu solicitud sea procesada.',
+        createBeforeApprovalQuestion: '¿Puedo crear contenido antes de la aprobación?',
+        createBeforeApprovalAnswer: 'Sí, puedes crear sedes, clases y eventos, pero no serán visibles para los estudiantes hasta la aprobación del admin. Esto te permite preparar tu contenido con anticipación.',
+        feesQuestion: '¿Qué tarifas están asociadas con ser anfitrión?',
+        feesAnswer: 'Tomamos una pequeña comisión de las reservas exitosas. No hay tarifas iniciales o cargos mensuales para convertirte en anfitrión.',
+        multipleVenuesQuestion: '¿Puedo gestionar múltiples sedes?',
+        multipleVenuesAnswer: '¡Absolutamente! Puedes crear y gestionar múltiples sedes en diferentes ubicaciones, perfecto para academias de danza con múltiples sucursales.',
+        rejectionQuestion: '¿Qué pasa si mi solicitud es rechazada?',
+        rejectionAnswer: 'Si tu solicitud no cumple con nuestros requisitos actuales, recibirás comentarios sobre áreas de mejora y puedes volver a solicitar después de abordar las preocupaciones.',
+        readyToShare: '¿Listo para Compartir tu Pasión?',
+        joinHundreds: 'Únete a cientos de profesionales de la danza que confían en nuestra plataforma para hacer crecer su negocio',
+        startHostApplication: 'Iniciar Solicitud de Anfitrión',
+        noSetupFees: 'Sin tarifas de configuración • Proceso de aprobación rápido • Soporte profesional'
       },
       // Error Messages
       errors: {

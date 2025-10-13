@@ -236,15 +236,23 @@ export default function InstructorsPage() {
         <div className="relative z-10 dance-container text-center">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white mb-5">
             <span className="mr-2">👨‍🏫</span>
-            <span className="text-sm font-medium">{pageContent?.heroBadgeText || "Meet Our Expert Team"}</span>
+            <span className="text-sm font-medium">
+              {pageContent?.heroBadgeText 
+                ? <TranslatedText text={pageContent.heroBadgeText} /> 
+                : "Meet Our Expert Team"}
+            </span>
           </div>
           
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-5 dance-font text-white">
-            {pageContent?.heroTitle || "Our"} <span className="text-yellow-100 dance-font">Instructors</span>
+            {pageContent?.heroTitle 
+              ? <TranslatedText text={pageContent.heroTitle} />
+              : "Our"} <span className="text-yellow-100 dance-font">Instructors</span>
           </h1>
           
           <p className="text-base md:text-lg text-white/90 mb-7 max-w-2xl mx-auto leading-relaxed">
-            {pageContent?.heroSubtitle || `Meet the ${instructors.length} talented professionals behind our classes. Experienced, passionate, and dedicated to helping you achieve your dance goals.`}
+            {pageContent?.heroSubtitle 
+              ? <TranslatedText text={pageContent.heroSubtitle} />
+              : <TranslatedText text={`Meet the ${instructors.length} talented professionals behind our classes. Experienced, passionate, and dedicated to helping you achieve your dance goals.`} />}
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
@@ -257,7 +265,7 @@ export default function InstructorsPage() {
                 {index > 0 && <div className="hidden sm:block text-white/60 mx-4">•</div>}
                 <div className="flex items-center text-white/90">
                   <span className="mr-2">{feature.icon}</span>
-                  <span className="font-medium">{feature.text}</span>
+                  <span className="font-medium"><TranslatedText text={feature.text} /></span>
                 </div>
               </div>
             ))}
@@ -288,25 +296,45 @@ export default function InstructorsPage() {
             <>
               {/* Stats Section */}
               <div className="dance-section-header mb-16">
-                <h2 className="dance-section-title">{pageContent?.statsSection.title || "Our Teaching Excellence"}</h2>
-                <p className="max-w-2xl mx-auto mb-12">{pageContent?.statsSection.subtitle || "Meet our diverse team of professional dance instructors, each bringing unique expertise and passion to every class"}</p>
+                <h2 className="dance-section-title">
+                  {pageContent?.statsSection.title 
+                    ? <TranslatedText text={pageContent.statsSection.title} />
+                    : <TranslatedText text="Our Teaching Excellence" />}
+                </h2>
+                <p className="max-w-2xl mx-auto mb-12">
+                  {pageContent?.statsSection.subtitle 
+                    ? <TranslatedText text={pageContent.statsSection.subtitle} />
+                    : <TranslatedText text="Meet our diverse team of professional dance instructors, each bringing unique expertise and passion to every class" />}
+                </p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
                   <div className="bg-white rounded-2xl shadow-lg p-6 text-center border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                     <div className="text-4xl font-bold mb-2 text-indigo-600">{instructors.length}</div>
-                    <div className="text-gray-700 font-medium">{pageContent?.statsSection.labels.instructorsLabel || "Expert Instructors"}</div>
+                    <div className="text-gray-700 font-medium">
+                      {pageContent?.statsSection.labels.instructorsLabel 
+                        ? <TranslatedText text={pageContent.statsSection.labels.instructorsLabel} />
+                        : <TranslatedText text="Expert Instructors" />}
+                    </div>
                   </div>
                   <div className="bg-white rounded-2xl shadow-lg p-6 text-center border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                     <div className="text-4xl font-bold mb-2 text-emerald-600">
                       {instructors.reduce((sum, instructor) => sum + instructor.classCount, 0)}
                     </div>
-                    <div className="text-gray-700 font-medium">{pageContent?.statsSection.labels.classesLabel || "Active Classes"}</div>
+                    <div className="text-gray-700 font-medium">
+                      {pageContent?.statsSection.labels.classesLabel 
+                        ? <TranslatedText text={pageContent.statsSection.labels.classesLabel} />
+                        : <TranslatedText text="Active Classes" />}
+                    </div>
                   </div>
                   <div className="bg-white rounded-2xl shadow-lg p-6 text-center border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                     <div className="text-4xl font-bold mb-2 text-purple-600">
                       {Math.round(instructors.reduce((sum, instructor) => sum + parseFloat(instructor.experience || '0'), 0) / instructors.length) || 0}+
                     </div>
-                    <div className="text-gray-700 font-medium">{pageContent?.statsSection.labels.experienceLabel || "Years Experience"}</div>
+                    <div className="text-gray-700 font-medium">
+                      {pageContent?.statsSection.labels.experienceLabel 
+                        ? <TranslatedText text={pageContent.statsSection.labels.experienceLabel} />
+                        : <TranslatedText text="Years Experience" />}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -337,7 +365,7 @@ export default function InstructorsPage() {
                         </h3>
                         {instructor.experience && (
                           <p className="text-indigo-600 text-sm font-medium px-3 py-1 bg-indigo-100 rounded-full">
-                            {instructor.experience} Experience
+                            <TranslatedText text={`${instructor.experience} Experience`} />
                           </p>
                         )}
                       </div>
@@ -355,7 +383,7 @@ export default function InstructorsPage() {
                       {/* Specialties */}
                       {instructor.specialtiesArray.length > 0 && (
                         <div className="mb-6">
-                          <p className="text-xs font-semibold mb-3 text-gray-700 uppercase tracking-wider">Specialties</p>
+                          <p className="text-xs font-semibold mb-3 text-gray-700 uppercase tracking-wider"><TranslatedText text="Specialties" /></p>
                           <div className="flex flex-wrap gap-2">
                             {instructor.specialtiesArray.slice(0, 5).map((specialty, index) => {
                               const colors = [
@@ -391,13 +419,13 @@ export default function InstructorsPage() {
                             <div className="text-2xl font-bold text-blue-600">
                               {instructor.classCount}
                             </div>
-                            <div className="text-xs font-medium text-blue-700">Active Classes</div>
+                            <div className="text-xs font-medium text-blue-700"><TranslatedText text="Active Classes" /></div>
                           </div>
                           <div className="rounded-xl p-4 bg-gradient-to-br from-emerald-50 to-emerald-100 border border-emerald-200">
                             <div className="text-2xl font-bold text-emerald-600">
                               {instructor.activeClasses.filter(c => c.isPrimary).length}
                             </div>
-                            <div className="text-xs font-medium text-emerald-700">Lead Instructor</div>
+                            <div className="text-xs font-medium text-emerald-700"><TranslatedText text="Lead Instructor" /></div>
                           </div>
                         </div>
                       </div>
@@ -405,7 +433,7 @@ export default function InstructorsPage() {
                       {/* Active Classes */}
                       {instructor.activeClasses.length > 0 && (
                         <div className="mb-6">
-                          <p className="text-xs font-semibold mb-3 text-gray-700 uppercase tracking-wider">Current Classes</p>
+                          <p className="text-xs font-semibold mb-3 text-gray-700 uppercase tracking-wider"><TranslatedText text="Current Classes" /></p>
                           <div className="space-y-2">
                             {instructor.activeClasses.slice(0, 3).map((cls) => (
                               <Link 
@@ -444,7 +472,7 @@ export default function InstructorsPage() {
                             background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'
                           }}
                         >
-                          View Classes
+                          <TranslatedText text="View Classes" />
                         </Link>
                         {instructor.email && (
                           <Link 
