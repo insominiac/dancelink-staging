@@ -649,6 +649,77 @@ const resources = {
           november: 'November',
           december: 'December'
         }
+      },
+      // Privacy Policy
+      privacy: {
+        heroBadge: 'Your Privacy Matters',
+        title: 'Privacy Policy',
+        heroDescription: 'We are committed to protecting your personal information and your right to privacy. Learn how we collect, use, and safeguard your data.',
+        dataProtection: 'Data Protection',
+        secureStorage: 'Secure Storage',
+        legalCompliance: 'Legal Compliance',
+        lastUpdated: 'Last Updated',
+        lastUpdatedDate: 'October 14, 2024',
+        introduction: {
+          title: 'Introduction',
+          paragraph1: 'Welcome to DanceLink ("we," "our," or "us"). We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you about how we look after your personal data when you visit our website and tell you about your privacy rights and how the law protects you.',
+          paragraph2: 'This privacy policy applies to all information collected through our website, mobile applications, and any related services, sales, marketing, or events.'
+        },
+        infoCollection: {
+          title: 'Information We Collect',
+          personalInfo: {
+            title: 'Personal Information'
+          }
+        },
+        contact: {
+          title: 'Contact Us',
+          description: 'If you have any questions about this Privacy Policy or our privacy practices, please contact us:'
+        },
+        cta: {
+          badge: 'Your Privacy is Protected',
+          title: 'Questions About Our Privacy Policy?',
+          description: "We're here to help. Contact our support team for any privacy-related questions or concerns.",
+          contactSupport: 'Contact Support',
+          viewTerms: 'View Terms of Service'
+        }
+      },
+      // Terms of Service
+      terms: {
+        heroBadge: 'Legal Terms & Conditions',
+        title: 'Terms of Service',
+        heroDescription: 'Please read these terms carefully before using our services. By accessing DanceLink, you agree to be bound by these terms and conditions.',
+        clearGuidelines: 'Clear Guidelines',
+        fairAgreement: 'Fair Agreement',
+        legalProtection: 'Legal Protection',
+        lastUpdated: 'Last Updated',
+        lastUpdatedDate: 'October 14, 2024',
+        agreement: {
+          title: 'Agreement to Terms',
+          paragraph1: 'By accessing and using DanceLink ("the Service"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.',
+          paragraph2: 'These terms apply to all visitors, users, and others who access or use the service, including instructors, students, and hosts.'
+        },
+        usage: {
+          title: 'Use of the Service'
+        },
+        accounts: {
+          title: 'User Accounts'
+        },
+        payment: {
+          title: 'Booking and Payment Terms'
+        },
+        contact: {
+          title: 'Contact Us',
+          description: 'If you have any questions about these Terms of Service, please contact us:'
+        },
+        cta: {
+          badge: 'Clear Terms & Fair Conditions',
+          title: 'Ready to Join Our Dance Community?',
+          description: "Now that you've read our terms, you're ready to start your dance journey with confidence and clarity.",
+          browseClasses: 'Browse Classes',
+          contactUs: 'Questions? Contact Us',
+          agreement: 'By using our service, you agree to these terms.',
+          viewPrivacy: 'View our Privacy Policy'
+        }
       }
     }
   },
@@ -800,6 +871,77 @@ const resources = {
           from50to100: '$50 - $100',
           over100: '$100 이상'
         }
+      },
+      // Privacy Policy
+      privacy: {
+        heroBadge: '개인정보가 중요합니다',
+        title: '개인정보 보호정책',
+        heroDescription: '저희는 귀하의 개인정보를 보호하고 개인정보 보호 권리를 지키는 데 최선을 다하고 있습니다. 저희가 어떻게 데이터를 수집, 사용, 보호하는지 알아보세요.',
+        dataProtection: '데이터 보호',
+        secureStorage: '안전한 저장',
+        legalCompliance: '법적 준수',
+        lastUpdated: '최종 업데이트',
+        lastUpdatedDate: '2024년 10월 14일',
+        introduction: {
+          title: '소개',
+          paragraph1: 'DanceLink("저희", "당사" 또는 "우리")에 오신 것을 환영합니다. 저희는 귀하의 개인정보를 존중하며 개인 데이터 보호에 최선을 다하고 있습니다. 이 개인정보 보호정책은 귀하가 저희 웹사이트를 방문할 때 개인 데이터를 어떻게 관리하는지, 그리고 개인정보 보호 권리와 법적 보호에 대해 알려드립니다.',
+          paragraph2: '이 개인정보 보호정책은 저희 웹사이트, 모바일 애플리케이션 및 관련 서비스, 판매, 마케팅 또는 이벤트를 통해 수집되는 모든 정보에 적용됩니다.'
+        },
+        infoCollection: {
+          title: '수집하는 정보',
+          personalInfo: {
+            title: '개인정보'
+          }
+        },
+        contact: {
+          title: '문의하기',
+          description: '이 개인정보 보호정책이나 개인정보 보호 관행에 대해 궁금한 점이 있으시면 저희에게 연락해 주세요:'
+        },
+        cta: {
+          badge: '귀하의 개인정보는 보호됩니다',
+          title: '개인정보 보호정책에 대한 질문이 있으신가요?',
+          description: '저희가 도와드리겠습니다. 개인정보 보호 관련 질문이나 우려사항이 있으시면 지원팀에 문의하세요.',
+          contactSupport: '지원팀 연락',
+          viewTerms: '서비스 약관 보기'
+        }
+      },
+      // Terms of Service
+      terms: {
+        heroBadge: '법적 약관 및 조건',
+        title: '서비스 약관',
+        heroDescription: '저희 서비스를 사용하기 전에 이 약관을 신중히 읽어주세요. DanceLink에 접근함으로써 귀하는 이러한 약관 및 조건에 구속되는 것에 동의합니다.',
+        clearGuidelines: '명확한 지침',
+        fairAgreement: '공정한 계약',
+        legalProtection: '법적 보호',
+        lastUpdated: '최종 업데이트',
+        lastUpdatedDate: '2024년 10월 14일',
+        agreement: {
+          title: '약관 동의',
+          paragraph1: 'DanceLink("서비스")에 접근하고 사용함으로써 귀하는 이 계약의 약관 및 조항에 구속되는 것에 동의하고 승낙합니다. 위 사항에 동의하지 않으신다면 이 서비스를 사용하지 마십시오.',
+          paragraph2: '이 약관은 강사, 학생, 호스트를 포함하여 서비스에 접근하거나 사용하는 모든 방문자, 사용자 및 기타 모든 이들에게 적용됩니다.'
+        },
+        usage: {
+          title: '서비스 사용'
+        },
+        accounts: {
+          title: '사용자 계정'
+        },
+        payment: {
+          title: '예약 및 결제 약관'
+        },
+        contact: {
+          title: '문의하기',
+          description: '이 서비스 약관에 대해 궁금한 점이 있으시면 저희에게 연락해 주세요:'
+        },
+        cta: {
+          badge: '명확한 약관 및 공정한 조건',
+          title: '저희 댄스 커뮤니티에 참여할 준비가 되셨나요?',
+          description: '약관을 읽어보셨으니 이제 자신감과 명확함을 가지고 댄스 여정을 시작할 준비가 되었습니다.',
+          browseClasses: '수업 둘러보기',
+          contactUs: '질문이 있나요? 문의하기',
+          agreement: '저희 서비스를 사용함으로써 이 약관에 동의합니다.',
+          viewPrivacy: '개인정보 보호정책 보기'
+        }
       }
     }
   },
@@ -950,6 +1092,77 @@ const resources = {
           from25to50: '$25 - $50',
           from50to100: '$50 - $100',
           over100: 'Trên $100'
+        }
+      },
+      // Privacy Policy
+      privacy: {
+        heroBadge: 'Quyền riêng tư của bạn rất quan trọng',
+        title: 'Chính sách bảo mật',
+        heroDescription: 'Chúng tôi cam kết bảo vệ thông tin cá nhân và quyền riêng tư của bạn. Tìm hiểu cách chúng tôi thu thập, sử dụng và bảo vệ dữ liệu của bạn.',
+        dataProtection: 'Bảo vệ dữ liệu',
+        secureStorage: 'Lưu trữ an toàn',
+        legalCompliance: 'Tuân thủ pháp luật',
+        lastUpdated: 'Cập nhật lần cuối',
+        lastUpdatedDate: '14 tháng 10, 2024',
+        introduction: {
+          title: 'Giới thiệu',
+          paragraph1: 'Chào mừng bạn đến với DanceLink ("chúng tôi", "công ty chúng tôi" hoặc "chúng ta"). Chúng tôi tôn trọng quyền riêng tư của bạn và cam kết bảo vệ dữ liệu cá nhân của bạn. Chính sách bảo mật này sẽ thông báo cho bạn về cách chúng tôi quản lý dữ liệu cá nhân của bạn khi bạn truy cập trang web của chúng tôi và cho bạn biết về quyền riêng tư của bạn và cách pháp luật bảo vệ bản.',
+          paragraph2: 'Chính sách bảo mật này áp dụng cho tất cả thông tin được thu thập thông qua trang web, ứng dụng di động và bất kỳ dịch vụ, bán hàng, tiếp thị hoặc sự kiện liên quan nào của chúng tôi.'
+        },
+        infoCollection: {
+          title: 'Thông tin chúng tôi thu thập',
+          personalInfo: {
+            title: 'Thông tin cá nhân'
+          }
+        },
+        contact: {
+          title: 'Liên hệ',
+          description: 'Nếu bạn có bất kỳ câu hỏi nào về Chính sách Bảo mật này hoặc các thái học bảo mật của chúng tôi, vui lòng liên hệ với chúng tôi:'
+        },
+        cta: {
+          badge: 'Quyền riêng tư của bạn được bảo vệ',
+          title: 'Câu hỏi về Chính sách Bảo mật của chúng tôi?',
+          description: 'Chúng tôi sẵn sàng hỗ trợ. Liên hệ đội ngũ hỗ trợ của chúng tôi nếu bạn có bất kỳ câu hỏi hoặc mối quan tâm nào về quyền riêng tư.',
+          contactSupport: 'Liên hệ hỗ trợ',
+          viewTerms: 'Xem Điều khoản Dịch vụ'
+        }
+      },
+      // Terms of Service
+      terms: {
+        heroBadge: 'Điều khoản & Điều kiện Pháp lý',
+        title: 'Điều khoản Dịch vụ',
+        heroDescription: 'Vui lòng đọc kỹ những điều khoản này trước khi sử dụng dịch vụ của chúng tôi. Bằng cách truy cập DanceLink, bạn đồng ý bị ràng buộc bởi những điều khoản và điều kiện này.',
+        clearGuidelines: 'Hướng dẫn rõ ràng',
+        fairAgreement: 'Thỏa thuận công bằng',
+        legalProtection: 'Bảo vệ pháp lý',
+        lastUpdated: 'Cập nhật lần cuối',
+        lastUpdatedDate: '14 tháng 10, 2024',
+        agreement: {
+          title: 'Thỏa thuận Điều khoản',
+          paragraph1: 'Bằng cách truy cập và sử dụng DanceLink ("Dịch vụ"), bạn chấp nhận và đồng ý bị ràng buộc bởi các điều khoản và điều kiện của thỏa thuận này. Nếu bạn không đồng ý tuân thủ các điều trên, vui lòng không sử dụng dịch vụ này.',
+          paragraph2: 'Các điều khoản này áp dụng cho tất cả khách truy cập, người dùng và những người khác truy cập hoặc sử dụng dịch vụ, bao gồm giảng viên, học viên và host.'
+        },
+        usage: {
+          title: 'Sử dụng Dịch vụ'
+        },
+        accounts: {
+          title: 'Tài khoản Người dùng'
+        },
+        payment: {
+          title: 'Điều khoản Đặt chỗ và Thanh toán'
+        },
+        contact: {
+          title: 'Liên hệ',
+          description: 'Nếu bạn có bất kỳ câu hỏi nào về các Điều khoản Dịch vụ này, vui lòng liên hệ với chúng tôi:'
+        },
+        cta: {
+          badge: 'Điều khoản Rõ ràng & Điều kiện Công bằng',
+          title: 'Sẵn sàng Tham gia Cộng đồng Khiêu vũ của chúng tôi?',
+          description: 'Bây giờ bạn đã đọc các điều khoản của chúng tôi, bạn đã sẵn sàng bắt đầu hành trình khiêu vũ của mình với sự tự tin và rõ ràng.',
+          browseClasses: 'Duyệt lớp học',
+          contactUs: 'Câu hỏi? Liên hệ chúng tôi',
+          agreement: 'Bằng cách sử dụng dịch vụ của chúng tôi, bạn đồng ý với các điều khoản này.',
+          viewPrivacy: 'Xem Chính sách Bảo mật của chúng tôi'
         }
       }
     }
@@ -1570,6 +1783,77 @@ const resources = {
           october: 'Octubre',
           november: 'Noviembre',
           december: 'Diciembre'
+        }
+      },
+      // Privacy Policy
+      privacy: {
+        heroBadge: 'Tu privacidad importa',
+        title: 'Política de Privacidad',
+        heroDescription: 'Estamos comprometidos a proteger tu información personal y tu derecho a la privacidad. Aprende cómo recopilamos, usamos y protegemos tus datos.',
+        dataProtection: 'Protección de Datos',
+        secureStorage: 'Almacenamiento Seguro',
+        legalCompliance: 'Cumplimiento Legal',
+        lastUpdated: 'Última Actualización',
+        lastUpdatedDate: '14 de octubre de 2024',
+        introduction: {
+          title: 'Introducción',
+          paragraph1: 'Bienvenido a DanceLink ("nosotros", "nuestra empresa" o "nos"). Respetamos tu privacidad y estamos comprometidos a proteger tus datos personales. Esta política de privacidad te informará sobre cómo cuidamos tus datos personales cuando visitas nuestro sitio web y te dirá sobre tus derechos de privacidad y cómo te protege la ley.',
+          paragraph2: 'Esta política de privacidad se aplica a toda la información recopilada a través de nuestro sitio web, aplicaciones móviles y cualquier servicio relacionado, ventas, marketing o eventos.'
+        },
+        infoCollection: {
+          title: 'Información que Recopilamos',
+          personalInfo: {
+            title: 'Información Personal'
+          }
+        },
+        contact: {
+          title: 'Contáctanos',
+          description: 'Si tienes alguna pregunta sobre esta Política de Privacidad o nuestras prácticas de privacidad, por favor contáctanos:'
+        },
+        cta: {
+          badge: 'Tu Privacidad está Protegida',
+          title: '¿Preguntas sobre nuestra Política de Privacidad?',
+          description: 'Estamos aquí para ayudarte. Contacta a nuestro equipo de soporte para cualquier pregunta o preocupación relacionada con la privacidad.',
+          contactSupport: 'Contactar Soporte',
+          viewTerms: 'Ver Términos de Servicio'
+        }
+      },
+      // Terms of Service
+      terms: {
+        heroBadge: 'Términos y Condiciones Legales',
+        title: 'Términos de Servicio',
+        heroDescription: 'Por favor lee estos términos cuidadosamente antes de usar nuestros servicios. Al acceder a DanceLink, aceptas estar sujeto a estos términos y condiciones.',
+        clearGuidelines: 'Guías Claras',
+        fairAgreement: 'Acuerdo Justo',
+        legalProtection: 'Protección Legal',
+        lastUpdated: 'Última Actualización',
+        lastUpdatedDate: '14 de octubre de 2024',
+        agreement: {
+          title: 'Acuerdo a los Términos',
+          paragraph1: 'Al acceder y usar DanceLink ("el Servicio"), aceptas y acuerdas estar sujeto a los términos y provisiones de este acuerdo. Si no estás de acuerdo en cumplir con lo anterior, por favor no uses este servicio.',
+          paragraph2: 'Estos términos se aplican a todos los visitantes, usuarios y otros que accedan o usen el servicio, incluidos instructores, estudiantes y hosts.'
+        },
+        usage: {
+          title: 'Uso del Servicio'
+        },
+        accounts: {
+          title: 'Cuentas de Usuario'
+        },
+        payment: {
+          title: 'Términos de Reserva y Pago'
+        },
+        contact: {
+          title: 'Contáctanos',
+          description: 'Si tienes alguna pregunta sobre estos Términos de Servicio, por favor contáctanos:'
+        },
+        cta: {
+          badge: 'Términos Claros y Condiciones Justas',
+          title: '¿¿Listo para Unirte a Nuestra Comunidad de Danza?',
+          description: 'Ahora que has leído nuestros términos, estás listo para comenzar tu viaje de danza con confianza y claridad.',
+          browseClasses: 'Explorar Clases',
+          contactUs: '¿Preguntas? Contáctanos',
+          agreement: 'Al usar nuestro servicio, aceptas estos términos.',
+          viewPrivacy: 'Ver nuestra Política de Privacidad'
         }
       }
     }
