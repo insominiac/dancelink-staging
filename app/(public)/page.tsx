@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import '@/lib/i18n'
 import DanceStylesTabs from '../components/DanceStylesTabs'
 import TranslatedText from '../components/TranslatedText'
+import '../styles/homepage-grid.css'
 
 interface Stats {
   students: number
@@ -235,7 +236,7 @@ export default function HomePage() {
   }
 
   return (
-    <div>
+    <div className="homepage">
       {/* Hero Section */}
       <section 
         className="dance-hero relative overflow-hidden"

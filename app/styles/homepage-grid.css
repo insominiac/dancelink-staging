@@ -1,0 +1,25 @@
+/* Homepage-specific Grid Styles */
+/* This CSS file contains grid styles that should only apply to the homepage */
+
+.homepage .dance-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+/* Mobile responsive adjustments for homepage grid */
+@media (max-width: 768px) {
+  .homepage .dance-card-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .homepage .dance-card-grid {
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+}
