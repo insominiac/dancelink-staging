@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-// Filesystem operations removed for Vercel compatibility
-// Path operations removed for Vercel compatibility
+import fs from 'fs/promises'
+import path from 'path'
 
 // Default content for instructors page
 const DEFAULT_INSTRUCTORS_CONTENT = {

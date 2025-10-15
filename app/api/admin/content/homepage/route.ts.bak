@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-// Filesystem operations removed for Vercel compatibility
-// Path operations removed for Vercel compatibility
+import fs from 'fs/promises'
+import path from 'path'
 
 // Content file path - in a real app, this would be stored in a database
 const CONTENT_FILE = path.join(process.cwd(), 'data', 'homepage-content.json')
