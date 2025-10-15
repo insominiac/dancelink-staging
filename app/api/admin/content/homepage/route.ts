@@ -44,3 +44,20 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to update homepage content' }, { status: 500 })
   }
 }
+
+// Allow POST by delegating to PUT (for clients using POST)
+export async function POST(request: NextRequest) {
+  return PUT(request)
+}
+
+// Optional: handle CORS preflight if calling cross-origin
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET,PUT,POST,OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  })
+}
