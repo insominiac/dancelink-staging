@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import fs from 'fs/promises'
-import path from 'path'
-
-// Content file path - in a real app, this would be stored in a database
-const SETTINGS_FILE = path.join(process.cwd(), 'data', 'site-settings.json')
+import db from '@/app/lib/db'
 
 // Default site settings
 const DEFAULT_SETTINGS = {
@@ -106,20 +102,23 @@ const DEFAULT_SETTINGS = {
 
 export async function GET() {
   try {
-    // Ensure data directory exists
-    const dataDir = path.dirname(SETTINGS_FILE)
-    try {
-      await fs.access(dataDir)
-    } catch {
-      await fs.mkdir(dataDir, { recursive: true })
-    }
-
-    // Try to read existing settings
-    try {
-      const settings = await fs.readFile(SETTINGS_FILE, 'utf-8')
-      return NextResponse.json(JSON.parse(settings))
-    } catch {
-      // If file doesn't exist, return default settings
+    // Try to get settings from database
+    const settings = await db.siteSettings.findFirst({
+      orderBy: { createdAt: 'desc' }
+    })
+    
+    if (settings) {
+      return NextResponse.json({
+        siteName: settings.siteName,
+        siteDescription: settings.siteDescription,
+        contactEmail: settings.contactEmail,
+        phoneNumber: settings.phoneNumber,
+        address: settings.address,
+        socialMedia: settings.socialMedia || DEFAULT_SETTINGS.socialMedia,
+        footer: settings.footer || DEFAULT_SETTINGS.footer
+      })
+    } else {
+      // If no settings exist, return default settings
       return NextResponse.json(DEFAULT_SETTINGS)
     }
   } catch (error) {
@@ -182,16 +181,39 @@ export async function PUT(request: NextRequest) {
       }
     }
 
-    // Ensure data directory exists
-    const dataDir = path.dirname(SETTINGS_FILE)
-    try {
-      await fs.access(dataDir)
-    } catch {
-      await fs.mkdir(dataDir, { recursive: true })
-    }
+    // Save or update settings in database
+    const existingSettings = await db.siteSettings.findFirst({
+      orderBy: { createdAt: 'desc' }
+    })
 
-    // Save settings to file
-    await fs.writeFile(SETTINGS_FILE, JSON.stringify(settings, null, 2))
+    if (existingSettings) {
+      // Update existing settings
+      await db.siteSettings.update({
+        where: { id: existingSettings.id },
+        data: {
+          siteName: settings.siteName,
+          siteDescription: settings.siteDescription,
+          contactEmail: settings.contactEmail,
+          phoneNumber: settings.phoneNumber,
+          address: settings.address,
+          socialMedia: settings.socialMedia,
+          footer: settings.footer
+        }
+      })
+    } else {
+      // Create new settings record
+      await db.siteSettings.create({
+        data: {
+          siteName: settings.siteName,
+          siteDescription: settings.siteDescription,
+          contactEmail: settings.contactEmail,
+          phoneNumber: settings.phoneNumber,
+          address: settings.address,
+          socialMedia: settings.socialMedia,
+          footer: settings.footer
+        }
+      })
+    }
 
     return NextResponse.json({ 
       success: true, 
@@ -206,15 +228,20 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE() {
   try {
-    // Reset to default settings
-    const dataDir = path.dirname(SETTINGS_FILE)
-    try {
-      await fs.access(dataDir)
-    } catch {
-      await fs.mkdir(dataDir, { recursive: true })
-    }
-
-    await fs.writeFile(SETTINGS_FILE, JSON.stringify(DEFAULT_SETTINGS, null, 2))
+    // Delete all existing settings and create new default settings
+    await db.siteSettings.deleteMany({})
+    
+    await db.siteSettings.create({
+      data: {
+        siteName: DEFAULT_SETTINGS.siteName,
+        siteDescription: DEFAULT_SETTINGS.siteDescription,
+        contactEmail: DEFAULT_SETTINGS.contactEmail,
+        phoneNumber: DEFAULT_SETTINGS.phoneNumber,
+        address: DEFAULT_SETTINGS.address,
+        socialMedia: DEFAULT_SETTINGS.socialMedia,
+        footer: DEFAULT_SETTINGS.footer
+      }
+    })
 
     return NextResponse.json({ 
       success: true, 

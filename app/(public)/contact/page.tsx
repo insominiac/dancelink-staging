@@ -53,6 +53,105 @@ export default function ContactPage() {
   const [content, setContent] = useState<ContactPageContent | null>(null)
   const [seo, setSeo] = useState<{ title?: string; description?: string; ogTitle?: string } | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  
+  // Form state management
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    subject: '',
+    message: ''
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
+
+  // Form handlers
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+    // Clear submit message when user starts typing
+    if (submitMessage) setSubmitMessage(null)
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setSubmitMessage(null)
+
+    // Detailed validation
+    const errors = []
+    
+    // Check required fields
+    if (!formData.name.trim()) {
+      errors.push('• Name is required')
+    }
+    if (!formData.email.trim()) {
+      errors.push('• Email address is required')
+    } else {
+      // Email format validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(formData.email)) {
+        errors.push('• Please enter a valid email address (e.g., you@example.com)')
+      }
+    }
+    if (!formData.message.trim()) {
+      errors.push('• Message is required')
+    } else if (formData.message.trim().length < 10) {
+      errors.push(`• Message must be at least 10 characters (currently ${formData.message.trim().length} characters)`)
+    }
+
+    // If there are validation errors, show them
+    if (errors.length > 0) {
+      setSubmitMessage({
+        type: 'error',
+        text: `Please fix the following issues:\n${errors.join('\n')}`
+      })
+      setIsSubmitting(false)
+      return
+    }
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          subject: formData.subject || 'General Inquiry',
+          message: formData.message.trim()
+        })
+      })
+
+      const result = await response.json()
+
+      if (response.ok && result.success) {
+        setSubmitMessage({
+          type: 'success',
+          text: result.message || 'Thank you! Your message has been sent successfully. We\'ll get back to you soon.'
+        })
+        // Reset form
+        setFormData({
+          name: '',
+          phone: '',
+          email: '',
+          subject: '',
+          message: ''
+        })
+      } else {
+        throw new Error(result.error || 'Failed to send message')
+      }
+    } catch (error) {
+      console.error('Contact form error:', error)
+      setSubmitMessage({
+        type: 'error',
+        text: error instanceof Error ? error.message : 'Sorry, there was an error sending your message. Please try again.'
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   useEffect(() => {
     setIsMounted(true)
@@ -242,27 +341,72 @@ export default function ContactPage() {
 <p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{color: 'var(--neutral-gray)'}}><TranslatedText text={content?.formSubtitle || "Fill out the form below and we'll get back to you within 24 hours"} /></p>
           </div>
           <div className="dance-card max-w-3xl mx-auto">
-            <form className="space-y-8">
+            {/* Success/Error Message */}
+            {submitMessage && (
+              <div className={`p-4 rounded-lg mb-6 text-center ${
+                submitMessage.type === 'success' 
+                  ? 'bg-green-50 border border-green-200'
+                  : 'bg-red-50 border border-red-200'
+              }`}>
+                <div className="flex items-start justify-center">
+                  <span className="mr-2 mt-1">
+                    {submitMessage.type === 'success' ? '✅' : '❌'}
+                  </span>
+                  <div className="font-medium text-black text-left">
+                    {submitMessage.text.split('\n').map((line, index) => (
+                      <div key={index} className={index === 0 ? 'mb-2' : 'ml-0'}>
+                        {line}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+            <form className="space-y-8" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium mb-3" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.formFields?.nameLabel || "Name *"} /></label>
-                  <input className="w-full px-5 py-4 border-2 rounded-full focus:border-yellow-400 focus:outline-none transition border-gray-300 text-base" 
-                         placeholder={content?.formFields?.namePlaceholder || "Your name"} required />
+                  <input 
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className="w-full px-5 py-4 border-2 rounded-full focus:border-yellow-400 focus:outline-none transition border-gray-300 text-base" 
+                    placeholder={content?.formFields?.namePlaceholder || "Your name"} 
+                    required 
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-3" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.formFields?.phoneLabel || "Phone"} /></label>
-                  <input type="tel" className="w-full px-5 py-4 border-2 rounded-full focus:border-yellow-400 focus:outline-none transition border-gray-300 text-base" 
-                         placeholder={content?.formFields?.phonePlaceholder || "(123) 456-7890"} />
+                  <input 
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className="w-full px-5 py-4 border-2 rounded-full focus:border-yellow-400 focus:outline-none transition border-gray-300 text-base" 
+                    placeholder={content?.formFields?.phonePlaceholder || "(123) 456-7890"} 
+                  />
                 </div>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-3" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.formFields?.emailLabel || "Email *"} /></label>
-                <input type="email" className="w-full px-5 py-4 border-2 rounded-full focus:border-yellow-400 focus:outline-none transition border-gray-300 text-base" 
-                       placeholder={content?.formFields?.emailPlaceholder || "you@example.com"} required />
+                <input 
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full px-5 py-4 border-2 rounded-full focus:border-yellow-400 focus:outline-none transition border-gray-300 text-base" 
+                  placeholder={content?.formFields?.emailPlaceholder || "you@example.com"} 
+                  required 
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-3" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.formFields?.interestLabel || "I'm interested in:"} /></label>
-                <select className="w-full px-5 py-4 border-2 rounded-full focus:border-yellow-400 focus:outline-none transition border-gray-300 text-base">
+                <select 
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleInputChange}
+                  className="w-full px-5 py-4 border-2 rounded-full focus:border-yellow-400 focus:outline-none transition border-gray-300 text-base"
+                >
                   <option value="">{selectAnOptionText}</option>
                   {(content?.formOptions || [
                     { value: "trial", label: freeTrialClassText },
@@ -276,13 +420,38 @@ export default function ContactPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-3" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.formFields?.messageLabel || "Message"} /></label>
-                <textarea className="w-full px-5 py-4 border-2 rounded-lg focus:border-yellow-400 focus:outline-none transition border-gray-300 text-base" 
-                          rows={6} placeholder={content?.formFields?.messagePlaceholder || "Tell us about your dance goals, experience level, or any questions you have..."}></textarea>
+                <label className="block text-sm font-medium mb-3" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.formFields?.messageLabel || "Message * (minimum 10 characters)"} /></label>
+                <textarea 
+                  name="message"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  className="w-full px-5 py-4 border-2 rounded-lg focus:border-yellow-400 focus:outline-none transition border-gray-300 text-base" 
+                  rows={6} 
+                  placeholder={content?.formFields?.messagePlaceholder || "Tell us about your dance goals, experience level, or any questions you have..."}
+                  required
+                ></textarea>
               </div>
               <div className="text-center pt-4">
-                <button type="submit" className="dance-btn dance-btn-primary px-12 py-4 text-lg hover:transform hover:scale-105 transition-all duration-300">
-<TranslatedText text={content?.submitButtonText || "🚀 Send Message"} />
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className={`dance-btn dance-btn-primary px-12 py-4 text-lg transition-all duration-300 ${
+                    isSubmitting 
+                      ? 'opacity-50 cursor-not-allowed' 
+                      : 'hover:transform hover:scale-105'
+                  }`}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center">
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Sending...
+                    </span>
+                  ) : (
+                    <TranslatedText text={content?.submitButtonText || "🚀 Send Message"} />
+                  )}
                 </button>
 <p className="text-sm mt-6 opacity-75 max-w-lg mx-auto"><TranslatedText text={content?.responseTimeText || "We typically respond within 2-4 hours during business hours"} /></p>
               </div>

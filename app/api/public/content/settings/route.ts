@@ -1,9 +1,5 @@
 import { NextResponse } from 'next/server'
-import fs from 'fs/promises'
-import path from 'path'
-
-// Content file path
-const SETTINGS_FILE = path.join(process.cwd(), 'data', 'site-settings.json')
+import db from '@/app/lib/db'
 
 // Default site settings
 const DEFAULT_SETTINGS = {
@@ -27,12 +23,23 @@ const DEFAULT_SETTINGS = {
 
 export async function GET() {
   try {
-    // Try to read existing settings
-    try {
-      const settings = await fs.readFile(SETTINGS_FILE, 'utf-8')
-      return NextResponse.json(JSON.parse(settings))
-    } catch {
-      // If file doesn't exist, return default settings
+    // Try to get settings from database
+    const settings = await db.siteSettings.findFirst({
+      orderBy: { createdAt: 'desc' }
+    })
+    
+    if (settings) {
+      return NextResponse.json({
+        siteName: settings.siteName,
+        siteDescription: settings.siteDescription,
+        contactEmail: settings.contactEmail,
+        phoneNumber: settings.phoneNumber,
+        address: settings.address,
+        socialMedia: settings.socialMedia || DEFAULT_SETTINGS.socialMedia,
+        footer: settings.footer || DEFAULT_SETTINGS.footer
+      })
+    } else {
+      // If no settings exist, return default settings
       return NextResponse.json(DEFAULT_SETTINGS)
     }
   } catch (error) {

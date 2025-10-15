@@ -937,3 +937,18 @@ enum CompetitionRequestStatus {
   APPROVED
   REJECTED
 }
+
+model SiteSettings {
+  id                  String   @id @default(cuid())
+  siteName            String   @map("site_name")
+  siteDescription     String   @map("site_description")
+  contactEmail        String   @map("contact_email")
+  phoneNumber         String?  @map("phone_number")
+  address             String?
+  socialMedia         Json?    @map("social_media")
+  footer              Json?
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  @@map("site_settings")
+}

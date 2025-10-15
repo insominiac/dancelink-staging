@@ -12,6 +12,7 @@ const publicRoutes = [
   '/api/auth/logout',
   '/api/auth/admin-token-login',
   '/api/public',
+  '/api/debug',
   '/classes',
   '/events',
   '/instructors',
@@ -62,7 +63,7 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
   
   // Allow public routes
-  if (publicRoutes.some(route => path === route) || path.startsWith('/api/public') || path.startsWith('/_next') || path.startsWith('/favicon')) {
+  if (publicRoutes.some(route => path === route) || path.startsWith('/api/public') || path.startsWith('/api/debug') || path.startsWith('/_next') || path.startsWith('/favicon')) {
     return NextResponse.next()
   }
 
