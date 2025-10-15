@@ -1,9 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-// Filesystem operations removed for Vercel compatibility
-// Path operations removed for Vercel compatibility
-
-// Content file path - in a real app, this would be stored in a database
-const CONTENT_FILE = path.join(process.cwd(), 'data', 'homepage-content.json')
 
 // Default homepage content
 const DEFAULT_CONTENT = {
@@ -19,25 +14,11 @@ const DEFAULT_CONTENT = {
 
 export async function GET() {
   try {
-    // Ensure data directory exists
-    const dataDir = path.dirname(CONTENT_FILE)
-    try {
-      await fs.access(dataDir)
-    } catch {
-      await fs.mkdir(dataDir, { recursive: true })
-    }
-
-    // Try to read existing content
-    try {
-      const content = await fs.readFile(CONTENT_FILE, 'utf-8')
-      return NextResponse.json(JSON.parse(content))
-    } catch {
-      // If file doesn't exist, return default content
-      return NextResponse.json(DEFAULT_CONTENT)
-    }
+    // Return default content for Vercel compatibility
+    return NextResponse.json(DEFAULT_CONTENT)
   } catch (error) {
     console.error('Error fetching homepage content:', error)
-    return NextResponse.json({ error: 'Failed to fetch homepage content' }, { status: 500 })
+    return NextResponse.json(DEFAULT_CONTENT)
   }
 }
 
@@ -50,24 +31,16 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    // Ensure data directory exists
-    const dataDir = path.dirname(CONTENT_FILE)
-    try {
-      await fs.access(dataDir)
-    } catch {
-      await fs.mkdir(dataDir, { recursive: true })
-    }
-
-    // Save content to file
-    await fs.writeFile(CONTENT_FILE, JSON.stringify(content, null, 2))
+    // For Vercel compatibility, just return success without persisting
+    console.log('Homepage content update requested (not persisted):', content)
 
     return NextResponse.json({ 
       success: true, 
-      message: 'Homepage content updated successfully',
+      message: 'Homepage content received (not persisted on Vercel)',
       updatedAt: new Date().toISOString()
     })
   } catch (error) {
-    console.error('Error saving homepage content:', error)
-    return NextResponse.json({ error: 'Failed to save homepage content' }, { status: 500 })
+    console.error('Error updating homepage content:', error)
+    return NextResponse.json({ error: 'Failed to update homepage content' }, { status: 500 })
   }
 }
