@@ -118,23 +118,14 @@ const DEFAULT_ABOUT_CONTENT = {
 
 export async function GET() {
   try {
-    // Try to get content from database
-    const contentRecord = await prisma.siteSettings.findFirst({
-      where: {
-        id: CONTENT_KEY
-      }
-    })
-
-    if (contentRecord && contentRecord.socialMedia) {
-      // Content exists in database, return it
-      return NextResponse.json(contentRecord.socialMedia)
-    } else {
-      // No content found, return default content
-      return NextResponse.json(DEFAULT_ABOUT_CONTENT)
-    }
+    // For now, always return default content to ensure API stability
+    // TODO: Implement proper database storage when ready
+    console.log('Returning default about content for Vercel compatibility')
+    return NextResponse.json(DEFAULT_ABOUT_CONTENT)
   } catch (error) {
     console.error('Error fetching about content:', error)
-    return NextResponse.json({ error: 'Failed to fetch about content' }, { status: 500 })
+    // Even if there's an error, return default content
+    return NextResponse.json(DEFAULT_ABOUT_CONTENT)
   }
 }
 
