@@ -15,9 +15,10 @@ interface BookingItem {
 interface EnhancedGuestBookingFormProps {
   item: BookingItem
   isAvailable: boolean
+  disabledReason?: string
 }
 
-export default function EnhancedGuestBookingForm({ item, isAvailable }: EnhancedGuestBookingFormProps) {
+export default function EnhancedGuestBookingForm({ item, isAvailable, disabledReason }: EnhancedGuestBookingFormProps) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -56,11 +57,24 @@ export default function EnhancedGuestBookingForm({ item, isAvailable }: Enhanced
     
     try {
       // Prepare booking data to pass to payment page
+      // Acquire seat lock before proceeding
+      const lockRes = await fetch('/api/availability/lock', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemType: item.type === 'class' ? 'CLASS' : 'EVENT', itemId: item.id })
+      })
+      if (!lockRes.ok) {
+        const err = await lockRes.json().catch(() => ({}))
+        throw new Error(err.error || 'No seats available')
+      }
+      const { lock } = await lockRes.json()
+
       const bookingData = {
         [item.type === 'class' ? 'classId' : 'eventId']: item.id,
         className: item.title,
         price: item.price,
         bookingType: item.type,
+        lockId: lock.id,
         userDetails: {
           name: formData.name,
           email: formData.email,
@@ -86,12 +100,19 @@ export default function EnhancedGuestBookingForm({ item, isAvailable }: Enhanced
 
   if (!isAvailable) {
     return (
-      <button
-        disabled
-        className="w-full py-4 rounded-full font-semibold bg-gray-400 text-gray-600 cursor-not-allowed"
-      >
-        {item.type === 'class' ? 'Class' : 'Event'} Unavailable
-      </button>
+      <div>
+        <button
+          disabled
+          className="w-full py-4 rounded-full font-semibold bg-gray-400 text-gray-600 cursor-not-allowed"
+        >
+          {item.type === 'class' ? 'Class' : 'Event'} Unavailable
+        </button>
+        {disabledReason && (
+          <p className="text-xs text-center mt-3 text-gray-700">
+            {disabledReason}
+          </p>
+        )}
+      </div>
     )
   }
 

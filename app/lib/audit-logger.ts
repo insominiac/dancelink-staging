@@ -1,5 +1,6 @@
 import db from './db'
 import { headers } from 'next/headers'
+import { AdminNotifier } from './admin-notifier'
 
 interface AuditLogData {
   userId: string
@@ -32,7 +33,7 @@ export class AuditLogger {
     try {
       const clientInfo = await this.getClientInfo()
       
-      await db.auditLog.create({
+      const audit = await db.auditLog.create({
         data: {
           userId: data.userId,
           action: data.action,
@@ -43,6 +44,18 @@ export class AuditLogger {
           ipAddress: clientInfo.ipAddress,
           userAgent: clientInfo.userAgent
         }
+      })
+
+      // Notify admins for every audit event
+      await AdminNotifier.notifyAdminsForAudit({
+        id: audit.id,
+        userId: audit.userId,
+        action: audit.action,
+        tableName: audit.tableName,
+        recordId: audit.recordId,
+        createdAt: audit.createdAt,
+        newValues: audit.newValues,
+        oldValues: audit.oldValues,
       })
     } catch (error) {
       console.error('Failed to create audit log:', error)

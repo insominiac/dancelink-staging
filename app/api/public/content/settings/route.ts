@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import db from '@/app/lib/db'
+import db, { ensureDbConnection } from '@/app/lib/db'
 
 // Default site settings
 const DEFAULT_SETTINGS = {
@@ -23,6 +23,7 @@ const DEFAULT_SETTINGS = {
 
 export async function GET() {
   try {
+    await ensureDbConnection()
     // Try to get settings from database
     const settings = await db.siteSettings.findFirst({
       orderBy: { createdAt: 'desc' }

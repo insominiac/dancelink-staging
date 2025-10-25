@@ -61,9 +61,27 @@ function pathStartsWith(path: string, routes: string[]): boolean {
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
+
+  // Conditionally proxy API requests to the standalone API service.
+  // Default: in development, use local Next.js route handlers under /app/api.
+  // Opt-in to proxy by setting USE_STANDALONE_API=true.
+  if (path.startsWith('/api/')) {
+    const useStandalone = process.env.USE_STANDALONE_API === 'true'
+    const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL
+
+    if (useStandalone) {
+      if (!apiBase) {
+        return NextResponse.json({ error: 'API base not configured' }, { status: 503 })
+      }
+      const target = new URL(request.nextUrl.pathname + request.nextUrl.search, apiBase.replace(/\/$/, ''))
+      return NextResponse.rewrite(target)
+    }
+
+    // When not using standalone API, fall through to Next.js route handlers
+  }
   
   // Allow public routes
-  if (publicRoutes.some(route => path === route) || path.startsWith('/api/public') || path.startsWith('/api/debug') || path.startsWith('/_next') || path.startsWith('/favicon')) {
+  if (publicRoutes.some(route => path === route) || path.startsWith('/_next') || path.startsWith('/favicon')) {
     return NextResponse.next()
   }
 

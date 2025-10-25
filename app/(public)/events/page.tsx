@@ -1,6 +1,7 @@
 import { headers } from 'next/headers'
 import EventsClient from './EventsClient'
 import { translationService } from '@/lib/translation-service'
+import { generateMetadata as genMeta } from '@/app/lib/seo'
 
 interface Event {
   id: string
@@ -51,6 +52,21 @@ interface EventsPageContent {
   }[]
 }
 
+export async function generateMetadata() {
+  try {
+    const h = headers()
+    const protocol = h.get('x-forwarded-proto') || 'http'
+    const host = h.get('host') || 'localhost:3000'
+    const baseUrl = `${protocol}://${host}`
+    const res = await fetch(`${baseUrl}/api/seo?path=/events`, { cache: 'no-store' })
+    if (res.ok) {
+      const data = await res.json()
+      return genMeta('/events', data.seoData)
+    }
+  } catch {}
+  return genMeta('/events', null)
+}
+
 export default async function EventsPage() {
   // Detect language from cookie or Accept-Language
   const h = headers()
@@ -58,7 +74,8 @@ export default async function EventsPage() {
   const cookieLang = (cookie.match(/(?:^|;\s*)i18next=([^;]+)/)?.[1] || '').split('-')[0]
   const accept = h.get('accept-language') || ''
   const acceptLang = accept.split(',')[0]?.split('-')[0]
-  const lang = (cookieLang || acceptLang || 'en') as string
+  const rawLang = (cookieLang || acceptLang || 'en').toLowerCase()
+  const lang = /^[a-z]{2}$/.test(rawLang) ? (rawLang as string) : 'en'
 
   // Fetch events and page content on server
   const protocol = h.get('x-forwarded-proto') || 'http'

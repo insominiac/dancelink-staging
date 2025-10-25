@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import prisma from '../../../lib/db'
+import prisma, { ensureDbConnection } from '../../../lib/db'
 import { resolveLocale } from '@/app/lib/locale'
 import { translationService } from '@/lib/translation-service'
 
 export async function GET(request: NextRequest) {
   try {
+    await ensureDbConnection()
     const locale = resolveLocale(request, 'en')
     // Fetch only published events that haven't ended
     const events = await prisma.event.findMany({
@@ -48,9 +49,24 @@ export async function GET(request: NextRequest) {
     })
 
     // Calculate current attendees for each event
-    let eventsWithAttendeeCount = events.map(event => ({
-      ...event,
-      currentAttendees: event._count.bookings
+    let eventsWithAttendeeCount = await Promise.all(events.map(async (event) => {
+      // Be resilient if prisma.seatLock is missing in the generated client
+      let activeLocks = 0
+      try {
+        const seatLockModel = (prisma as any).seatLock
+        if (seatLockModel?.count) {
+          activeLocks = await seatLockModel.count({
+            where: { itemType: 'EVENT' as any, itemId: event.id, status: 'ACTIVE' as any, expiresAt: { gt: new Date() } }
+          })
+        }
+      } catch (_) {
+        activeLocks = 0
+      }
+      const bookingsCount = (event as any)?._count?.bookings ?? 0
+      return ({
+        ...event,
+        currentAttendees: bookingsCount + activeLocks
+      })
     }))
 
     // Server-side translation for dynamic fields when locale != en

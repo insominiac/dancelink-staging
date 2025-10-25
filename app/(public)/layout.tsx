@@ -140,7 +140,7 @@ export default function PublicLayout({
                       </Link>
                       <Link 
                         href="/register"
-                        className="dance-btn dance-btn-primary text-sm px-4 py-2 block text-center"
+                        className="dance-btn dance-btn-primary text-base px-4 py-3 block text-center"
                       >
                         Join Now
                       </Link>
@@ -187,7 +187,7 @@ export default function PublicLayout({
                       <div className="py-1">
                         <Link
                           href="/login"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                          className="block px-4 py-2 text-base text-gray-700 hover:bg-gray-50"
                           role="menuitem"
                           onClick={() => setIsAuthMenuOpen(false)}
                         >
@@ -198,7 +198,7 @@ export default function PublicLayout({
                         </Link>
                         <Link
                           href="/register"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                          className="block px-4 py-2 text-base text-gray-700 hover:bg-gray-50"
                           role="menuitem"
                           onClick={() => setIsAuthMenuOpen(false)}
                         >

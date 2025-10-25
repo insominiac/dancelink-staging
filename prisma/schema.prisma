@@ -7,6 +7,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum SeatLockItemType {
+  CLASS
+  EVENT
+}
+
+enum SeatLockStatus {
+  ACTIVE
+  RELEASED
+  CANCELLED
+  EXPIRED
+}
+
+model SeatLock {
+  id         String           @id @default(cuid())
+  itemType   SeatLockItemType
+  itemId     String
+  userId     String?
+  quantity   Int              @default(1)
+  status     SeatLockStatus   @default(ACTIVE)
+  expiresAt  DateTime
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  releasedAt DateTime?
+  bookingId  String?
+
+  @@index([itemType, itemId])
+  @@index([status, expiresAt])
+  @@index([bookingId])
+  @@map("seat_locks")
+}
+
 model User {
   id                 String              @id @default(cuid())
   email              String              @unique

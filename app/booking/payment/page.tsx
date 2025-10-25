@@ -120,7 +120,7 @@ function PaymentPageContent() {
       const paymentResponse = await fetch('/api/payments/create-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(paymentData)
+        body: JSON.stringify({ ...paymentData, lockId: (bookingData as any).lockId })
       })
 
       const paymentResult = await paymentResponse.json()
@@ -350,10 +350,6 @@ function PaymentPageContent() {
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
                       >
                         <option value="USD">USD - US Dollar</option>
-                        <option value="EUR">EUR - Euro</option>
-                        <option value="GBP">GBP - British Pound</option>
-                        <option value="CAD">CAD - Canadian Dollar</option>
-                        <option value="AUD">AUD - Australian Dollar</option>
                       </select>
                     </div>
                   </div>

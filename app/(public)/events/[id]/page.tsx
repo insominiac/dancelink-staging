@@ -1,9 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { formatDateRangeSafe } from '@/app/lib/date'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import GuestBookingForm from '@/app/(public)/components/GuestBookingForm'
+import SEOHead from '@/components/SEOHead'
 
 interface EventDetail {
   id: string
@@ -79,18 +81,69 @@ export default function EventDetailPage({ params }: { params: { id: string } }) 
   }
 
   const spotsLeft = eventData.maxAttendees - eventData.currentAttendees
-  const isAvailable = spotsLeft > 0 && eventData.status === 'PUBLISHED'
+  const missing: string[] = []
+  if (!eventData.venue?.name) missing.push('venue')
+  if (!eventData.startTime) missing.push('time')
+  if (!eventData.price || isNaN(parseFloat(eventData.price)) || parseFloat(eventData.price) <= 0) missing.push('price')
+  if (!eventData.maxAttendees || eventData.maxAttendees <= 0) missing.push('capacity')
+  const bookable = missing.length === 0
+  const isAvailable = spotsLeft > 0 && eventData.status === 'PUBLISHED' && bookable
+  const disabledReason = !bookable ? `Booking unavailable: missing ${missing.join(', ')}. Please check back later.` : undefined
 
   const formatEventDate = (startDate: string, endDate: string) => {
-    const start = new Date(startDate)
-    const end = new Date(endDate)
-    const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' }
-    if (startDate === endDate) return start.toLocaleDateString('en-US', options)
-    return `${start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${end.toLocaleDateString('en-US', options)}`
+    return formatDateRangeSafe(startDate, endDate, 'en-US') || 'TBD'
+  }
+
+  const handleMobileBookNow = () => {
+    const el = document.getElementById('booking')
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 96px)' }}>
+      {/* SEO Head and JSON-LD for Event */}
+      {eventData && (
+        <>
+          <SEOHead 
+            path={`/events/${eventData.id}`}
+            fallbackTitle={`${eventData.title} | Dance Event`}
+            fallbackDescription={eventData.description?.slice(0, 160) || 'Join this dance event'}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Event',
+              name: eventData.title,
+              description: eventData.description,
+              startDate: eventData.startDate,
+              endDate: eventData.endDate,
+              eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+              eventStatus: (spotsLeft > 0) ? 'https://schema.org/EventScheduled' : 'https://schema.org/EventCancelled',
+              location: eventData.venue ? {
+                '@type': 'Place',
+                name: eventData.venue.name,
+                address: {
+                  '@type': 'PostalAddress',
+                  streetAddress: eventData.venue.addressLine1 || eventData.venue.addressLine2,
+                  addressLocality: eventData.venue.city,
+                  addressRegion: eventData.venue.state
+                }
+              } : undefined,
+              offers: {
+                '@type': 'Offer',
+                price: parseFloat(eventData.price || '0') || undefined,
+                priceCurrency: 'USD',
+                availability: spotsLeft > 0 ? 'http://schema.org/InStock' : 'http://schema.org/SoldOut'
+              },
+              organizer: {
+                '@type': 'Organization',
+                name: 'Dance Platform'
+              }
+            }) }}
+          />
+        </>
+      )}
       {/* Breadcrumb */}
       <div className="mb-6">
         <Link href="/events" className="text-purple-600 hover:text-purple-700">
@@ -168,10 +221,10 @@ export default function EventDetailPage({ params }: { params: { id: string } }) 
 
         {/* Booking Sidebar */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg shadow-lg p-6 sticky top-24">
+          <div id="booking" className="bg-white rounded-lg shadow-lg p-6 sticky top-24">
             <div className="text-center mb-6">
               <p className="text-3xl font-bold text-gray-900">${eventData.price}</p>
-              <p className="text-gray-600">per person</p>
+              <p className="text-gray-600">/person</p>
             </div>
 
             <div className="space-y-4 mb-6">
@@ -199,7 +252,27 @@ export default function EventDetailPage({ params }: { params: { id: string } }) 
                 maxCapacity: eventData.maxAttendees
               }}
               isAvailable={isAvailable}
+              disabledReason={disabledReason}
             />
+          </div>
+        </div>
+      </div>
+      {/* Mobile Sticky Booking Bar */}
+      <div className="sm:hidden fixed inset-x-0 bottom-0 z-40">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex items-center justify-between px-4 py-3 shadow-lg" style={{ background: 'white', paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
+            <div>
+              <div className="text-sm text-gray-500">Price</div>
+              <div className="text-xl font-bold text-gray-900">${eventData.price} <span className="text-sm text-gray-500">/person</span></div>
+            </div>
+            <button
+              onClick={handleMobileBookNow}
+              disabled={!isAvailable}
+              className="px-5 py-3 rounded-lg font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))' }}
+            >
+              {isAvailable ? 'Book Now' : 'Unavailable'}
+            </button>
           </div>
         </div>
       </div>

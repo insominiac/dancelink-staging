@@ -25,6 +25,8 @@ const createPaymentSessionSchema = z.object({
     type: z.string().optional(),
     details: z.record(z.any()).optional(),
   }).optional(),
+  // Seat lock
+  lockId: z.string().optional(),
 })
 
 export async function POST(request: NextRequest) {
@@ -44,6 +46,7 @@ export async function POST(request: NextRequest) {
       successUrl, 
       cancelUrl,
       wiseRecipientDetails,
+      lockId,
     } = validatedData
 
     // Validate payment provider configuration
@@ -77,6 +80,16 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         )
       }
+    }
+
+    // Validate/obtain seat lock
+    let seatLock = null as null | { id: string }
+    if (lockId) {
+      const lock = await prisma.seatLock.findUnique({ where: { id: lockId } })
+      if (!lock || lock.status !== 'ACTIVE' || lock.expiresAt <= new Date()) {
+        return NextResponse.json({ error: 'Invalid or expired seat lock' }, { status: 400 })
+      }
+      seatLock = { id: lock.id }
     }
 
     // Get item details and price
@@ -158,7 +171,26 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create booking record first
+    // If no seat lock, try to create one now to prevent overbooking
+    if (!seatLock) {
+      try {
+        const lock = await prisma.seatLock.create({
+          data: {
+            itemType: (bookingType === 'class' ? 'CLASS' : 'EVENT') as any,
+            itemId,
+            userId: user.id,
+            quantity: 1,
+            expiresAt: new Date(Date.now() + 15 * 60_000),
+          }
+        })
+        seatLock = { id: lock.id }
+      } catch (e) {
+        // Fallback: capacity may be full
+        return NextResponse.json({ error: 'No seats available' }, { status: 409 })
+      }
+    }
+
+    // Create booking record first (PENDING)
     const booking = await prisma.booking.create({
       data: {
         userId,
@@ -276,6 +308,7 @@ export async function POST(request: NextRequest) {
         sessionUrl: session.url,
         booking: {
           id: booking.id,
+          lockId: seatLock?.id,
           confirmationCode: booking.confirmationCode,
           totalAmount: finalBasePrice,
           discountAmount: finalDiscountAmount,
@@ -335,6 +368,7 @@ export async function POST(request: NextRequest) {
         rate: wisePaymentResult.rate,
         booking: {
           id: booking.id,
+          lockId: seatLock?.id,
           confirmationCode: booking.confirmationCode,
           totalAmount: finalBasePrice,
           discountAmount: finalDiscountAmount,

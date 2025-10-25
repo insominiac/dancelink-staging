@@ -198,13 +198,17 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
             type: isClass ? 'class' : 'event',
             startDate: item.startDate.toISOString(),
             endDate: item.endDate?.toISOString(),
-            startTime: isClass ? booking.class?.schedule : booking.event?.startTime,
-            venue: item.venue ? {
-              name: item.venue.name,
-              address: item.venue.address || '',
-              city: item.venue.city,
-              state: item.venue.state || ''
-            } : undefined,
+            startTime: isClass ? booking.class?.scheduleTime : booking.event?.startTime,
+            venue: item.venue ? ((): { name: string; address: string; city: string; state?: string } => {
+              type VenueLike = { name: string; city: string; state?: string; addressLine1?: string; address?: string; timezone?: string }
+              const v = item.venue as unknown as VenueLike
+              return {
+                name: v.name,
+                address: v.addressLine1 ?? v.address ?? '',
+                city: v.city,
+                state: v.state
+              }
+            })() : undefined,
             instructor: isClass && booking.class?.classInstructors?.[0]?.instructor?.user ? 
               booking.class.classInstructors[0].instructor.user.fullName : undefined,
             organizer: !isClass && booking.event?.organizer ? 
@@ -213,6 +217,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
         }
         
         await emailService.sendBookingConfirmation(emailData)
+        // Note: timezone resolved internally from venue.timezone or EMAIL_DEFAULT_TIMEZONE
         console.log('Confirmation email sent to:', booking.user.email)
       }
     } catch (emailError) {

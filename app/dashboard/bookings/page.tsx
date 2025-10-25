@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { formatDateSafe } from '@/app/lib/date'
 import Link from 'next/link'
 
 interface Booking {
@@ -148,7 +149,7 @@ export default function MyBookingsPage() {
             <div className="flex items-center">
               <span className="mr-2">📅</span>
               <span>
-                {formatDate(booking.item.startDate)}
+                {formatDateSafe(booking.item.startDate, 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) || '—'}
                 {booking.item.scheduleTime && (
                   <span className="ml-1">at {formatTime(booking.item.scheduleTime)}</span>
                 )}
@@ -176,7 +177,7 @@ export default function MyBookingsPage() {
             
             <div className="flex items-center">
               <span className="mr-2">📅</span>
-              <span>Booked: {formatDate(booking.bookingDate)}</span>
+              <span>Booked: {formatDateSafe(booking.bookingDate, 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) || '—'}</span>
             </div>
             
             {activeTab === 'upcoming' && (

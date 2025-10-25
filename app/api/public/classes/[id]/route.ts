@@ -69,10 +69,13 @@ export async function GET(
       )
     }
 
-    // Add current students count
+    // Add current students count including active seat locks
+    const activeLocks = await prisma.seatLock.count({
+      where: { itemType: 'CLASS' as any, itemId: params.id, status: 'ACTIVE' as any, expiresAt: { gt: new Date() } }
+    })
     const classWithStudentCount = {
       ...classData,
-      currentStudents: classData._count.bookings
+      currentStudents: classData._count.bookings + activeLocks
     }
 
     return NextResponse.json({ 

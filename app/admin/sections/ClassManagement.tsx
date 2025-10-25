@@ -48,6 +48,7 @@ interface Class {
   startDate?: string | Date
   endDate?: string | Date
   isActive: boolean
+  status: string
   classInstructors?: any[]
   classStyles?: any[]
   _count?: { bookings: number }
@@ -178,6 +179,24 @@ export default function ClassManagement({ helperData }: { helperData: any }) {
     }
   }
 
+  const updateClassStatus = async (id: string, status: string) => {
+    try {
+      const res = await fetch(`/api/admin/classes/${id}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      })
+      if (!res.ok) {
+        const error = await res.json().catch(() => ({}))
+        alert(error.error || 'Failed to update status')
+        return
+      }
+      setClasses((prev) => prev.map((c) => (c.id === id ? { ...c, status } : c)))
+    } catch (e) {
+      alert('Failed to update status')
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -284,11 +303,24 @@ export default function ClassManagement({ helperData }: { helperData: any }) {
                     {classItem.maxCapacity} spots
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`px-2 py-1 text-xs rounded-full ${
-                      classItem.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {classItem.isActive ? 'Active' : 'Inactive'}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className={`px-2 py-1 text-xs rounded-full ${
+                        classItem.status === 'PUBLISHED' ? 'bg-green-100 text-green-800' :
+                        classItem.status === 'DRAFT' ? 'bg-gray-100 text-gray-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {classItem.status}
+                      </span>
+                      <select
+                        className="ml-2 text-xs border rounded px-2 py-1"
+                        value={classItem.status}
+                        onChange={(e) => updateClassStatus(classItem.id, e.target.value)}
+                      >
+                        <option value="DRAFT">Draft</option>
+                        <option value="PUBLISHED">Published</option>
+                        <option value="CANCELLED">Cancelled</option>
+                      </select>
+                    </div>
                   </td>
                   <td className="px-6 py-4">
                     <button

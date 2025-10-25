@@ -405,6 +405,7 @@ function getReschedulePolicy(hoursUntilClass: number) {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function calculateRefund(booking: any, classStartDate?: Date): number {
   if (!classStartDate) return 0
   
@@ -463,16 +464,53 @@ async function processWaitlist(itemId: string, type: 'class' | 'event') {
   }
 }
 
-async function sendCancellationEmail(booking: any, refundAmount: number, refundRecord: any) {
-  // TODO: Implement cancellation email template
-  console.log('Sending cancellation email', { 
-    booking: booking.id, 
-    refundAmount, 
-    hasRefund: !!refundRecord 
-  })
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function sendCancellationEmail(booking: any, refundAmount: number, // eslint-disable-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  refundRecord: any) {
+  try {
+    const item = booking.class || booking.event
+    if (!item || !booking.user) return
+
+    const data = {
+      user: {
+        name: booking.user.fullName,
+        email: booking.user.email
+      },
+      booking: {
+        confirmationCode: booking.confirmationCode || 'N/A',
+        totalAmount: Number(booking.totalAmount),
+        amountPaid: Number(booking.amountPaid),
+        paymentMethod: booking.paymentMethod || 'card',
+        bookingDate: booking.createdAt.toISOString()
+      },
+      item: {
+        title: item.title,
+        type: booking.classId ? 'class' as const : 'event' as const,
+        startDate: (booking.class ? booking.class.startDate : booking.event!.startDate).toISOString(),
+        endDate: (booking.class ? booking.class.endDate : booking.event!.endDate)?.toISOString(),
+        startTime: booking.class ? booking.class.scheduleTime : booking.event?.startTime,
+        venue: item.venue ? {
+          name: item.venue.name,
+          address: item.venue.addressLine1 || item.venue.address || '',
+          city: item.venue.city,
+          state: item.venue.state || ''
+        } : undefined,
+        instructor: booking.class?.classInstructors?.[0]?.instructor?.user?.fullName,
+        organizer: booking.event?.organizer?.fullName
+      }
+    }
+
+    await emailService.sendBookingCancellation({ ...data, refundAmount })
+    console.log('Cancellation email sent to:', booking.user.email)
+  } catch (e) {
+    console.error('Cancellation email error:', e)
+  }
 }
 
-async function sendRescheduleEmail(originalBooking: any, newClass: any, priceDifference: number) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function sendRescheduleEmail(originalBooking: any, // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  newClass: any, priceDifference: number) {
   // TODO: Implement reschedule email template
   console.log('Sending reschedule email', { 
     booking: originalBooking.id, 

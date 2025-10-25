@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import '@/lib/i18n' // Initialize unified i18n
 import TranslatedText from '../../components/TranslatedText'
+import SEOHead from '@/components/SEOHead'
 
 interface Class {
   id: string
@@ -179,6 +180,7 @@ export default function ClassesPage() {
 
   return (
     <div className="min-h-[calc(100vh-200px)] bg-gray-50">
+      <SEOHead path="/classes" fallbackTitle="Dance Classes | Dance Platform" fallbackDescription="Browse dance classes by level, style, schedule and book your spot." />
       {/* Header Section */}
       <section 
           className="relative py-16 md:py-20 overflow-hidden"
@@ -320,6 +322,15 @@ export default function ClassesPage() {
               const availability = getAvailabilityStatus(cls)
               const spotsLeft = getSpotsLeft(cls)
               
+              const missing: string[] = []
+              if (!cls.venue?.name) missing.push('venue')
+              if (!cls.schedule || cls.schedule === 'TBD') missing.push('time')
+              if (!cls.price || isNaN(parseFloat(cls.price)) || parseFloat(cls.price) <= 0) missing.push('price')
+              if (!cls.maxStudents || cls.maxStudents <= 0) missing.push('capacity')
+              if (!cls.classInstructors || cls.classInstructors.length === 0) missing.push('instructor')
+              const bookable = missing.length === 0
+              const disabledReason = !bookable ? `Booking unavailable: missing ${missing.join(', ')}.` : undefined
+
               return (
                 <div key={cls.id} className="bg-white rounded-xl shadow-md overflow-hidden group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col border border-gray-100">
                   {/* Card Header */}
@@ -381,13 +392,13 @@ export default function ClassesPage() {
                         <div className="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center mr-3">
                           <span className="text-green-600 text-sm">📍</span>
                         </div>
-                        <span className="text-sm font-medium truncate">{cls.venue?.name || (isMounted ? t('classes.tbd') : 'TBD')}</span>
+                        <span className="text-sm font-medium truncate" title={cls.venue?.name || (isMounted ? t('classes.tbd') : 'TBD')}>{cls.venue?.name || (isMounted ? t('classes.tbd') : 'TBD')}</span>
                       </div>
                       <div className="flex items-center text-gray-700 col-span-1 sm:col-span-1">
                         <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center mr-3">
                           <span className="text-purple-600 text-sm">👨‍🏫</span>
                         </div>
-                        <span className="text-sm font-medium truncate">
+                        <span className="text-sm font-medium truncate" title={cls.classInstructors?.[0]?.instructor?.user?.fullName || (isMounted ? t('classes.proInstructor') : 'Pro Instructor')}>
                           {cls.classInstructors?.[0]?.instructor?.user?.fullName || (isMounted ? t('classes.proInstructor') : 'Pro Instructor')}
                         </span>
                       </div>
@@ -422,7 +433,7 @@ export default function ClassesPage() {
                       <div className="flex items-center justify-between mb-4 pb-4 border-t border-gray-100">
                         <div className="pt-4">
                           <span className="text-2xl font-bold text-gray-900">${cls.price}</span>
-                          <span className="text-sm text-gray-500 ml-1">{isMounted ? t('classes.perClass') : '/class'}</span>
+                          <span className="text-sm text-gray-500 ml-1">/class</span>
                         </div>
                       </div>
                       
@@ -436,7 +447,8 @@ export default function ClassesPage() {
                         {spotsLeft > 0 ? (
                           <button
                             onClick={() => handleBookNow(cls)}
-                            disabled={bookingClass === cls.id}
+                            disabled={bookingClass === cls.id || !bookable}
+                            title={!bookable ? disabledReason : undefined}
                             className="flex-1 px-4 py-3 text-white font-semibold rounded-lg transition-all duration-300 hover:transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                             style={{
                               background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'
@@ -457,6 +469,9 @@ export default function ClassesPage() {
                           <button className="flex-1 px-4 py-3 bg-gray-400 text-white font-semibold rounded-lg cursor-not-allowed">
                             {isMounted ? t('classes.classFull') : 'Class Full'}
                           </button>
+                        )}
+                        {!bookable && (
+                          <p className="text-xs text-gray-600 mt-2">{disabledReason}</p>
                         )}
                       </div>
                     </div>

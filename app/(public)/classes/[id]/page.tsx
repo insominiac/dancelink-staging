@@ -1,9 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { formatDateSafe, formatRecurringSchedule } from '@/app/lib/date'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import EnhancedGuestBookingForm from '@/app/(public)/components/EnhancedGuestBookingForm'
+import SEOHead from '@/components/SEOHead'
 
 interface ClassDetail {
   id: string
@@ -80,10 +82,72 @@ export default function ClassDetailPage({ params }: { params: { id: string } }) 
   }
 
   const spotsLeft = classData.maxCapacity - classData.currentStudents
-  const isAvailable = spotsLeft > 0 && classData.isActive
+  const missing: string[] = []
+  if (!classData.venue?.name) missing.push('venue')
+  if (!classData.scheduleTime) missing.push('time')
+  if (!classData.price || isNaN(parseFloat(classData.price)) || parseFloat(classData.price) <= 0) missing.push('price')
+  if (!classData.maxCapacity || classData.maxCapacity <= 0) missing.push('capacity')
+  if (!classData.classInstructors || classData.classInstructors.length === 0) missing.push('instructor')
+  const bookable = missing.length === 0
+  const isAvailable = spotsLeft > 0 && classData.isActive && bookable
+  const disabledReason = !bookable ? `Booking unavailable: missing ${missing.join(', ')}. Please check back later.` : undefined
+
+  const handleMobileBookNow = () => {
+    const el = document.getElementById('booking')
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   return (
     <div>
+      {/* SEO Head and JSON-LD for Course */}
+      {classData && (
+        <>
+          <SEOHead 
+            path={`/classes/${classData.id}`}
+            fallbackTitle={`${classData.title} | Dance Class`}
+            fallbackDescription={classData.description?.slice(0, 160) || 'Join this dance class'}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Course',
+              name: classData.title,
+              description: classData.description,
+              provider: {
+                '@type': 'Organization',
+                name: 'Dance Platform'
+              },
+              hasCourseInstance: {
+                '@type': 'CourseInstance',
+                courseMode: classData.level,
+                startDate: classData.startDate || undefined,
+                endDate: classData.endDate || undefined,
+                location: classData.venue ? {
+                  '@type': 'Place',
+                  name: classData.venue.name,
+                  address: {
+                    '@type': 'PostalAddress',
+                    streetAddress: classData.venue.addressLine1,
+                    addressLocality: classData.venue.city,
+                    addressRegion: classData.venue.state
+                  }
+                } : undefined,
+                instructor: classData.classInstructors?.[0]?.instructor?.user?.fullName ? {
+                  '@type': 'Person',
+                  name: classData.classInstructors?.[0]?.instructor?.user?.fullName
+                } : undefined,
+                offers: {
+                  '@type': 'Offer',
+                  price: parseFloat(classData.price || '0') || undefined,
+                  priceCurrency: 'USD',
+                  availability: (classData.maxCapacity - classData.currentStudents) > 0 ? 'http://schema.org/InStock' : 'http://schema.org/SoldOut'
+                }
+              }
+            }) }}
+          />
+        </>
+      )}
       {/* Hero Section */}
       <section className="py-20" style={{background: 'linear-gradient(135deg, var(--primary-dark), var(--primary-gold))', color: 'white'}}>
         <div className="dance-container">
@@ -109,7 +173,7 @@ export default function ClassDetailPage({ params }: { params: { id: string } }) 
         </div>
       </section>
 
-      <div className="dance-container py-12">
+      <div className="dance-container py-12" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 96px)' }}>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2">
@@ -120,8 +184,7 @@ export default function ClassDetailPage({ params }: { params: { id: string } }) 
                 <div className="grid grid-cols-2 gap-6 mb-8">
                   <div className="dance-card" style={{padding: '1.5rem'}}>
                     <h3 className="font-semibold mb-2" style={{color: 'var(--primary-dark)'}}>📅 Schedule</h3>
-                    <p style={{color: 'var(--neutral-gray)'}}>{classData.scheduleDays}</p>
-                    <p style={{color: 'var(--neutral-gray)'}}>{classData.scheduleTime}</p>
+                    <p style={{color: 'var(--neutral-gray)'}}>{formatRecurringSchedule(classData.scheduleDays, classData.scheduleTime)}</p>
                   </div>
                   <div className="dance-card" style={{padding: '1.5rem'}}>
                     <h3 className="font-semibold mb-2" style={{color: 'var(--primary-dark)'}}>⏱️ Duration</h3>
@@ -130,13 +193,13 @@ export default function ClassDetailPage({ params }: { params: { id: string } }) 
                   <div className="dance-card" style={{padding: '1.5rem'}}>
                     <h3 className="font-semibold mb-2" style={{color: 'var(--primary-dark)'}}>🗓️ Start Date</h3>
                     <p style={{color: 'var(--neutral-gray)'}}>
-                      {new Date(classData.startDate).toLocaleDateString()}
+                      {formatDateSafe(classData.startDate) || '—'}
                     </p>
                   </div>
                   <div className="dance-card" style={{padding: '1.5rem'}}>
                     <h3 className="font-semibold mb-2" style={{color: 'var(--primary-dark)'}}>📆 End Date</h3>
                     <p style={{color: 'var(--neutral-gray)'}}>
-                      {new Date(classData.endDate).toLocaleDateString()}
+                      {formatDateSafe(classData.endDate) || '—'}
                     </p>
                   </div>
                 </div>
@@ -202,10 +265,10 @@ export default function ClassDetailPage({ params }: { params: { id: string } }) 
 
           {/* Booking Sidebar */}
           <div className="lg:col-span-1">
-            <div className="dance-card sticky top-24" style={{background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))', color: 'white'}}>
+            <div id="booking" className="dance-card sticky top-24" style={{background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))', color: 'white'}}>
               <div className="text-center mb-6">
                 <p className="text-4xl font-bold mb-2">${classData.price}</p>
-                <p className="opacity-80">per class</p>
+                <p className="opacity-80">/class</p>
               </div>
 
               <div className="space-y-4 mb-6">
@@ -235,8 +298,29 @@ export default function ClassDetailPage({ params }: { params: { id: string } }) 
                   maxCapacity: classData.maxCapacity
                 }}
                 isAvailable={isAvailable}
+                disabledReason={disabledReason}
               />
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Sticky Booking Bar */}
+      <div className="sm:hidden fixed inset-x-0 bottom-0 z-40">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex items-center justify-between px-4 py-3 shadow-lg" style={{ background: 'white', paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
+            <div>
+              <div className="text-sm text-gray-500">Price</div>
+              <div className="text-xl font-bold text-gray-900">${classData.price} <span className="text-sm text-gray-500">/class</span></div>
+            </div>
+            <button
+              onClick={handleMobileBookNow}
+              disabled={!isAvailable}
+              className="px-5 py-3 rounded-lg font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))' }}
+            >
+              {isAvailable ? 'Book Now' : 'Unavailable'}
+            </button>
           </div>
         </div>
       </div>

@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server'
-import db from '../../../lib/db'
+import db, { ensureDbConnection } from '../../../lib/db'
 
 // Enable ISR with 5 minute revalidation
 export const revalidate = 300 // 5 minutes
 
 export async function GET() {
   try {
+    await ensureDbConnection()
     // Get counts from database
     const [
       totalStudents,

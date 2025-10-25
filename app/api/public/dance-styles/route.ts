@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import prisma from '@/app/lib/db'
+import prisma, { ensureDbConnection } from '@/app/lib/db'
 import { resolveLocale } from '@/app/lib/locale'
 import { translationService } from '@/lib/translation-service'
 
 export async function GET(request: NextRequest) {
   try {
+    await ensureDbConnection()
     const locale = resolveLocale(request, 'en')
     const danceStyles = await prisma.danceStyle.findMany({
       where: {

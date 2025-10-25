@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import prisma from '../../../lib/db'
+import prisma, { ensureDbConnection } from '../../../lib/db'
 import { resolveLocale } from '@/app/lib/locale'
 import { translationService } from '@/lib/translation-service'
 
 export async function GET(request: NextRequest) {
   try {
+    await ensureDbConnection()
     const locale = resolveLocale(request, 'en')
     // Fetch only active classes that haven't ended
     const classes = await prisma.class.findMany({
@@ -63,12 +64,27 @@ export async function GET(request: NextRequest) {
     })
 
     // Calculate current students for each class and map field names
-    let classesWithStudentCount = classes.map(cls => ({
-      ...cls,
-      currentStudents: cls._count.bookings,
-      maxStudents: cls.maxCapacity, // Map maxCapacity to maxStudents for frontend compatibility
-      duration: cls.durationMins, // Map durationMins to duration for frontend compatibility
-      schedule: cls.scheduleTime || cls.scheduleDays || 'TBD' // Map schedule fields
+    let classesWithStudentCount = await Promise.all(classes.map(async (cls) => {
+      // Be resilient if prisma.seatLock is missing in the generated client
+      let activeLocks = 0
+      try {
+        const seatLockModel = (prisma as any).seatLock
+        if (seatLockModel?.count) {
+          activeLocks = await seatLockModel.count({
+            where: { itemType: 'CLASS' as any, itemId: cls.id, status: 'ACTIVE' as any, expiresAt: { gt: new Date() } }
+          })
+        }
+      } catch (_) {
+        activeLocks = 0
+      }
+      const bookingsCount = (cls as any)?._count?.bookings ?? 0
+      return ({
+        ...cls,
+        currentStudents: bookingsCount + activeLocks,
+        maxStudents: cls.maxCapacity, // Map maxCapacity to maxStudents for frontend compatibility
+        duration: cls.durationMins, // Map durationMins to duration for frontend compatibility
+        schedule: cls.scheduleTime || cls.scheduleDays || 'TBD' // Map schedule fields
+      })
     }))
 
     // Server-side translation for dynamic fields

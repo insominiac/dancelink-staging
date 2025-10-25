@@ -27,6 +27,13 @@ export interface EmailTemplate {
   text?: string
 }
 
+export interface EmailAttachment {
+  filename: string
+  content: string | Buffer
+  contentType?: string
+  method?: 'REQUEST' | 'CANCEL'
+}
+
 export interface BookingConfirmationData {
   user: {
     name: string
@@ -50,6 +57,7 @@ export interface BookingConfirmationData {
       address: string
       city: string
       state?: string
+      timezone?: string
     }
     instructor?: string
     organizer?: string
@@ -74,9 +82,41 @@ export interface NewUserAdminNotificationData {
   totalUsers: number
 }
 
+// Branding and timezone helpers
+const BRAND_NAME = process.env.EMAIL_BRAND_NAME || 'DanceLink'
+const BRAND_PRIMARY = process.env.EMAIL_BRAND_PRIMARY_COLOR || '#f72585'
+const BRAND_ACCENT = process.env.EMAIL_BRAND_ACCENT_COLOR || '#ff6b35'
+const BRAND_LOGO_URL = process.env.EMAIL_BRAND_LOGO_URL || ''
+const DEFAULT_TZ = process.env.EMAIL_DEFAULT_TIMEZONE || 'UTC'
+
+function getEmailTimezone(data?: BookingConfirmationData): string {
+  const tz = data?.item?.venue?.timezone || DEFAULT_TZ
+  return typeof tz === 'string' && tz.trim() ? tz : DEFAULT_TZ
+}
+
+function formatInTz(dateIso: string, opts?: Intl.DateTimeFormatOptions, tz?: string) {
+  const d = new Date(dateIso)
+  const timeZone = tz || DEFAULT_TZ
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    ...(opts || { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+  }).format(d)
+}
+
+function tzAbbr(dateIso: string, tz?: string) {
+  const timeZone = tz || DEFAULT_TZ
+  try {
+    const parts = new Intl.DateTimeFormat('en-US', { timeZone, timeZoneName: 'short' }).formatToParts(new Date(dateIso))
+    const name = parts.find(p => p.type === 'timeZoneName')?.value
+    return name || timeZone
+  } catch {
+    return timeZone
+  }
+}
+
 class EmailService {
   private config: EmailConfig
-  private transporter: any
+  private transporter?: nodemailer.Transporter
 
   constructor() {
     this.config = this.getEmailConfig()
@@ -142,9 +182,9 @@ class EmailService {
     }
   }
 
-  async sendEmail(to: string, template: EmailTemplate, from?: string): Promise<boolean> {
+  async sendEmail(to: string, template: EmailTemplate, from?: string, attachments?: EmailAttachment[]): Promise<boolean> {
     try {
-      const fromAddress = from || process.env.EMAIL_FROM || 'DanceLink <noreply@dancelink.com>'
+      const fromAddress = from || process.env.EMAIL_FROM || `${BRAND_NAME} <noreply@dancelink.com>`
 
       switch (this.config.provider) {
         case 'console':
@@ -154,6 +194,9 @@ class EmailService {
           console.log(`Subject: ${template.subject}`)
           console.log('HTML Content:', template.html)
           console.log('Text Content:', template.text || 'No text version')
+          if (attachments?.length) {
+            console.log(`Attachments: ${attachments.map(a => a.filename).join(', ')}`)
+          }
           console.log('---')
           return true
 
@@ -167,7 +210,8 @@ class EmailService {
             to,
             subject: template.subject,
             html: template.html,
-            text: template.text
+            text: template.text,
+            attachments: attachments?.map(a => ({ filename: a.filename, content: a.content, contentType: a.contentType || 'text/calendar; charset=utf-8' }))
           })
 
           console.log('Email sent via SMTP:', result.messageId)
@@ -199,6 +243,9 @@ class EmailService {
 
     const subject = `Booking Confirmed: ${item.title} - ${booking.confirmationCode}`
 
+    const tz = getEmailTimezone(data)
+    const dateLine = `${formatInTz(item.startDate, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }, tz)}${item.startTime ? ` at ${item.startTime}` : ''} (${tzAbbr(item.startDate, tz)})`
+
     const html = `
       <!DOCTYPE html>
       <html>
@@ -208,35 +255,36 @@ class EmailService {
         <style>
           body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
           .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #ff6b35, #f72585); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .header { background: linear-gradient(135deg, ${BRAND_ACCENT}, ${BRAND_PRIMARY}); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .brand { display: flex; align-items: center; gap: 12px; justify-content: center; }
+          .brand img { max-height: 36px; background: rgba(255,255,255,0.92); border-radius: 8px; padding: 6px 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.25), 0 4px 12px rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.06); }
+          .brand-name { font-weight: 800; letter-spacing: 0.3px; text-shadow: -1px 0 0 rgba(0,0,0,0.6), 0 1px 0 rgba(0,0,0,0.6), 1px 0 0 rgba(0,0,0,0.6), 0 -1px 0 rgba(0,0,0,0.6), 0 0 6px rgba(0,0,0,0.5), 0 0 2px rgba(255,255,255,0.7); }
           .content { background: white; padding: 30px; border: 1px solid #ddd; }
           .footer { background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; }
           .booking-details { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; }
-          .highlight { color: #f72585; font-weight: bold; }
-          .button { background: #f72585; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 10px 0; }
+          .highlight { color: ${BRAND_PRIMARY}; font-weight: bold; }
+          .button { background: ${BRAND_PRIMARY}; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 10px 0; }
+          .muted { color: #666; font-size: 12px; }
         </style>
       </head>
       <body>
         <div class="container">
           <div class="header">
-            <h1>🎉 Booking Confirmed!</h1>
-            <p>Your ${item.type} booking is confirmed</p>
+            <div class="brand">
+              ${BRAND_LOGO_URL ? `<img src="${BRAND_LOGO_URL}" alt="${BRAND_NAME} logo" />` : ''}
+              <h1 class="brand-name" style="margin:0;">${BRAND_NAME}</h1>
+            </div>
+            <p style="margin-top:6px;">🎉 Booking Confirmed</p>
           </div>
           
           <div class="content">
             <h2>Hello ${user.name}!</h2>
-            <p>Great news! Your booking for <strong>${item.title}</strong> has been confirmed and your payment has been processed successfully.</p>
+            <p>Your booking for <strong>${item.title}</strong> is confirmed.</p>
             
             <div class="booking-details">
               <h3>📅 ${item.type.charAt(0).toUpperCase() + item.type.slice(1)} Details</h3>
               <p><strong>Title:</strong> ${item.title}</p>
-              <p><strong>Date:</strong> ${new Date(item.startDate).toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              })}</p>
-              ${item.startTime ? `<p><strong>Time:</strong> ${item.startTime}</p>` : ''}
+              <p><strong>When:</strong> ${dateLine}</p>
               ${item.venue ? `
                 <p><strong>Location:</strong> ${item.venue.name}<br>
                 ${item.venue.address}<br>
@@ -244,24 +292,17 @@ class EmailService {
               ` : ''}
               ${item.instructor ? `<p><strong>Instructor:</strong> ${item.instructor}</p>` : ''}
               ${item.organizer ? `<p><strong>Organizer:</strong> ${item.organizer}</p>` : ''}
+              <p class="muted">Timezone: ${DEFAULT_TZ}</p>
             </div>
 
             <div class="booking-details">
-              <h3>💳 Payment Details</h3>
+              <h3>💳 Payment</h3>
               <p><strong>Confirmation Code:</strong> <span class="highlight">${booking.confirmationCode}</span></p>
               <p><strong>Total Amount:</strong> $${booking.totalAmount.toFixed(2)}</p>
               <p><strong>Amount Paid:</strong> $${booking.amountPaid.toFixed(2)}</p>
-              <p><strong>Payment Method:</strong> ${booking.paymentMethod}</p>
-              <p><strong>Payment Date:</strong> ${new Date(booking.bookingDate).toLocaleDateString()}</p>
+              <p><strong>Method:</strong> ${booking.paymentMethod}</p>
+              <p><strong>Payment Date:</strong> ${formatInTz(booking.bookingDate, undefined, tz)}</p>
             </div>
-
-            <h3>✨ What's Next?</h3>
-            <ul>
-              <li>Save this confirmation email for your records</li>
-              <li>Arrive ${item.type === 'class' ? '10' : '15'} minutes early</li>
-              <li>Bring comfortable clothes and water</li>
-              <li>Check your dashboard for any updates</li>
-            </ul>
 
             <p style="text-align: center;">
               <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/dashboard" class="button">
@@ -271,8 +312,8 @@ class EmailService {
           </div>
 
           <div class="footer">
-            <p>Questions? Contact us at <a href="mailto:support@dancelink.com">support@dancelink.com</a></p>
-            <p>&copy; 2024 DanceLink. All rights reserved.</p>
+            <p>Questions? Contact us at <a href="mailto:${process.env.EMAIL_SUPPORT || 'support@dancelink.com'}">${process.env.EMAIL_SUPPORT || 'support@dancelink.com'}</a></p>
+            <p>&copy; ${new Date().getFullYear()} ${BRAND_NAME}. All rights reserved.</p>
           </div>
         </div>
       </body>
@@ -287,27 +328,19 @@ class EmailService {
       Your booking for "${item.title}" has been confirmed!
 
       ${item.type.charAt(0).toUpperCase() + item.type.slice(1)} Details:
-      - Title: ${item.title}
-      - Date: ${new Date(item.startDate).toLocaleDateString()}
-      ${item.startTime ? `- Time: ${item.startTime}` : ''}
+      - When: ${dateLine}
       ${item.venue ? `- Location: ${item.venue.name}, ${item.venue.address}, ${item.venue.city}` : ''}
-      ${item.instructor ? `- Instructor: ${item.instructor}` : ''}
 
-      Payment Details:
+      Payment:
       - Confirmation Code: ${booking.confirmationCode}
       - Amount Paid: $${booking.amountPaid.toFixed(2)}
-      - Payment Method: ${booking.paymentMethod}
-
-      What's Next:
-      - Arrive ${item.type === 'class' ? '10' : '15'} minutes early
-      - Bring comfortable clothes and water
-      - Check your dashboard for updates
+      - Method: ${booking.paymentMethod}
 
       Visit your dashboard: ${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/dashboard
 
-      Questions? Contact us at support@dancelink.com
+      Questions? Contact: ${process.env.EMAIL_SUPPORT || 'support@dancelink.com'}
 
-      © 2024 DanceLink. All rights reserved.
+      © ${new Date().getFullYear()} ${BRAND_NAME}. All rights reserved.
     `
 
     return { subject, html, text }
@@ -344,7 +377,7 @@ class EmailService {
           </div>
           
           <div class="content">
-            <p><strong>Date:</strong> ${new Date(booking.bookingDate).toLocaleDateString()}</p>
+            <p><strong>Date:</strong> ${formatInTz(booking.bookingDate, { year: 'numeric', month: 'long', day: 'numeric' })}</p>
             <p><strong>Customer:</strong> ${user.name} (${user.email})</p>
             
             <table class="receipt-table">
@@ -372,7 +405,7 @@ class EmailService {
 
           <div class="footer">
             <p>Keep this receipt for your records</p>
-            <p>&copy; 2024 DanceLink. All rights reserved.</p>
+            <p>&copy; ${new Date().getFullYear()} ${BRAND_NAME}. All rights reserved.</p>
           </div>
         </div>
       </body>
@@ -383,7 +416,7 @@ class EmailService {
       Payment Receipt
       
       Receipt #${booking.confirmationCode}
-      Date: ${new Date(booking.bookingDate).toLocaleDateString()}
+      Date: ${formatInTz(booking.bookingDate, { year: 'numeric', month: 'long', day: 'numeric' }, getEmailTimezone(data))}
       Customer: ${user.name} (${user.email})
       
       Description: ${item.title} (${item.type})
@@ -395,7 +428,7 @@ class EmailService {
       
       Keep this receipt for your records.
       
-      © 2024 DanceLink. All rights reserved.
+      © ${new Date().getFullYear()} ${BRAND_NAME}. All rights reserved.
     `
 
     return { subject, html, text }
@@ -404,7 +437,23 @@ class EmailService {
   // Main booking confirmation method
   async sendBookingConfirmation(data: BookingConfirmationData): Promise<boolean> {
     const template = this.generateBookingConfirmationEmail(data)
-    return await this.sendEmail(data.user.email, template)
+    // Create ICS attachment
+    const { createBookingICS } = await import('./ics')
+    const ics = createBookingICS({
+      uid: data.booking.confirmationCode || `${Date.now()}@dancelink` ,
+      title: data.item.title,
+      description: `${data.item.type} booking (${data.booking.confirmationCode})` ,
+      location: data.item.venue ? `${data.item.venue.name}, ${data.item.venue.address}, ${data.item.venue.city}${data.item.venue.state ? ', ' + data.item.venue.state : ''}` : undefined,
+      start: new Date(data.item.startDate),
+      end: data.item.endDate ? new Date(data.item.endDate) : undefined,
+      timezone: getEmailTimezone(data),
+      url: (process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001') + '/dashboard',
+      organizerName: BRAND_NAME,
+      organizerEmail: (process.env.EMAIL_FROM || 'noreply@dancelink.com').replace(/.*<|>.*/g, '') || 'noreply@dancelink.com',
+      method: 'REQUEST',
+      sequence: 1
+    })
+    return await this.sendEmail(data.user.email, template, undefined, [{ filename: 'booking.ics', content: ics, contentType: 'text/calendar; charset=utf-8; method=REQUEST', method: 'REQUEST' }])
   }
 
   // Payment receipt method
@@ -417,38 +466,39 @@ class EmailService {
   generateWelcomeEmail(data: NewUserWelcomeData): EmailTemplate {
     const { user } = data
 
-    const subject = `Welcome to DanceLink, ${user.name.split(' ')[0]}! 🎉`
+    const subject = `Welcome to ${BRAND_NAME}, ${user.name.split(' ')[0]}! 🎉`
 
     const html = `
       <!DOCTYPE html>
       <html>
       <head>
         <meta charset="utf-8">
-        <title>Welcome to DanceLink</title>
+        <title>Welcome to ${BRAND_NAME}</title>
         <style>
           body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
           .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #ff6b35, #f72585); color: white; padding: 40px 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .header { background: linear-gradient(135deg, ${BRAND_ACCENT}, ${BRAND_PRIMARY}); color: white; padding: 40px 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .brand-name { font-weight: 800; letter-spacing: 0.3px; text-shadow: -1px 0 0 rgba(0,0,0,0.6), 0 1px 0 rgba(0,0,0,0.6), 1px 0 0 rgba(0,0,0,0.6), 0 -1px 0 rgba(0,0,0,0.6), 0 0 6px rgba(0,0,0,0.5), 0 0 2px rgba(255,255,255,0.7); }
           .content { background: white; padding: 30px; border: 1px solid #ddd; }
           .footer { background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; }
-          .feature-box { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #f72585; }
-          .button { background: #f72585; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block; margin: 10px 0; font-weight: bold; }
+          .feature-box { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 15px 0; border-left: 4px solid ${BRAND_PRIMARY}; }
+          .button { background: ${BRAND_PRIMARY}; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block; margin: 10px 0; font-weight: bold; }
           .emoji { font-size: 1.2em; }
         </style>
       </head>
       <body>
         <div class="container">
           <div class="header">
-            <h1>🎉 Welcome to DanceLink!</h1>
+            <h1 class="brand-name">🎉 Welcome to ${BRAND_NAME}!</h1>
             <p>Your journey into the world of dance begins now</p>
           </div>
           
           <div class="content">
             <h2>Hello ${user.name}!</h2>
-            <p>Thank you for joining DanceLink - the premier platform for dancers, instructors, and dance enthusiasts. We're thrilled to have you as part of our vibrant community!</p>
+            <p>Thank you for joining ${BRAND_NAME} - the premier platform for dancers, instructors, and dance enthusiasts. We're thrilled to have you as part of our vibrant community!</p>
             
             <div class="feature-box">
-              <h3><span class="emoji">💃</span> What you can do on DanceLink:</h3>
+              <h3><span class="emoji">💃</span> What you can do on ${BRAND_NAME}:</h3>
               <ul>
                 <li><strong>Discover Classes:</strong> Browse and book dance classes from talented instructors</li>
                 <li><strong>Join Events:</strong> Attend workshops, performances, and special dance events</li>
@@ -478,9 +528,9 @@ class EmailService {
           </div>
 
           <div class="footer">
-            <p>Need help getting started? Check out our <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/help">Help Center</a> or contact us at <a href="mailto:support@dancelink.com">support@dancelink.com</a></p>
-            <p>&copy; 2024 DanceLink. All rights reserved.</p>
-            <p style="font-size: 12px; color: #666;">You received this email because you created an account on DanceLink.</p>
+            <p>Need help getting started? Check out our <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/help">Help Center</a> or contact us at <a href="mailto:${process.env.EMAIL_SUPPORT || 'support@dancelink.com'}">${process.env.EMAIL_SUPPORT || 'support@dancelink.com'}</a></p>
+            <p>&copy; ${new Date().getFullYear()} ${BRAND_NAME}. All rights reserved.</p>
+            <p style="font-size: 12px; color: #666;">You received this email because you created an account on ${BRAND_NAME}.</p>
           </div>
         </div>
       </body>
@@ -488,11 +538,11 @@ class EmailService {
     `
 
     const text = `
-      Welcome to DanceLink, ${user.name}!
+      Welcome to ${BRAND_NAME}, ${user.name}!
 
-      Thank you for joining DanceLink - the premier platform for dancers, instructors, and dance enthusiasts. We're thrilled to have you as part of our vibrant community!
+      Thank you for joining ${BRAND_NAME} - the premier platform for dancers, instructors, and dance enthusiasts. We're thrilled to have you as part of our vibrant community!
 
-      What you can do on DanceLink:
+      What you can do on ${BRAND_NAME}:
       • Discover Classes: Browse and book dance classes from talented instructors
       • Join Events: Attend workshops, performances, and special dance events
       • Connect with Partners: Find dance partners who match your style and skill level
@@ -621,6 +671,89 @@ class EmailService {
     const template = this.generateNewUserAdminNotificationEmail(data)
     return await this.sendEmail(adminEmail, template)
   }
+
+  // Generate cancellation email
+  generateCancellationEmail(data: BookingConfirmationData & { refundAmount?: number }): EmailTemplate {
+    const { user, booking, item } = data
+    const subject = `Booking Cancelled: ${item.title} - ${booking.confirmationCode}`
+    const tz = getEmailTimezone(data)
+    const dateLine = `${formatInTz(item.startDate, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }, tz)}${item.startTime ? ` at ${item.startTime}` : ''} (${tzAbbr(item.startDate, tz)})`
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>Booking Cancelled</title>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: #7f1d1d; color: white; padding: 24px; text-align: center; border-radius: 10px 10px 0 0; }
+          .brand-name { font-weight: 800; letter-spacing: 0.3px; text-shadow: -1px 0 0 rgba(0,0,0,0.6), 0 1px 0 rgba(0,0,0,0.6), 1px 0 0 rgba(0,0,0,0.6), 0 -1px 0 rgba(0,0,0,0.6), 0 0 6px rgba(0,0,0,0.5), 0 0 2px rgba(255,255,255,0.7); }
+          .content { background: white; padding: 24px; border: 1px solid #ddd; }
+          .footer { background: #f8f9fa; padding: 16px; text-align: center; border-radius: 0 0 10px 10px; }
+          .details { background: #fff7ed; padding: 16px; border-radius: 8px; margin: 16px 0; }
+          .highlight { color: ${BRAND_PRIMARY}; font-weight: bold; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h2 class="brand-name">${BRAND_NAME} — Booking Cancelled</h2>
+          </div>
+          <div class="content">
+            <p>Hello ${user.name},</p>
+            <p>Your booking for <strong>${item.title}</strong> has been cancelled.</p>
+            <div class="details">
+              <p><strong>Originally scheduled:</strong> ${dateLine}</p>
+              ${item.venue ? `<p><strong>Location:</strong> ${item.venue.name}, ${item.venue.address}, ${item.venue.city}${item.venue.state ? ', ' + item.venue.state : ''}</p>` : ''}
+              <p>Timezone: ${tz}</p>
+              <p><strong>Confirmation Code:</strong> <span class="highlight">${booking.confirmationCode}</span></p>
+              ${data.refundAmount ? `<p><strong>Refund:</strong> $${data.refundAmount.toFixed(2)} (if applicable)</p>` : ''}
+            </div>
+            <p>If this was a mistake or you need assistance, reply to this email.</p>
+          </div>
+          <div class="footer">
+            <p>&copy; ${new Date().getFullYear()} ${BRAND_NAME}. All rights reserved.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `
+
+    const text = `
+      Booking Cancelled - ${item.title}
+
+      Hello ${user.name}, your booking has been cancelled.
+      Originally scheduled: ${dateLine}
+      Confirmation Code: ${booking.confirmationCode}
+      ${data.refundAmount ? `Refund: $${data.refundAmount.toFixed(2)}` : ''}
+
+      © ${new Date().getFullYear()} ${BRAND_NAME}. All rights reserved.
+    `
+
+    return { subject, html, text }
+  }
+
+  async sendBookingCancellation(data: BookingConfirmationData & { refundAmount?: number }): Promise<boolean> {
+    const template = this.generateCancellationEmail(data)
+    const { createBookingICS } = await import('./ics')
+    const ics = createBookingICS({
+      uid: data.booking.confirmationCode || `${Date.now()}@dancelink` ,
+      title: data.item.title,
+      description: `Cancelled: ${data.item.type} booking (${data.booking.confirmationCode})` ,
+      location: data.item.venue ? `${data.item.venue.name}, ${data.item.venue.address}, ${data.item.venue.city}${data.item.venue.state ? ', ' + data.item.venue.state : ''}` : undefined,
+      start: new Date(data.item.startDate),
+      end: data.item.endDate ? new Date(data.item.endDate) : undefined,
+      timezone: getEmailTimezone(data),
+      url: (process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001') + '/dashboard',
+      organizerName: BRAND_NAME,
+      organizerEmail: (process.env.EMAIL_FROM || 'noreply@dancelink.com').replace(/.*<|>.*/g, '') || 'noreply@dancelink.com',
+      method: 'CANCEL',
+      sequence: 2,
+      status: 'CANCELLED'
+    })
+    return await this.sendEmail(data.user.email, template, undefined, [{ filename: 'booking-cancellation.ics', content: ics, contentType: 'text/calendar; charset=utf-8; method=CANCEL', method: 'CANCEL' }])
+  }
 }
 
 // Export singleton instance
@@ -634,13 +767,14 @@ export async function sendEmail(options: {
   html: string
   text?: string
   from?: string
+  attachments?: EmailAttachment[]
 }): Promise<boolean> {
   const template: EmailTemplate = {
     subject: options.subject,
     html: options.html,
     text: options.text
   }
-  return await emailService.sendEmail(options.to, template, options.from)
+  return await emailService.sendEmail(options.to, template, options.from, options.attachments)
 }
 
 // Contact form notification
@@ -655,14 +789,14 @@ export async function sendContactNotification(options: {
     subject: `New Contact Form Submission: ${options.subject}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #7c3aed;">New Contact Form Submission</h2>
+        <h2 style="color: ${BRAND_PRIMARY};">New Contact Form Submission</h2>
         <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
           <h3 style="margin: 0 0 10px 0;">Contact Details</h3>
           <p><strong>Name:</strong> ${options.customerName}</p>
           <p><strong>Email:</strong> ${options.customerEmail}</p>
           <p><strong>Subject:</strong> ${options.subject}</p>
         </div>
-        <div style="background-color: #f9fafb; padding: 15px; border-radius: 8px; border-left: 4px solid #7c3aed;">
+        <div style="background-color: #f9fafb; padding: 15px; border-radius: 8px; border-left: 4px solid ${BRAND_PRIMARY};">
           <h3 style="margin: 0 0 10px 0;">Message</h3>
           <p style="white-space: pre-line;">${options.message}</p>
         </div>

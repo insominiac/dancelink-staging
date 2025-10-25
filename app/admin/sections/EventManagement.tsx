@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { formatDateSafe } from '@/app/lib/date'
 
 interface Event {
   id: string
@@ -123,6 +124,25 @@ export default function EventManagement({ helperData }: { helperData: any }) {
     }
   }
 
+  const updateEventStatus = async (id: string, status: string) => {
+    try {
+      const res = await fetch(`/api/admin/events/${id}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      })
+      if (!res.ok) {
+        const error = await res.json().catch(() => ({}))
+        alert(error.error || 'Failed to update status')
+        return
+      }
+      // Update local state optimistically
+      setEvents((prev) => prev.map((e) => (e.id === id ? { ...e, status } : e)))
+    } catch (e) {
+      alert('Failed to update status')
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -200,7 +220,7 @@ export default function EventManagement({ helperData }: { helperData: any }) {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500">
-                    <div>{new Date(event.startDate).toLocaleDateString()}</div>
+                    <div>{formatDateSafe(event.startDate)}</div>
                     <div>{event.startTime} - {event.endTime}</div>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500">
@@ -213,13 +233,24 @@ export default function EventManagement({ helperData }: { helperData: any }) {
                     {event.currentAttendees}/{event.maxAttendees}
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`px-2 py-1 text-xs rounded-full ${
-                      event.status === 'PUBLISHED' ? 'bg-green-100 text-green-800' :
-                      event.status === 'DRAFT' ? 'bg-gray-100 text-gray-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                      {event.status}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className={`px-2 py-1 text-xs rounded-full ${
+                        event.status === 'PUBLISHED' ? 'bg-green-100 text-green-800' :
+                        event.status === 'DRAFT' ? 'bg-gray-100 text-gray-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {event.status}
+                      </span>
+                      <select
+                        className="ml-2 text-xs border rounded px-2 py-1"
+                        value={event.status}
+                        onChange={(e) => updateEventStatus(event.id, e.target.value)}
+                      >
+                        <option value="DRAFT">Draft</option>
+                        <option value="PUBLISHED">Published</option>
+                        <option value="CANCELLED">Cancelled</option>
+                      </select>
+                    </div>
                   </td>
                   <td className="px-6 py-4">
                     <button

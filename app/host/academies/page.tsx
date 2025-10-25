@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { useAuth } from "@/app/lib/auth-context"
+import { useAuth } from '@/app/lib/auth-context'
+import Image from 'next/image'
 
 interface Academy {
   id: string
@@ -106,9 +107,15 @@ export default function HostAcademiesPage() {
             {academies.map(a => (
               <div key={a.id} className="bg-white rounded-xl shadow p-5">
                 <div className="flex items-start gap-4">
-                  {a.logoUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={a.logoUrl} alt={a.name} className="w-14 h-14 rounded object-cover" />
+{a.logoUrl ? (
+                    <Image 
+                      src={a.logoUrl} 
+                      alt={a.name} 
+                      width={56} 
+                      height={56}
+                      loading="lazy"
+                      className="w-14 h-14 rounded object-cover" 
+                    />
                   ) : (
                     <div className="w-14 h-14 rounded bg-gray-100 flex items-center justify-center text-2xl">🏫</div>
                   )}

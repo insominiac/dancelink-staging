@@ -94,13 +94,17 @@ export async function POST(request: NextRequest) {
         type: 'class',
         startDate: testClass.startDate.toISOString(),
         endDate: testClass.endDate?.toISOString(),
-        startTime: testClass.schedule,
-        venue: testClass.venue ? {
-          name: testClass.venue.name,
-          address: testClass.venue.address || '',
-          city: testClass.venue.city,
-          state: testClass.venue.state || ''
-        } : undefined,
+        startTime: testClass.scheduleTime,
+        venue: testClass.venue ? ((): { name: string; address: string; city: string; state?: string } => {
+          type VenueLike = { name: string; city: string; state?: string; addressLine1?: string; address?: string; timezone?: string }
+          const v = testClass.venue as unknown as VenueLike
+          return {
+            name: v.name,
+            address: v.addressLine1 ?? v.address ?? '',
+            city: v.city,
+            state: v.state
+          }
+        })() : undefined,
         instructor: testClass.classInstructors?.[0]?.instructor?.user ? 
           testClass.classInstructors[0].instructor.user.fullName : undefined
       }

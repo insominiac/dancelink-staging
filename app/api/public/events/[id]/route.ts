@@ -53,10 +53,21 @@ export async function GET(
       )
     }
 
-    // Add current attendees count
+    // Add current attendees count including active seat locks (guard if seatLock is not present)
+    let activeLocks = 0
+    try {
+      const seatLockModel = (prisma as any).seatLock
+      if (seatLockModel?.count) {
+        activeLocks = await seatLockModel.count({
+          where: { itemType: 'EVENT' as any, itemId: params.id, status: 'ACTIVE' as any, expiresAt: { gt: new Date() } }
+        })
+      }
+    } catch (_) {
+      activeLocks = 0
+    }
     const eventWithAttendeeCount = {
       ...eventData,
-      currentAttendees: eventData._count.bookings
+      currentAttendees: ((eventData as any)?._count?.bookings ?? 0) + activeLocks
     }
 
     return NextResponse.json({ 

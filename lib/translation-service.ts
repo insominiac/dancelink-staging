@@ -21,19 +21,30 @@ class TranslationService {
     }
   }
 
+  private normalizeLang(lang: string | undefined, fallback: string = 'en') {
+    const raw = (lang || '').trim().toLowerCase().replace('_', '-')
+    if (!raw || raw === '*' || raw === 'auto' || raw === 'und') return fallback
+    // Allow "en", "es", "pt-br" patterns
+    const ok = /^[a-z]{2}(-[a-z]{2})?$/.test(raw)
+    return ok ? raw : fallback
+  }
+
   /**
    * Translate text using Google Translate API
    */
   async translateText(text: string, targetLanguage: string, sourceLanguage: string = 'en'): Promise<string> {
+    const from = this.normalizeLang(sourceLanguage, 'en')
+    const to = this.normalizeLang(targetLanguage, from)
+
     // Return original text if same language
-    if (targetLanguage === sourceLanguage) {
+    if (to === from) {
       return text
     }
 
     // Check cache first
-    const cacheKey = `${sourceLanguage}-${text}`
-    if (this.cache[cacheKey] && this.cache[cacheKey][targetLanguage]) {
-      return this.cache[cacheKey][targetLanguage]
+    const cacheKey = `${from}-${text}`
+    if (this.cache[cacheKey] && this.cache[cacheKey][to]) {
+      return this.cache[cacheKey][to]
     }
 
     if (!this.isGoogleTranslateEnabled) {
@@ -43,15 +54,15 @@ class TranslationService {
 
     try {
       const [translation] = await this.translate.translate(text, {
-        from: sourceLanguage,
-        to: targetLanguage,
+        from,
+        to,
       })
 
       // Cache the result
       if (!this.cache[cacheKey]) {
         this.cache[cacheKey] = {}
       }
-      this.cache[cacheKey][targetLanguage] = translation
+      this.cache[cacheKey][to] = translation
 
       return translation
     } catch (error) {
@@ -64,7 +75,10 @@ class TranslationService {
    * Translate multiple texts at once (more efficient)
    */
   async translateBatch(texts: string[], targetLanguage: string, sourceLanguage: string = 'en'): Promise<string[]> {
-    if (targetLanguage === sourceLanguage) {
+    const from = this.normalizeLang(sourceLanguage, 'en')
+    const to = this.normalizeLang(targetLanguage, from)
+
+    if (to === from) {
       return texts
     }
 
@@ -74,19 +88,19 @@ class TranslationService {
 
     try {
       const [translationsRaw] = await this.translate.translate(texts, {
-        from: sourceLanguage,
-        to: targetLanguage,
+        from,
+        to,
       })
 
       const translationsArr = Array.isArray(translationsRaw) ? translationsRaw : [translationsRaw]
 
       // Cache results
       texts.forEach((text, index) => {
-        const cacheKey = `${sourceLanguage}-${text}`
+        const cacheKey = `${from}-${text}`
         if (!this.cache[cacheKey]) {
           this.cache[cacheKey] = {}
         }
-        this.cache[cacheKey][targetLanguage] = translationsArr[index]
+        this.cache[cacheKey][to] = translationsArr[index]
       })
 
       return translationsArr

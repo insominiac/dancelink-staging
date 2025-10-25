@@ -10,7 +10,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'texts must be an array' }, { status: 400 })
     }
 
-    const translations = await translationService.translateBatch(texts, target, source)
+    // translationService now sanitizes languages internally, but we still guard here
+    const translations = await translationService.translateBatch(texts, String(target || 'en'), String(source || 'en'))
     return NextResponse.json({ translations })
   } catch (error) {
     console.error('Translation API error:', error)

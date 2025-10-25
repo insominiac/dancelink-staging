@@ -6,6 +6,7 @@ import { AuthProvider } from '@/app/lib/auth-context'
 import ServiceWorkerProvider from '@/app/components/ServiceWorkerProvider'
 import { Toaster } from 'react-hot-toast'
 import { cookies, headers } from 'next/headers'
+import { SeoProvider } from '@/contexts/SeoContext'
 
 const dancingScript = Dancing_Script({ 
   subsets: ['latin'],
@@ -59,8 +60,10 @@ export default function RootLayout({
       <body className={`${dancingScript.variable}`} style={{fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"}}>
         <ServiceWorkerProvider>
           <AuthProvider>
-            {children}
-            <Toaster position="top-right" />
+            <SeoProvider>
+              {children}
+              <Toaster position="top-right" />
+            </SeoProvider>
           </AuthProvider>
         </ServiceWorkerProvider>
       </body>

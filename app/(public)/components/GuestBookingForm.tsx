@@ -15,9 +15,10 @@ interface BookingItem {
 interface GuestBookingFormProps {
   item: BookingItem
   isAvailable: boolean
+  disabledReason?: string
 }
 
-export default function GuestBookingForm({ item, isAvailable }: GuestBookingFormProps) {
+export default function GuestBookingForm({ item, isAvailable, disabledReason }: GuestBookingFormProps) {
   const router = useRouter()
   const [showForm, setShowForm] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -51,11 +52,25 @@ export default function GuestBookingForm({ item, isAvailable }: GuestBookingForm
     
     try {
       // Prepare booking data to pass to payment page
+      // Acquire seat lock before proceeding
+      const lockRes = await fetch('/api/availability/lock', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemType: item.type === 'class' ? 'CLASS' : 'EVENT', itemId: item.id })
+      })
+      if (!lockRes.ok) {
+        alert('No seats available')
+        setIsSubmitting(false)
+        return
+      }
+      const { lock } = await lockRes.json()
+
       const bookingData = {
         [item.type === 'class' ? 'classId' : 'eventId']: item.id,
         className: item.title,
         price: item.price,
         bookingType: item.type,
+        lockId: lock.id,
         userDetails: {
           name: formData.name,
           email: formData.email,
@@ -80,12 +95,19 @@ export default function GuestBookingForm({ item, isAvailable }: GuestBookingForm
 
   if (!isAvailable) {
     return (
-      <button
-        disabled
-        className="w-full py-4 rounded-full font-semibold bg-gray-400 text-gray-600 cursor-not-allowed"
-      >
-        {item.type === 'class' ? 'Class' : 'Event'} Unavailable
-      </button>
+      <div>
+        <button
+          disabled
+          className="w-full py-4 rounded-full font-semibold bg-gray-400 text-gray-600 cursor-not-allowed"
+        >
+          {item.type === 'class' ? 'Class' : 'Event'} Unavailable
+        </button>
+        {disabledReason && (
+          <p className="text-xs text-center mt-3 text-gray-700">
+            {disabledReason}
+          </p>
+        )}
+      </div>
     )
   }
 

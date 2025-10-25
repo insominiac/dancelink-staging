@@ -2,9 +2,11 @@
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useTranslation } from 'react-i18next'
 import TranslatedText, { useAutoTranslate } from '../../components/TranslatedText'
 import '@/lib/i18n'
+import { formatDateRangeSafe, isEmptyDate } from '@/app/lib/date'
 
 interface Event {
   id: string
@@ -109,7 +111,7 @@ export default function EventsClient({
       filtered = filtered.filter(e => e.eventType === filters.eventType)
     }
     if (filters.month !== 'all') {
-      filtered = filtered.filter(e => (new Date(e.startDate).getMonth()) === parseInt(filters.month))
+      filtered = filtered.filter(e => !isEmptyDate(e.startDate) && (new Date(e.startDate).getMonth()) === parseInt(filters.month))
     }
     if (filters.priceRange !== 'all') {
       const [min, max] = filters.priceRange.split('-').map(Number)
@@ -124,11 +126,7 @@ export default function EventsClient({
   const getSpotsLeft = (event: Event) => event.maxAttendees - event.currentAttendees
 
   const formatEventDate = (startDate: string, endDate: string) => {
-    const start = new Date(startDate)
-    const end = new Date(endDate)
-    const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' }
-    if (startDate === endDate) return start.toLocaleDateString('en-US', options)
-    return `${start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${end.toLocaleDateString('en-US', options)}`
+    return formatDateRangeSafe(startDate, endDate, 'en-US') || (isMounted ? 'TBD' : 'TBD')
   }
 
   if (isLoading || !pageContent) {
@@ -211,8 +209,15 @@ export default function EventsClient({
                 {events.filter(e => e.isFeatured).slice(0, 2).map((event) => (
                   <div key={event.id} className="dance-card group relative overflow-hidden transform hover:-translate-y-2 transition-all duration-500">
                     <div className="relative h-64 overflow-hidden" style={{background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'}}>
-                      {event.imageUrl && (
-                        <img src={event.imageUrl} alt={event.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+{event.imageUrl && (
+                        <Image 
+                          src={event.imageUrl} 
+                          alt={event.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          loading="lazy"
+                          className="object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                       <div className="absolute top-4 right-4">
@@ -261,7 +266,7 @@ export default function EventsClient({
                       <div className="flex items-center justify-between">
                         <div>
                           <span className="text-3xl font-bold" style={{color: 'var(--primary-dark)'}}>${event.price}</span>
-                          <span className="text-sm ml-1" style={{color: 'var(--neutral-gray)'}}>{isMounted ? t('events.perPerson') : '/person'}</span>
+                          <span className="text-sm ml-1" style={{color: 'var(--neutral-gray)'}}>/person</span>
                         </div>
                         <Link href={`/events/${event.id}`} className="dance-btn dance-btn-accent hover:transform hover:scale-105 transition-all duration-300 px-4 py-2 text-sm">
                           {isMounted ? t('ui.viewDetails') : 'View Details'}
@@ -331,8 +336,15 @@ export default function EventsClient({
               return (
                 <div key={event.id} className="dance-card group relative overflow-hidden transform hover:-translate-y-2 transition-all duration-500">
                   <div className="relative h-48 overflow-hidden" style={{background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'}}>
-                    {event.imageUrl && (
-                      <img src={event.imageUrl} alt={event.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+{event.imageUrl && (
+                      <Image 
+                        src={event.imageUrl} 
+                        alt={event.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        loading="lazy"
+                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
                     )}
                     <div className="absolute inset-0" style={{background: 'rgba(26, 15, 31, 0.3)'}}></div>
                     <div className="absolute top-4 left-4">
@@ -401,7 +413,7 @@ export default function EventsClient({
                         <span className="text-sm ml-1" style={{color: 'var(--neutral-gray)'}}>/person</span>
                       </div>
                       <div className="flex gap-2">
-                        <Link href={`/events/${event.id}`} className="dance-btn dance-btn-secondary hover:transform hover:scale-105 transition-all duration-300 px-3 py-2 text-sm">{isMounted ? t('ui.viewDetails') : 'Details'}</Link>
+                        <Link href={`/events/${event.id}`} className="dance-btn dance-btn-secondary hover:transform hover:scale-105 transition-all duration-300 px-3 py-2 text-sm">{isMounted ? t('ui.viewDetails') : 'View Details'}</Link>
                         {spotsLeft > 0 ? (
                           <Link href={`/events/${event.id}`} className="dance-btn dance-btn-accent hover:transform hover:scale-105 transition-all duration-300 px-4 py-2 text-sm">{isMounted ? t('ui.bookNow') : 'Book Now'}</Link>
                         ) : (
