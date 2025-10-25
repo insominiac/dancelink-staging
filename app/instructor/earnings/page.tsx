@@ -33,7 +33,7 @@ export default function InstructorEarningsPage() {
     if (!user) return
     ;(async () => {
       try {
-        const profRes = await fetch(`/api/instructor/profile/${user.id}`)
+        const profRes = await fetch(`/api/v2/utils/instructor/profile/${user.id}`)
         if (!profRes.ok) throw new Error('Instructor not found')
         const prof = await profRes.json()
         setInstructorId(prof.instructor.id as string)
@@ -53,8 +53,8 @@ export default function InstructorEarningsPage() {
       if (to) params.to = new Date(to).toISOString()
       const q = new URLSearchParams(params)
       const [sumRes, txRes] = await Promise.all([
-        fetch(`/api/instructor/earnings/summary?${q.toString()}`),
-        fetch(`/api/instructor/earnings/transactions?${q.toString()}&page=${page}&pageSize=${pageSize}`)
+        fetch(`/api/v2/utils/instructor/earnings/summary?${q.toString()}`),
+        fetch(`/api/v2/utils/instructor/earnings/transactions?${q.toString()}&page=${page}&pageSize=${pageSize}`)
       ])
       if (sumRes.ok) {
         const s = await sumRes.json()
@@ -121,7 +121,7 @@ export default function InstructorEarningsPage() {
       <div className="bg-white rounded-lg border">
         <div className="flex items-center justify-between px-6 py-4 border-b">
           <h2 className="text-lg font-semibold">Transactions</h2>
-          <a href={`/api/instructor/earnings/export?instructorId=${instructorId || ''}${from ? `&from=${encodeURIComponent(new Date(from).toISOString())}`:''}${to ? `&to=${encodeURIComponent(new Date(to).toISOString())}`:''}`} className="px-3 py-2 border rounded text-sm">Export CSV</a>
+          <a href={`/api/v2/utils/instructor/earnings/export?instructorId=${instructorId || ''}${from ? `&from=${encodeURIComponent(new Date(from).toISOString())}`:''}${to ? `&to=${encodeURIComponent(new Date(to).toISOString())}`:''}`} className="px-3 py-2 border rounded text-sm">Export CSV</a>
         </div>
         {loading ? (
           <div className="p-12 text-center text-gray-600">Loading...</div>

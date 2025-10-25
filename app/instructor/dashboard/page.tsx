@@ -101,8 +101,8 @@ export default function InstructorDashboard() {
     const loadCounts = async () => {
       try {
         const [pubRes, draftRes] = await Promise.all([
-          fetch(`/api/instructor/classes?instructorId=${instructorId}&status=active&page=1&pageSize=1`),
-          fetch(`/api/instructor/classes?instructorId=${instructorId}&status=inactive&page=1&pageSize=1`)
+          fetch(`/api/v2/utils/instructor/classes?instructorId=${instructorId}&status=active&page=1&pageSize=1`),
+          fetch(`/api/v2/utils/instructor/classes?instructorId=${instructorId}&status=inactive&page=1&pageSize=1`)
         ])
         if (pubRes.ok && draftRes.ok) {
           const pub = await pubRes.json()
@@ -117,7 +117,7 @@ export default function InstructorDashboard() {
 
     const loadStudentCounts = async () => {
       try {
-        const res = await fetch(`/api/instructor/students/stats?instructorId=${instructorId}`)
+        const res = await fetch(`/api/v2/utils/instructor/students/stats?instructorId=${instructorId}`)
         if (res.ok) {
           const s = await res.json()
           setStudentCounts({ total: s.total ?? 0, thisMonth: s.thisMonth ?? 0 })
@@ -137,7 +137,7 @@ export default function InstructorDashboard() {
     
     try {
       // First, find the instructor record for current user
-      const instructorLookupResponse = await fetch(`/api/instructor/profile/${user.id}`)
+      const instructorLookupResponse = await fetch(`/api/v2/utils/instructor/profile/${user.id}`)
       
       if (!instructorLookupResponse.ok) {
         throw new Error('Instructor profile not found. Please contact admin.')
@@ -149,8 +149,8 @@ export default function InstructorDashboard() {
       
       // Fetch dashboard data and resource stats in parallel
       const [dashboardResponse, resourceResponse] = await Promise.all([
-        fetch(`/api/instructor/dashboard/${instructorIdValue}`),
-        fetch(`/api/instructor/resources/stats?instructorId=${instructorIdValue}`)
+        fetch(`/api/v2/utils/instructor/dashboard/${instructorIdValue}`),
+        fetch(`/api/v2/utils/instructor/resources/stats?instructorId=${instructorIdValue}`)
       ])
       
       if (!dashboardResponse.ok) {

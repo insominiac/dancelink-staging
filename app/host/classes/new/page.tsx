@@ -52,7 +52,7 @@ export default function NewClassPage() {
     const loadVenues = async () => {
       try {
         setLoadingVenues(true)
-        const res = await fetch("/api/host/venues")
+        const res = await fetch("/api/v2/utils/host/venues")
         if (res.ok) {
           const data = await res.json()
           setVenues((data.venues || []).map((v: any) => ({ id: v.id, name: v.name })))
@@ -88,7 +88,7 @@ export default function NewClassPage() {
       if (form.startDate) payload.startDate = form.startDate
       if (form.endDate) payload.endDate = form.endDate
 
-      const res = await fetch("/api/host/classes", {
+      const res = await fetch("/api/v2/utils/host/classes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

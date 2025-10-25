@@ -31,7 +31,7 @@ export default function HostCompetitionsPage() {
     const load = async () => {
       try {
         setIsLoading(true)
-        const res = await fetch('/api/host/competitions')
+        const res = await fetch('/api/v2/utils/host/competitions')
         const data = await res.json()
         if (!res.ok) throw new Error(data?.error || 'Failed to load competition requests')
         setRequests(data.requests || [])

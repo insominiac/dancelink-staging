@@ -10,7 +10,7 @@ export interface AuditMiddlewareConfig {
 }
 
 const defaultConfig: AuditMiddlewareConfig = {
-  excludePaths: ['/api/health', '/api/status'],
+  excludePaths: ['/api/v2/utils/health', '/api/status'],
   includeBody: false,
   logLevel: 'mutations',
   sensitiveFields: ['password', 'token', 'secret', 'key', 'authorization']

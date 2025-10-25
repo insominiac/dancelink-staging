@@ -106,7 +106,7 @@ export default function ClassManagement({ helperData }: { helperData: any }) {
   const fetchClasses = async () => {
     setIsLoading(true)
     try {
-      const res = await fetch('/api/admin/classes')
+      const res = await fetch('/api/v2/admin/classes')
       if (res.ok) {
         const data = await res.json()
         setClasses(data.classes)
@@ -166,7 +166,7 @@ export default function ClassManagement({ helperData }: { helperData: any }) {
     if (!confirm('Are you sure you want to delete this class?')) return
     
     try {
-      const res = await fetch(`/api/admin/classes/${id}`, { method: 'DELETE' })
+      const res = await fetch(`/api/v2/admin/classes/${id}`, { method: 'DELETE' })
       if (res.ok) {
         fetchClasses()
         alert('Class deleted successfully')
@@ -181,7 +181,7 @@ export default function ClassManagement({ helperData }: { helperData: any }) {
 
   const updateClassStatus = async (id: string, status: string) => {
     try {
-      const res = await fetch(`/api/admin/classes/${id}/status`, {
+      const res = await fetch(`/api/v2/admin/classes/${id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
@@ -201,8 +201,8 @@ export default function ClassManagement({ helperData }: { helperData: any }) {
     e.preventDefault()
     
     const url = editingClass 
-      ? `/api/admin/classes/${editingClass.id}`
-      : '/api/admin/classes'
+      ? `/api/v2/admin/classes/${editingClass.id}`
+      : '/api/v2/admin/classes'
     const method = editingClass ? 'PUT' : 'POST'
     
     try {

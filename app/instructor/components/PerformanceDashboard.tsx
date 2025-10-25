@@ -67,8 +67,8 @@ export default function PerformanceDashboard({ instructorId }: { instructorId: s
     setLoading(true)
     try {
       const [performanceRes, engagementRes] = await Promise.all([
-        fetch(`/api/instructor/performance/${instructorId}?period=${selectedPeriod}`),
-        fetch(`/api/instructor/engagement/${instructorId}?period=${selectedPeriod}`)
+        fetch(`/api/v2/utils/instructor/performance/${instructorId}?period=${selectedPeriod}`),
+        fetch(`/api/v2/utils/instructor/engagement/${instructorId}?period=${selectedPeriod}`)
       ])
 
       if (!performanceRes.ok || !engagementRes.ok) {

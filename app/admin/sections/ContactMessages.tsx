@@ -45,7 +45,7 @@ export default function ContactMessages() {
         ...(searchTerm && { search: searchTerm })
       })
 
-      const res = await fetch(`/api/admin/contact?${params}`)
+      const res = await fetch(`/api/v2/admin/contact?${params}`)
       if (res.ok) {
         const data = await res.json()
         setMessages(data.messages)
@@ -86,7 +86,7 @@ export default function ContactMessages() {
     // Mark as read if not already read
     if (!message.isRead) {
       try {
-        await fetch(`/api/admin/contact/${message.id}`, {
+        await fetch(`/api/v2/admin/contact/${message.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ isRead: true })
@@ -112,7 +112,7 @@ export default function ContactMessages() {
     if (!selectedMessage || !replyText.trim()) return
 
     try {
-      const res = await fetch(`/api/admin/contact/${selectedMessage.id}/reply`, {
+      const res = await fetch(`/api/v2/admin/contact/${selectedMessage.id}/reply`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reply: replyText })
@@ -142,7 +142,7 @@ export default function ContactMessages() {
     }
 
     try {
-      const res = await fetch('/api/admin/contact/bulk', {
+      const res = await fetch('/api/v2/admin/contact/bulk', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

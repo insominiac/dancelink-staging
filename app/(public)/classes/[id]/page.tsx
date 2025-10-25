@@ -45,7 +45,7 @@ export default function ClassDetailPage({ params }: { params: { id: string } }) 
   const fetchClassDetails = async () => {
     setIsLoading(true)
     try {
-      const res = await fetch(`/api/public/classes/${params.id}`)
+      const res = await fetch(`/api/v2/public/classes/${params.id}`)
       if (res.ok) {
         const data = await res.json()
         setClassData(data.class)

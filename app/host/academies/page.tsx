@@ -32,7 +32,7 @@ export default function HostAcademiesPage() {
     const load = async () => {
       try {
         setIsLoading(true)
-        const res = await fetch('/api/host/academies')
+        const res = await fetch('/api/v2/utils/host/academies')
         const data = await res.json()
         if (!res.ok) {
           throw new Error(data?.error || 'Failed to load academies')

@@ -79,8 +79,8 @@ export default function InstructorsPage() {
       try {
         // Fetch both instructors and page content in parallel
         const [instructorsResponse, contentResponse] = await Promise.all([
-          fetch('/api/public/instructors'),
-          fetch('/api/admin/content/instructors')
+          fetch('/api/v2/public/instructors'),
+          fetch('/api/v2/admin/content/instructors')
         ])
         
         if (instructorsResponse.ok) {

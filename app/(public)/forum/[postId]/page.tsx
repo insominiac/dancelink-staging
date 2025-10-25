@@ -60,7 +60,7 @@ export default function ForumPostPage({ params }: { params: { postId: string } }
 
   const fetchPost = async () => {
     try {
-      const response = await fetch(`/api/public/forum/posts/${params.postId}`)
+      const response = await fetch(`/api/v2/public/forum/posts/${params.postId}`)
       if (response.ok) {
         const data = await response.json()
         setPost(data)

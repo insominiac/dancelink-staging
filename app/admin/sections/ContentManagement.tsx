@@ -275,12 +275,12 @@ export default function ContentManagement() {
   const loadSavedContent = async () => {
     try {
       const [homepageRes, settingsRes, aboutRes, eventsRes, instructorsRes, contactRes] = await Promise.all([
-        fetch('/api/admin/content/homepage'),
-        fetch('/api/admin/content/settings'),
-        fetch('/api/admin/content/about'),
-        fetch('/api/admin/content/events'),
-        fetch('/api/admin/content/instructors'),
-        fetch('/api/admin/content/contact')
+        fetch('/api/v2/admin/content/homepage'),
+        fetch('/api/v2/admin/content/settings'),
+        fetch('/api/v2/admin/content/about'),
+        fetch('/api/v2/admin/content/events'),
+        fetch('/api/v2/admin/content/instructors'),
+        fetch('/api/v2/admin/content/contact')
       ])
 
       if (homepageRes.ok) {
@@ -350,7 +350,7 @@ export default function ContentManagement() {
   const saveHomepageContent = async () => {
     setIsSaving(true)
     try {
-      const response = await fetch('/api/admin/content/homepage', {
+      const response = await fetch('/api/v2/admin/content/homepage', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(homepageContent)
@@ -374,7 +374,7 @@ export default function ContentManagement() {
     
     setIsSaving(true)
     try {
-      const response = await fetch('/api/admin/content/about', {
+      const response = await fetch('/api/v2/admin/content/about', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(aboutContent)
@@ -398,7 +398,7 @@ export default function ContentManagement() {
     
     setIsSaving(true)
     try {
-      const response = await fetch('/api/admin/content/events', {
+      const response = await fetch('/api/v2/admin/content/events', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(eventsContent)
@@ -422,7 +422,7 @@ export default function ContentManagement() {
     
     setIsSaving(true)
     try {
-      const response = await fetch('/api/admin/content/instructors', {
+      const response = await fetch('/api/v2/admin/content/instructors', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: instructorsContent })
@@ -446,7 +446,7 @@ export default function ContentManagement() {
     
     setIsSaving(true)
     try {
-      const response = await fetch('/api/admin/content/contact', {
+      const response = await fetch('/api/v2/admin/content/contact', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: contactContent })
@@ -468,7 +468,7 @@ export default function ContentManagement() {
   const saveSiteSettings = async () => {
     setIsSaving(true)
     try {
-      const response = await fetch('/api/admin/content/settings', {
+      const response = await fetch('/api/v2/admin/content/settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(siteSettings)
@@ -494,7 +494,7 @@ export default function ContentManagement() {
 
     setIsSaving(true)
     try {
-      const response = await fetch('/api/admin/content/about', {
+      const response = await fetch('/api/v2/admin/content/about', {
         method: 'DELETE'
       })
 
@@ -520,7 +520,7 @@ export default function ContentManagement() {
 
     setIsSaving(true)
     try {
-      const response = await fetch('/api/admin/content/events', {
+      const response = await fetch('/api/v2/admin/content/events', {
         method: 'DELETE'
       })
 
@@ -546,7 +546,7 @@ export default function ContentManagement() {
 
     setIsSaving(true)
     try {
-      const response = await fetch('/api/admin/content/instructors', {
+      const response = await fetch('/api/v2/admin/content/instructors', {
         method: 'POST'
       })
 
@@ -572,7 +572,7 @@ export default function ContentManagement() {
 
     setIsSaving(true)
     try {
-      const response = await fetch('/api/admin/content/contact', {
+      const response = await fetch('/api/v2/admin/content/contact', {
         method: 'POST'
       })
 
@@ -598,7 +598,7 @@ export default function ContentManagement() {
 
     setIsSaving(true)
     try {
-      const response = await fetch('/api/admin/content/settings', {
+      const response = await fetch('/api/v2/admin/content/settings', {
         method: 'DELETE'
       })
 

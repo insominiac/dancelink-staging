@@ -112,7 +112,7 @@ export default function ForumModeration() {
       if (selectedCategory !== 'all') params.append('category', selectedCategory)
       if (selectedStatus !== 'all') params.append('status', selectedStatus)
 
-      const response = await fetch(`/api/admin/forum/posts?${params}`)
+      const response = await fetch(`/api/v2/admin/forum/posts?${params}`)
       if (response.ok) {
         const data = await response.json()
         setPosts(data.posts)
@@ -138,7 +138,7 @@ export default function ForumModeration() {
       
       if (searchTerm) params.append('search', searchTerm)
 
-      const response = await fetch(`/api/admin/forum/replies?${params}`)
+      const response = await fetch(`/api/v2/admin/forum/replies?${params}`)
       if (response.ok) {
         const data = await response.json()
         setReplies(data.replies)
@@ -165,7 +165,7 @@ export default function ForumModeration() {
     }
 
     try {
-      const endpoint = activeTab === 'posts' ? '/api/admin/forum/posts' : '/api/admin/forum/replies'
+      const endpoint = activeTab === 'posts' ? '/api/v2/admin/forum/posts' : '/api/v2/admin/forum/replies'
       const body = activeTab === 'posts' 
         ? { action, postIds: selectedItems }
         : { action, replyIds: selectedItems }

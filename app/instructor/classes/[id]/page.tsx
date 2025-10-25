@@ -26,13 +26,13 @@ export default function ClassDetailsPage({ params }: { params: { id: string } })
     setLoading(true)
     setError(null)
     try {
-      const profRes = await fetch(`/api/instructor/profile/${user!.id}`)
+      const profRes = await fetch(`/api/v2/utils/instructor/profile/${user!.id}`)
       if (!profRes.ok) throw new Error('Instructor profile not found')
       const prof = await profRes.json()
       const iid = prof.instructor.id as string
       setInstructorId(iid)
 
-      const res = await fetch(`/api/instructor/classes/${params.id}?instructorId=${iid}`)
+      const res = await fetch(`/api/v2/utils/instructor/classes/${params.id}?instructorId=${iid}`)
       if (!res.ok) throw new Error('Failed to load class')
       const data = await res.json()
       setCls(data.class)
@@ -47,7 +47,7 @@ export default function ClassDetailsPage({ params }: { params: { id: string } })
     if (!instructorId) return
     setBusy(true)
     try {
-      const res = await fetch(`/api/instructor/classes/${params.id}/publish`, {
+      const res = await fetch(`/api/v2/utils/instructor/classes/${params.id}/publish`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ instructorId, isActive }),
@@ -65,7 +65,7 @@ export default function ClassDetailsPage({ params }: { params: { id: string } })
     if (!instructorId) return
     setBusy(true)
     try {
-      const res = await fetch(`/api/instructor/classes/${params.id}/duplicate`, {
+      const res = await fetch(`/api/v2/utils/instructor/classes/${params.id}/duplicate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ instructorId }),
@@ -84,7 +84,7 @@ export default function ClassDetailsPage({ params }: { params: { id: string } })
     if (!confirm('Are you sure you want to delete this class? This cannot be undone.')) return
     setBusy(true)
     try {
-      const res = await fetch(`/api/instructor/classes/${params.id}`, {
+      const res = await fetch(`/api/v2/utils/instructor/classes/${params.id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ instructorId }),
@@ -133,7 +133,7 @@ const attendees = (cls.bookings || []).map((b: any) => b.user)
     const loadAttendance = async () => {
       if (!instructorId || tab !== 'attendance') return
       try {
-        const res = await fetch(`/api/instructor/classes/${params.id}/attendance?instructorId=${instructorId}`)
+        const res = await fetch(`/api/v2/utils/instructor/classes/${params.id}/attendance?instructorId=${instructorId}`)
         if (res.ok) {
           const data = await res.json()
           setAttn(data.attendees)
@@ -159,7 +159,7 @@ const attendees = (cls.bookings || []).map((b: any) => b.user)
     if (!records.length) return
     setBusy(true)
     try {
-      const res = await fetch(`/api/instructor/classes/${params.id}/attendance`, {
+      const res = await fetch(`/api/v2/utils/instructor/classes/${params.id}/attendance`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ instructorId, records }),

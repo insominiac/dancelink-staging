@@ -72,7 +72,7 @@ export default function AuditTrail() {
         ...(searchTerm && { search: searchTerm })
       })
 
-      const response = await fetch(`/api/admin/audit-logs?${params}`)
+      const response = await fetch(`/api/v2/admin/audit-logs?${params}`)
       if (response.ok) {
         const data = await response.json()
         setLogs(data.logs)
@@ -92,7 +92,7 @@ export default function AuditTrail() {
 
   const fetchAuditStats = async () => {
     try {
-      const response = await fetch('/api/admin/audit-logs/stats')
+      const response = await fetch('/api/v2/admin/audit-logs/stats')
       if (response.ok) {
         const data = await response.json()
         setStats(data)
@@ -113,7 +113,7 @@ export default function AuditTrail() {
         ...(searchTerm && { search: searchTerm })
       })
 
-      const response = await fetch(`/api/admin/audit-logs/export?${params}`)
+      const response = await fetch(`/api/v2/admin/audit-logs/export?${params}`)
       if (response.ok) {
         const blob = await response.blob()
         const url = window.URL.createObjectURL(blob)

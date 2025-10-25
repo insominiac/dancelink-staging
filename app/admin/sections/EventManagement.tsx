@@ -52,7 +52,7 @@ export default function EventManagement({ helperData }: { helperData: any }) {
   const fetchEvents = async () => {
     setIsLoading(true)
     try {
-      const res = await fetch('/api/admin/events')
+      const res = await fetch('/api/v2/admin/events')
       if (res.ok) {
         const data = await res.json()
         setEvents(data.events)
@@ -111,7 +111,7 @@ export default function EventManagement({ helperData }: { helperData: any }) {
     if (!confirm('Are you sure you want to delete this event?')) return
     
     try {
-      const res = await fetch(`/api/admin/events/${id}`, { method: 'DELETE' })
+      const res = await fetch(`/api/v2/admin/events/${id}`, { method: 'DELETE' })
       if (res.ok) {
         fetchEvents()
         alert('Event deleted successfully')
@@ -126,7 +126,7 @@ export default function EventManagement({ helperData }: { helperData: any }) {
 
   const updateEventStatus = async (id: string, status: string) => {
     try {
-      const res = await fetch(`/api/admin/events/${id}/status`, {
+      const res = await fetch(`/api/v2/admin/events/${id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
@@ -147,8 +147,8 @@ export default function EventManagement({ helperData }: { helperData: any }) {
     e.preventDefault()
     
     const url = editingEvent 
-      ? `/api/admin/events/${editingEvent.id}`
-      : '/api/admin/events'
+      ? `/api/v2/admin/events/${editingEvent.id}`
+      : '/api/v2/admin/events'
     const method = editingEvent ? 'PUT' : 'POST'
     
     try {

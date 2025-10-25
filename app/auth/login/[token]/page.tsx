@@ -51,7 +51,7 @@ export default function TokenLoginPage() {
 
   const validateToken = async () => {
     try {
-      const response = await fetch(`/api/auth/login-tokens/validate/${token}`)
+      const response = await fetch(`/api/v2/auth/login-tokens/validate/${token}`)
       const result = await response.json()
 
       if (result.valid) {
@@ -75,7 +75,7 @@ export default function TokenLoginPage() {
 
   const trackLoginAttempt = async (email: string, success: boolean, failureReason?: string) => {
     try {
-      await fetch(`/api/auth/login-tokens/validate/${token}`, {
+      await fetch(`/api/v2/auth/login-tokens/validate/${token}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

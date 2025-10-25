@@ -138,8 +138,8 @@ export default function HomePage() {
           fetch('/api/public/featured'),
           fetch('/api/public/content/homepage'),
           fetch('/api/public/content/settings'),
-          fetch('/api/public/dance-styles'),
-          fetch('/api/public/events')
+          fetch('/api/v2/public/dance-styles'),
+          fetch('/api/v2/public/events')
         ])
 
         if (statsRes.ok) {

@@ -238,7 +238,7 @@ export default function InstructorMessagesPage() {
     setNewMessage('')
 
     // In real app, would call API here
-    // await fetch('/api/instructor/messages/send', { ... })
+    // await fetch('/api/v2/utils/instructor/messages/send', { ... })
   }
 
   const formatTime = (dateString: string) => {

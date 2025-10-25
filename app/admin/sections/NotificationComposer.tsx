@@ -71,8 +71,8 @@ export default function NotificationComposer({ onSent }: NotificationComposerPro
   const fetchData = async () => {
     try {
       const [templatesRes, usersRes] = await Promise.all([
-        fetch('/api/admin/notifications/templates'),
-        fetch('/api/admin/users?limit=1000&select=id,fullName,email,role')
+        fetch('/api/v2/admin/notifications/templates'),
+        fetch('/api/v2/admin/users?limit=1000&select=id,fullName,email,role')
       ])
 
       if (templatesRes.ok) {
@@ -129,7 +129,7 @@ export default function NotificationComposer({ onSent }: NotificationComposerPro
         throw new Error('No recipients selected')
       }
 
-      const response = await fetch('/api/admin/notifications/send', {
+      const response = await fetch('/api/v2/admin/notifications/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -184,7 +184,7 @@ export default function NotificationComposer({ onSent }: NotificationComposerPro
       const templateName = prompt('Enter template name:')
       if (!templateName) return
 
-      const response = await fetch('/api/admin/notifications/templates', {
+      const response = await fetch('/api/v2/admin/notifications/templates', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

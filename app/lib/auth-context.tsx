@@ -226,7 +226,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const response = await fetch('/api/auth/switch-role', {
+      const response = await fetch('/api/v2/auth/switch-role', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -261,7 +261,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!sessionId) return 0
 
     try {
-      const response = await fetch(`/api/auth/sessions?sessionId=${sessionId}&action=others`, {
+      const response = await fetch(`/api/v2/auth/sessions?sessionId=${sessionId}&action=others`, {
         method: 'DELETE',
         credentials: 'include'
       })

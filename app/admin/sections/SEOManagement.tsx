@@ -116,7 +116,7 @@ export default function SEOManagement() {
   const fetchSeoPages = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch(`/api/admin/seo?page=${currentPage}&limit=${itemsPerPage}`)
+      const response = await fetch(`/api/v2/admin/seo?page=${currentPage}&limit=${itemsPerPage}`)
       if (response.ok) {
         const data = await response.json()
         setSeoPages(data.seoPages)
@@ -149,7 +149,7 @@ export default function SEOManagement() {
     setIsSubmitting(true)
 
     try {
-      const url = editingPage ? `/api/admin/seo/${editingPage.id}` : '/api/admin/seo'
+      const url = editingPage ? `/api/v2/admin/seo/${editingPage.id}` : '/api/v2/admin/seo'
       const method = editingPage ? 'PUT' : 'POST'
 
       const response = await fetch(url, {
@@ -208,7 +208,7 @@ export default function SEOManagement() {
     }
 
     try {
-      const response = await fetch(`/api/admin/seo/${id}`, {
+      const response = await fetch(`/api/v2/admin/seo/${id}`, {
         method: 'DELETE'
       })
 

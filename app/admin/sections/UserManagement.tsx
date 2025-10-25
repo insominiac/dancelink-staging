@@ -39,7 +39,7 @@ export default function UserManagement() {
   const fetchUsers = async () => {
     setIsLoading(true)
     try {
-      const res = await fetch('/api/admin/users')
+      const res = await fetch('/api/v2/admin/users')
       if (res.ok) {
         const data = await res.json()
         setUsers(data.users)
@@ -83,7 +83,7 @@ export default function UserManagement() {
     if (!confirm('Are you sure you want to delete this user?')) return
     
     try {
-      const res = await fetch(`/api/admin/users/${id}`, { method: 'DELETE' })
+      const res = await fetch(`/api/v2/admin/users/${id}`, { method: 'DELETE' })
       if (res.ok) {
         fetchUsers()
         alert('User deleted successfully')
@@ -97,8 +97,8 @@ export default function UserManagement() {
     e.preventDefault()
     
     const url = editingUser 
-      ? `/api/admin/users/${editingUser.id}`
-      : '/api/admin/users'
+      ? `/api/v2/admin/users/${editingUser.id}`
+      : '/api/v2/admin/users'
     const method = editingUser ? 'PUT' : 'POST'
     
     try {

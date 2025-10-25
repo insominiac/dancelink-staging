@@ -111,7 +111,7 @@ export default function ContactPage() {
     }
 
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch('/api/v2/utils/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -160,7 +160,7 @@ export default function ContactPage() {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const response = await fetch('/api/admin/content/contact')
+        const response = await fetch('/api/v2/admin/content/contact')
         if (response.ok) {
           const data = await response.json()
           setContent(data.content)
