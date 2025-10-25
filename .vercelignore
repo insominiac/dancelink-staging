@@ -35,3 +35,21 @@ railway.json
 
 # Backups
 backups/
+
+# Exclude old API structure from deployment to avoid function limit
+app/api/admin/
+app/api/auth/
+app/api/availability/
+app/api/bookings/
+app/api/classes/
+app/api/contact/
+app/api/debug/
+app/api/forum/
+app/api/gallery/
+app/api/health/
+app/api/host/
+app/api/instructor/
+app/api/public/
+
+# Keep only the new consolidated v2 APIs and necessary routes
+!app/api/v2/
