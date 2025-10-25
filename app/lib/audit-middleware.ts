@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { getCurrentUser } from './auth'
 import { AuditLogger } from './audit-logger'
 
 export interface AuditMiddlewareConfig {
@@ -48,13 +47,13 @@ export function createAuditMiddleware(config: AuditMiddlewareConfig = {}) {
     let userRole: string = 'guest'
 
     try {
-      const session = await getServerSession(authOptions)
-      if (session?.user) {
-        userId = (session.user as any).id || 'unknown'
-        userRole = (session.user as any).role || 'user'
+      const user = await getCurrentUser(request)
+      if (user) {
+        userId = user.id
+        userRole = user.role
       }
     } catch (error) {
-      console.error('Error getting session for audit middleware:', error)
+      console.error('Error getting user for audit middleware:', error)
     }
 
     let requestBody: any = null
