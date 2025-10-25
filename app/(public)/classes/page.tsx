@@ -60,7 +60,7 @@ export default function ClassesPage() {
   const fetchClasses = async () => {
     setIsLoading(true)
     try {
-      const res = await fetch('/api/public/classes')
+      const res = await fetch('/api/v2/public/classes')
       if (res.ok) {
         const data = await res.json()
         setClasses(data.classes)

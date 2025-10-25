@@ -56,7 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Check authentication status and validate session
   const checkAuth = async () => {
     try {
-      const response = await fetch('/api/auth/me', {
+      const response = await fetch('/api/v2/auth/me', {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -93,7 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!user) return
     
     try {
-      const response = await fetch(`/api/auth/sessions?userId=${user.id}`, {
+      const response = await fetch(`/api/v2/auth/sessions?userId=${user.id}`, {
         credentials: 'include'
       })
       
@@ -112,7 +112,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch('/api/v2/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = async (registerData: RegisterData) => {
     try {
-      const response = await fetch('/api/auth/register', {
+      const response = await fetch('/api/v2/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -185,7 +185,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      const response = await fetch('/api/auth/logout', {
+      const response = await fetch('/api/v2/auth/logout', {
         method: 'POST',
         credentials: 'include',
         headers: {

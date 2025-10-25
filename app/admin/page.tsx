@@ -99,7 +99,7 @@ export default function AdminPanel() {
     setError(null)
     
     try {
-      const statsRes = await fetch('/api/admin/stats')
+      const statsRes = await fetch('/api/v2/admin/stats')
       if (!statsRes.ok) throw new Error('Failed to fetch stats')
       const statsData = await statsRes.json()
       setStats(statsData.stats)
@@ -113,7 +113,7 @@ export default function AdminPanel() {
 
   const fetchHelperData = async () => {
     try {
-      const res = await fetch('/api/admin/helpers')
+      const res = await fetch('/api/v2/admin/helpers')
       if (res.ok) {
         const data = await res.json()
         setHelperData(data)
