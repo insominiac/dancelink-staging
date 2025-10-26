@@ -99,7 +99,7 @@ export default function AdminPanel() {
     setError(null)
     
     try {
-      const statsRes = await fetch('/api/v2/admin/stats')
+      const statsRes = await fetch('/api/admin/stats')
       if (!statsRes.ok) throw new Error('Failed to fetch stats')
       const statsData = await statsRes.json()
       setStats(statsData.stats)
@@ -113,7 +113,7 @@ export default function AdminPanel() {
 
   const fetchHelperData = async () => {
     try {
-      const res = await fetch('/api/v2/admin/helpers')
+      const res = await fetch('/api/admin/helpers')
       if (res.ok) {
         const data = await res.json()
         setHelperData(data)
@@ -362,7 +362,7 @@ export default function AdminPanel() {
             <h2 className="text-3xl font-bold mb-6">API Documentation</h2>
             <div className="bg-white rounded-lg shadow p-6 mb-6">
               <p className="text-gray-600 mb-4">
-                Interactive Swagger UI documentation for all Dance Platform API endpoints.
+                Interactive Swagger UI documentation for all DanceLink API endpoints.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <a 

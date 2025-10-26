@@ -561,7 +561,7 @@ class EmailService {
 
       Need help getting started? Check out our Help Center or contact us at support@dancelink.com
 
-      © 2024 DanceLink. All rights reserved.
+      © 2025 DanceLink. All rights reserved.
       You received this email because you created an account on DanceLink.
     `
 
@@ -630,7 +630,7 @@ class EmailService {
 
           <div class="footer">
             <p>This is an automated notification from the DanceLink platform.</p>
-            <p>&copy; 2024 DanceLink. All rights reserved.</p>
+            <p>&copy; 2025 DanceLink. All rights reserved.</p>
           </div>
         </div>
       </body>
@@ -654,7 +654,7 @@ class EmailService {
       View user in admin panel: ${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/admin/users
       
       This is an automated notification from the DanceLink platform.
-      © 2024 DanceLink. All rights reserved.
+      © 2025 DanceLink. All rights reserved.
     `
 
     return { subject, html, text }

@@ -106,7 +106,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="flex flex-col flex-grow bg-white border-r border-gray-200 pt-5 pb-4 overflow-y-auto">
           <div className="flex items-center flex-shrink-0 px-4">
             <Link href="/" className="flex items-center">
-              <span className="text-xl font-bold text-purple-600 dance-logo" style={{fontSize: '1.5rem'}}>Dance Platform</span>
+              <span className="text-xl font-bold text-purple-600 dance-logo" style={{fontSize: '1.5rem'}}>DanceLink</span>
             </Link>
           </div>
           
@@ -170,7 +170,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="px-4 py-2">
             <div className="flex items-center justify-between">
               <Link href="/" className="text-lg font-bold text-purple-600 dance-logo" style={{fontSize: '1.25rem'}}>
-                Dance Platform
+                DanceLink
               </Link>
               <div className="flex items-center space-x-2">
                 <NotificationBell userId={user.id} />
@@ -202,7 +202,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center">
               <p className="text-sm text-gray-500">
-                © 2024 Dance Platform. All rights reserved.
+                © 2025 DanceLink. All rights reserved.
               </p>
               <div className="flex space-x-4 text-sm">
                 <Link href="/help" className="text-gray-500 hover:text-gray-700">
