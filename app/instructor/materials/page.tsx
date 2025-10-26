@@ -97,7 +97,7 @@ export default function InstructorMaterialsPage() {
 
   const fetchInstructorProfile = async () => {
     try {
-      const response = await fetch(`/api/v2/utils/instructor/profile/${user?.id}`)
+      const response = await fetch(`/api/instructor/profile/${user?.id}`)
       if (response.ok) {
         const data = await response.json()
         setInstructorId(data.instructor.id)
@@ -116,7 +116,7 @@ export default function InstructorMaterialsPage() {
       if (selectedCategory) params.append('category', selectedCategory)
       if (selectedType) params.append('type', selectedType)
       
-      const response = await fetch(`/api/v2/utils/instructor/resources?${params}`)
+      const response = await fetch(`/api/instructor/resources?${params}`)
       const data = await response.json()
       
       if (response.ok) {
@@ -135,7 +135,7 @@ export default function InstructorMaterialsPage() {
     if (!instructorId) return
     
     try {
-      const response = await fetch(`/api/v2/utils/instructor/resources/stats?instructorId=${instructorId}`)
+      const response = await fetch(`/api/instructor/resources/stats?instructorId=${instructorId}`)
       const data = await response.json()
       
       if (response.ok) {
@@ -150,7 +150,7 @@ export default function InstructorMaterialsPage() {
     if (!instructorId) return
     
     try {
-      const response = await fetch('/api/v2/utils/instructor/resources', {
+      const response = await fetch('/api/instructor/resources', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, instructorId })
@@ -173,7 +173,7 @@ export default function InstructorMaterialsPage() {
     if (!confirm('Are you sure you want to delete this resource?')) return
     
     try {
-      const response = await fetch(`/api/v2/utils/instructor/resources/${resourceId}`, {
+      const response = await fetch(`/api/instructor/resources/${resourceId}`, {
         method: 'DELETE'
       })
       
@@ -500,7 +500,7 @@ function ResourceModal({ resource, onClose, onSave, categories, resourceTypes }:
       uploadFormData.append('file', file)
       uploadFormData.append('instructorId', instructorId)
       
-      const response = await fetch('/api/v2/utils/instructor/resources/upload', {
+      const response = await fetch('/api/instructor/resources/upload', {
         method: 'POST',
         body: uploadFormData
       })

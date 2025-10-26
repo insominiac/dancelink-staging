@@ -156,7 +156,7 @@ export default function ForumPage() {
         params.append('category', selectedCategory)
       }
       
-      const response = await fetch(`/api/v2/public/forum/posts?${params}`)
+      const response = await fetch(`/api/public/forum/posts?${params}`)
       if (response.ok) {
         const data = await response.json()
         setPosts(data.posts || [])

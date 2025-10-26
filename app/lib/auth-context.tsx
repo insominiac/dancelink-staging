@@ -56,7 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Check authentication status and validate session
   const checkAuth = async () => {
     try {
-      const response = await fetch('/api/v2/auth/me', {
+      const response = await fetch('/api/auth/me', {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -93,7 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!user) return
     
     try {
-      const response = await fetch(`/api/v2/auth/sessions?userId=${user.id}`, {
+      const response = await fetch(`/api/auth/sessions?userId=${user.id}`, {
         credentials: 'include'
       })
       
@@ -112,7 +112,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await fetch('/api/v2/auth/login', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = async (registerData: RegisterData) => {
     try {
-      const response = await fetch('/api/v2/auth/register', {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -185,7 +185,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      const response = await fetch('/api/v2/auth/logout', {
+      const response = await fetch('/api/auth/logout', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -226,7 +226,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const response = await fetch('/api/v2/auth/switch-role', {
+      const response = await fetch('/api/auth/switch-role', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -261,7 +261,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!sessionId) return 0
 
     try {
-      const response = await fetch(`/api/v2/auth/sessions?sessionId=${sessionId}&action=others`, {
+      const response = await fetch(`/api/auth/sessions?sessionId=${sessionId}&action=others`, {
         method: 'DELETE',
         credentials: 'include'
       })

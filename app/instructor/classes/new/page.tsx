@@ -32,12 +32,12 @@ export default function NewClassPage() {
     setSubmitting(true)
     setError(null)
     try {
-      const profRes = await fetch(`/api/v2/utils/instructor/profile/${user.id}`)
+      const profRes = await fetch(`/api/instructor/profile/${user.id}`)
       if (!profRes.ok) throw new Error('Instructor not found')
       const prof = await profRes.json()
       const instructorId = prof.instructor.id as string
 
-      const res = await fetch('/api/v2/utils/instructor/classes', {
+      const res = await fetch('/api/instructor/classes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

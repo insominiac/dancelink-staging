@@ -49,8 +49,8 @@ export default function HostDashboard() {
     try {
       setLoading(true)
       const [profileResponse, statsResponse] = await Promise.all([
-        fetch('/api/v2/utils/host/profile'),
-        fetch('/api/v2/utils/host/stats')
+        fetch('/api/host/profile'),
+        fetch('/api/host/stats')
       ])
 
       if (profileResponse.ok) {

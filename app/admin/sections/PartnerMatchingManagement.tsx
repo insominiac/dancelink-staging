@@ -149,7 +149,7 @@ export default function PartnerMatchingManagement() {
       
       switch (activeTab) {
         case 'stats':
-          const statsResponse = await fetch('/api/v2/admin/partner-matching/stats');
+          const statsResponse = await fetch('/api/admin/partner-matching/stats');
           const statsData = await statsResponse.json();
           if (statsData.success) {
             setStats(statsData.data);
@@ -157,7 +157,7 @@ export default function PartnerMatchingManagement() {
           break;
           
         case 'profiles':
-          const profilesResponse = await fetch(`/api/v2/admin/partner-matching/profiles?search=${searchTerm}&experienceLevel=${filters.experienceLevel}&isActive=${filters.isActive}`);
+          const profilesResponse = await fetch(`/api/admin/partner-matching/profiles?search=${searchTerm}&experienceLevel=${filters.experienceLevel}&isActive=${filters.isActive}`);
           const profilesData = await profilesResponse.json();
           if (profilesData.success) {
             setProfiles(profilesData.data.profiles);
@@ -165,7 +165,7 @@ export default function PartnerMatchingManagement() {
           break;
           
         case 'requests':
-          const requestsResponse = await fetch(`/api/v2/admin/partner-matching/requests?search=${searchTerm}&status=${filters.status}`);
+          const requestsResponse = await fetch(`/api/admin/partner-matching/requests?search=${searchTerm}&status=${filters.status}`);
           const requestsData = await requestsResponse.json();
           if (requestsData.success) {
             setRequests(requestsData.data.requests);
@@ -173,7 +173,7 @@ export default function PartnerMatchingManagement() {
           break;
           
         case 'matches':
-          const matchesResponse = await fetch(`/api/v2/admin/partner-matching/matches?search=${searchTerm}&isActive=${filters.isActive}`);
+          const matchesResponse = await fetch(`/api/admin/partner-matching/matches?search=${searchTerm}&isActive=${filters.isActive}`);
           const matchesData = await matchesResponse.json();
           if (matchesData.success) {
             setMatches(matchesData.data.matches);
@@ -190,7 +190,7 @@ export default function PartnerMatchingManagement() {
   // Admin Actions
   const updateRequestStatus = async (requestId: string, status: string, adminNotes?: string) => {
     try {
-      const response = await fetch(`/api/v2/admin/partner-matching/requests/${requestId}`, {
+      const response = await fetch(`/api/admin/partner-matching/requests/${requestId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'
@@ -216,7 +216,7 @@ export default function PartnerMatchingManagement() {
 
   const updateProfileStatus = async (profileId: string, isActive: boolean, adminNotes?: string) => {
     try {
-      const response = await fetch(`/api/v2/admin/partner-matching/profiles/${profileId}`, {
+      const response = await fetch(`/api/admin/partner-matching/profiles/${profileId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'
@@ -242,7 +242,7 @@ export default function PartnerMatchingManagement() {
 
   const updateMatchStatus = async (matchId: string, isActive: boolean, adminNotes?: string) => {
     try {
-      const response = await fetch(`/api/v2/admin/partner-matching/matches/${matchId}`, {
+      const response = await fetch(`/api/admin/partner-matching/matches/${matchId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'
@@ -272,7 +272,7 @@ export default function PartnerMatchingManagement() {
     }
     
     try {
-      const response = await fetch(`/api/v2/admin/partner-matching/requests/${requestId}`, {
+      const response = await fetch(`/api/admin/partner-matching/requests/${requestId}`, {
         method: 'DELETE'
       });
       

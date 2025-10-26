@@ -107,7 +107,7 @@ export default function PartnerProfilePage() {
       setLoading(true);
       
       // Load available dance styles
-      const stylesResponse = await fetch('/api/v2/admin/dance-styles');
+      const stylesResponse = await fetch('/api/admin/dance-styles');
       const stylesData = await stylesResponse.json();
       
       if (stylesData.success) {

@@ -44,7 +44,7 @@ export default function InstructorClassesPage() {
     setError(null)
     try {
       // Find instructorId for current user
-      const profRes = await fetch(`/api/v2/utils/instructor/profile/${user.id}`)
+      const profRes = await fetch(`/api/instructor/profile/${user.id}`)
       if (!profRes.ok) throw new Error('Failed to load instructor profile')
       const prof = await profRes.json()
       const iid = prof.instructor.id as string
@@ -52,7 +52,7 @@ export default function InstructorClassesPage() {
 
       const params = new URLSearchParams({ instructorId: iid, page: String(page), pageSize: String(pageSize), status })
       if (search.trim()) params.set('search', search.trim())
-      const res = await fetch(`/api/v2/utils/instructor/classes?${params.toString()}`)
+      const res = await fetch(`/api/instructor/classes?${params.toString()}`)
       if (!res.ok) throw new Error('Failed to load classes')
       const data = await res.json()
       setItems(data.items)

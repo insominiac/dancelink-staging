@@ -190,7 +190,7 @@ export const swaggerConfig = {
         }
       }
     },
-    '/api/v2/admin/users': {
+    '/api/admin/users': {
       get: {
         tags: ['Users'],
         summary: 'Get all users',
@@ -247,7 +247,7 @@ export const swaggerConfig = {
         }
       }
     },
-    '/api/v2/admin/users/{id}': {
+    '/api/admin/users/{id}': {
       get: {
         tags: ['Users'],
         summary: 'Get user by ID',
@@ -339,7 +339,7 @@ export const swaggerConfig = {
         }
       }
     },
-    '/api/v2/admin/classes': {
+    '/api/admin/classes': {
       get: {
         tags: ['Classes'],
         summary: 'Get all classes',
@@ -397,7 +397,7 @@ export const swaggerConfig = {
         }
       }
     },
-    '/api/v2/admin/classes/{id}': {
+    '/api/admin/classes/{id}': {
       get: {
         tags: ['Classes'],
         summary: 'Get class by ID',
@@ -491,7 +491,7 @@ export const swaggerConfig = {
         }
       }
     },
-    '/api/v2/admin/events': {
+    '/api/admin/events': {
       get: {
         tags: ['Events'],
         summary: 'Get all events',
@@ -549,7 +549,7 @@ export const swaggerConfig = {
         }
       }
     },
-    '/api/v2/admin/events/{id}': {
+    '/api/admin/events/{id}': {
       get: {
         tags: ['Events'],
         summary: 'Get event by ID',
@@ -643,7 +643,7 @@ export const swaggerConfig = {
         }
       }
     },
-    '/api/v2/admin/venues': {
+    '/api/admin/venues': {
       get: {
         tags: ['Venues'],
         summary: 'Get all venues',
@@ -698,7 +698,7 @@ export const swaggerConfig = {
         }
       }
     },
-    '/api/v2/admin/venues/{id}': {
+    '/api/admin/venues/{id}': {
       get: {
         tags: ['Venues'],
         summary: 'Get venue by ID',
@@ -789,7 +789,7 @@ export const swaggerConfig = {
         }
       }
     },
-    '/api/v2/admin/bookings': {
+    '/api/admin/bookings': {
       get: {
         tags: ['Bookings'],
         summary: 'Get all bookings',
@@ -845,7 +845,7 @@ export const swaggerConfig = {
         }
       }
     },
-    '/api/v2/admin/bookings/{id}': {
+    '/api/admin/bookings/{id}': {
       get: {
         tags: ['Bookings'],
         summary: 'Get booking by ID',

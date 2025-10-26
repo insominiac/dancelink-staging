@@ -78,7 +78,7 @@ export default function EventsClient({
       setIsLoading(true)
       try {
         const [evRes, pcRes] = await Promise.all([
-          fetch('/api/v2/public/events'),
+          fetch('/api/public/events'),
           fetch('/api/public/content/events')
         ])
         if (evRes.ok) {

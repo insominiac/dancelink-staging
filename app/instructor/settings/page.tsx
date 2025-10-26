@@ -28,7 +28,7 @@ export default function InstructorSettingsPage() {
       setLoading(true)
       setError(null)
       try {
-        const res = await fetch(`/api/v2/utils/instructor/profile/${user.id}`)
+        const res = await fetch(`/api/instructor/profile/${user.id}`)
         if (!res.ok) throw new Error('Failed to load profile')
         const data = await res.json()
         setForm({
@@ -61,7 +61,7 @@ export default function InstructorSettingsPage() {
     setSaving(true)
     setError(null)
     try {
-      const res = await fetch(`/api/v2/utils/instructor/profile/${user.id}`, {
+      const res = await fetch(`/api/instructor/profile/${user.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),

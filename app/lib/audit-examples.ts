@@ -43,7 +43,7 @@ export const customAuditRoute = withAudit(
   {
     logLevel: 'mutations',
     includeBody: true,
-    excludePaths: ['/api/v2/utils/health'],
+    excludePaths: ['/api/health'],
     sensitiveFields: ['password', 'token', 'secret', 'ssn', 'creditCard']
   }
 )

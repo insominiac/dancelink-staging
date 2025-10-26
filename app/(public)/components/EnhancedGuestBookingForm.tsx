@@ -58,7 +58,7 @@ export default function EnhancedGuestBookingForm({ item, isAvailable, disabledRe
     try {
       // Prepare booking data to pass to payment page
       // Acquire seat lock before proceeding
-      const lockRes = await fetch('/api/v2/utils/availability/lock', {
+      const lockRes = await fetch('/api/availability/lock', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ itemType: item.type === 'class' ? 'CLASS' : 'EVENT', itemId: item.id })

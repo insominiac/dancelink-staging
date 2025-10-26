@@ -62,7 +62,7 @@ export default function NotificationAnalytics() {
       setLoading(true)
       setError(null)
 
-      const response = await fetch(`/api/v2/admin/notifications/analytics?timeRange=${timeRange}`)
+      const response = await fetch(`/api/admin/notifications/analytics?timeRange=${timeRange}`)
       if (!response.ok) {
         throw new Error('Failed to fetch analytics data')
       }

@@ -138,11 +138,11 @@ export async function seedAuditLogs() {
         userId: user.id,
         action: 'API_ACCESS',
         tableName: 'api_logs',
-        recordId: '/api/v2/admin/users',
+        recordId: '/api/admin/users',
         newValues: JSON.stringify({
           method: 'GET',
           statusCode: 200,
-          endpoint: '/api/v2/admin/users'
+          endpoint: '/api/admin/users'
         }),
         ipAddress: '192.168.1.100',
         userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',

@@ -67,7 +67,7 @@ export default function NotificationCenter() {
       setError(null)
 
       // Fetch recent notifications for admin overview
-      const notificationsResponse = await fetch('/api/v2/admin/notifications?limit=50')
+      const notificationsResponse = await fetch('/api/admin/notifications?limit=50')
       if (!notificationsResponse.ok) {
         throw new Error('Failed to fetch notifications')
       }
@@ -75,7 +75,7 @@ export default function NotificationCenter() {
       setNotifications(notificationsData.notifications || [])
 
       // Fetch stats
-      const statsResponse = await fetch('/api/v2/admin/notifications/stats')
+      const statsResponse = await fetch('/api/admin/notifications/stats')
       if (!statsResponse.ok) {
         throw new Error('Failed to fetch stats')
       }
@@ -95,7 +95,7 @@ export default function NotificationCenter() {
     if (selectedNotifications.length === 0) return
 
     try {
-      const response = await fetch('/api/v2/admin/notifications/bulk', {
+      const response = await fetch('/api/admin/notifications/bulk', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

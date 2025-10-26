@@ -53,7 +53,7 @@ export default function DanceStylesTabs({ danceStyles, className = '' }: DanceSt
 
   const fetchDanceStyles = async () => {
     try {
-      const response = await fetch('/api/v2/public/dance-styles')
+      const response = await fetch('/api/public/dance-styles')
       if (response.ok) {
         const data = await response.json()
         if (data.success) {

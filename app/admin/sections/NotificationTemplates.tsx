@@ -57,7 +57,7 @@ export default function NotificationTemplates() {
       setLoading(true)
       setError(null)
 
-      const response = await fetch('/api/v2/admin/notifications/templates')
+      const response = await fetch('/api/admin/notifications/templates')
       if (!response.ok) {
         throw new Error('Failed to fetch templates')
       }
@@ -81,8 +81,8 @@ export default function NotificationTemplates() {
 
     try {
       const url = editingTemplate 
-        ? `/api/v2/admin/notifications/templates/${editingTemplate.id}`
-        : '/api/v2/admin/notifications/templates'
+        ? `/api/admin/notifications/templates/${editingTemplate.id}`
+        : '/api/admin/notifications/templates'
       
       const method = editingTemplate ? 'PUT' : 'POST'
 
@@ -126,7 +126,7 @@ export default function NotificationTemplates() {
     }
 
     try {
-      const response = await fetch(`/api/v2/admin/notifications/templates/${template.id}`, {
+      const response = await fetch(`/api/admin/notifications/templates/${template.id}`, {
         method: 'DELETE'
       })
 
@@ -146,7 +146,7 @@ export default function NotificationTemplates() {
   // Toggle template active status
   const toggleTemplateStatus = async (template: NotificationTemplate) => {
     try {
-      const response = await fetch(`/api/v2/admin/notifications/templates/${template.id}`, {
+      const response = await fetch(`/api/admin/notifications/templates/${template.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

@@ -26,7 +26,7 @@ export default function InstructorAnalyticsPage() {
     setError(null)
     
     try {
-      const response = await fetch(`/api/v2/utils/instructor/profile/${user.id}`)
+      const response = await fetch(`/api/instructor/profile/${user.id}`)
       
       if (!response.ok) {
         throw new Error('Instructor profile not found')

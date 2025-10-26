@@ -83,8 +83,8 @@ export default async function EventsPage() {
   const baseUrl = `${protocol}://${host}`
   
   const [eventsRes, contentRes] = await Promise.all([
-    fetch(`${baseUrl}/api/v2/public/events`, { cache: 'no-store' }),
-    fetch(`${baseUrl}/api/v2/admin/content/events`, { cache: 'no-store' })
+    fetch(`${baseUrl}/api/public/events`, { cache: 'no-store' }),
+    fetch(`${baseUrl}/api/public/content/events`, { cache: 'no-store' })
   ])
 
   let events: Event[] = []

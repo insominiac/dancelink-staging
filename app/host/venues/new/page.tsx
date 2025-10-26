@@ -51,7 +51,7 @@ export default function NewVenuePage() {
     setSubmitting(true)
 
     try {
-      const res = await fetch('/api/v2/utils/host/venues', {
+      const res = await fetch('/api/host/venues', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)

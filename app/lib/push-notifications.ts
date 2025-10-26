@@ -1,6 +1,5 @@
 import webpush from 'web-push';
 import prisma from './db';
-import { NotificationType, DeliveryMethod } from '@prisma/client';
 
 // Configure web-push with VAPID keys
 // In production, these should be environment variables
@@ -38,20 +37,26 @@ export class PushNotificationService {
     } = {}
   ): Promise<{ success: number; failed: number; errors: any[] }> {
     try {
+      // If push subscriptions model is not present, skip gracefully
+      const hasPushModel = (prisma as any)?.pushSubscription?.findMany;
+      if (!hasPushModel) {
+        return { success: 0, failed: 0, errors: ['Push subscriptions model not available'] };
+      }
+
       // Get active push subscriptions for the user
-      const subscriptions = await prisma.pushSubscription.findMany({
+      const subscriptions = await (prisma as any).pushSubscription.findMany({
         where: {
           userId,
           isActive: true
         }
       });
 
-      if (subscriptions.length === 0) {
+      if (!subscriptions || subscriptions.length === 0) {
         return { success: 0, failed: 0, errors: ['No active push subscriptions found'] };
       }
 
       const results = await Promise.allSettled(
-        subscriptions.map(subscription => 
+        subscriptions.map((subscription: any) => 
           this.sendPushNotification(subscription, payload, options)
         )
       );
@@ -122,29 +127,32 @@ export class PushNotificationService {
    */
   static async sendNotificationWithPreferences(
     userId: string,
-    type: NotificationType,
+    type: string,
     payload: PushNotificationPayload
   ): Promise<boolean> {
     try {
-      // Check user's notification preferences
-      const preferences = await prisma.notificationPreference.findUnique({
-        where: {
-          userId_type: {
-            userId,
-            type
+      // Check user's notification preferences if model exists
+      const hasPrefs = (prisma as any)?.notificationPreference?.findUnique;
+      if (hasPrefs) {
+        const preferences = await (prisma as any).notificationPreference.findUnique({
+          where: {
+            userId_type: {
+              userId,
+              type
+            }
           }
+        });
+
+        // If user has disabled push notifications for this type, don't send
+        if (preferences && preferences.pushEnabled === false) {
+          return false;
         }
-      });
 
-      // If user has disabled push notifications for this type, don't send
-      if (preferences && !preferences.pushEnabled) {
-        return false;
-      }
-
-      // Check quiet hours
-      if (preferences && this.isInQuietHours(preferences.quietHoursStart, preferences.quietHoursEnd)) {
-        // Schedule notification for later or skip based on urgency
-        return false;
+        // Check quiet hours
+        if (preferences && this.isInQuietHours(preferences.quietHoursStart, preferences.quietHoursEnd)) {
+          // Schedule notification for later or skip based on urgency
+          return false;
+        }
       }
 
       // Send the push notification
@@ -162,7 +170,7 @@ export class PushNotificationService {
    */
   static async createAndSendNotification(
     userId: string,
-    type: NotificationType,
+    type: string,
     title: string,
     message: string,
     options: {
@@ -175,7 +183,7 @@ export class PushNotificationService {
       pushPayload?: Partial<PushNotificationPayload>;
     } = {}
   ): Promise<{ notification: any; pushResult?: any }> {
-    // Create database notification
+    // Create database notification (match current schema)
     const notification = await prisma.notification.create({
       data: {
         userId,
@@ -183,12 +191,8 @@ export class PushNotificationService {
         title,
         message,
         priority: options.priority || 'NORMAL',
-        actionUrl: options.actionUrl,
-        actionData: options.actionData ? JSON.stringify(options.actionData) : null,
-        deliveryMethod: DeliveryMethod.PUSH,
-        scheduledFor: options.scheduledFor,
-        relatedEntityId: options.relatedEntityId,
-        relatedEntityType: options.relatedEntityType
+        actionUrl: options.actionUrl || undefined,
+        // createdAt/updatedAt are handled by defaults
       }
     });
 
@@ -207,17 +211,6 @@ export class PushNotificationService {
       };
 
       pushResult = await this.sendNotificationWithPreferences(userId, type, pushPayload);
-      
-      // Update delivery status
-      if (pushResult) {
-        await prisma.notification.update({
-          where: { id: notification.id },
-          data: {
-            isDelivered: true,
-            deliveredAt: new Date()
-          }
-        });
-      }
     }
 
     return { notification, pushResult };
@@ -294,15 +287,18 @@ export class PushNotificationService {
       .map(sub => sub.id);
 
     if (invalidSubscriptionIds.length > 0) {
-      await prisma.pushSubscription.updateMany({
-        where: {
-          id: { in: invalidSubscriptionIds }
-        },
-        data: {
-          isActive: false,
-          updatedAt: new Date()
-        }
-      });
+      const hasPushModel = (prisma as any)?.pushSubscription?.updateMany;
+      if (hasPushModel) {
+        await (prisma as any).pushSubscription.updateMany({
+          where: {
+            id: { in: invalidSubscriptionIds }
+          },
+          data: {
+            isActive: false,
+            updatedAt: new Date()
+          }
+        });
+      }
     }
   }
 

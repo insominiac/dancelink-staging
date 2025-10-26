@@ -32,7 +32,7 @@ export default function NewCompetitionPage() {
   useEffect(() => {
     const loadVenues = async () => {
       try {
-        const res = await fetch('/api/v2/utils/host/venues')
+        const res = await fetch('/api/host/venues')
         const data = await res.json()
         if (res.ok) {
           const vs: VenueOption[] = (data.venues || []).map((v: any) => ({ id: v.id, name: v.name }))
@@ -66,7 +66,7 @@ export default function NewCompetitionPage() {
       if (expectedParticipants !== '') form.append('expectedParticipants', String(expectedParticipants))
       if (attachments) Array.from(attachments).forEach((f, idx) => form.append(`attachment_${idx}`, f))
 
-      const res = await fetch('/api/v2/utils/host/competitions', { method: 'POST', body: form })
+      const res = await fetch('/api/host/competitions', { method: 'POST', body: form })
       const data = await res.json().catch(() => ({}))
       if (!res.ok) {
         throw new Error(data?.error || 'Failed to submit competition request')

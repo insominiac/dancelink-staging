@@ -56,7 +56,7 @@ export default function LoginTokensPage() {
 
   const fetchTokens = async () => {
     try {
-      const response = await fetch('/api/v2/auth/login-tokens')
+      const response = await fetch('/api/auth/login-tokens')
       const result = await response.json()
       
       if (result.success) {
@@ -72,7 +72,7 @@ export default function LoginTokensPage() {
   const createToken = async () => {
     setCreateLoading(true)
     try {
-      const response = await fetch('/api/v2/auth/login-tokens/generate', {
+      const response = await fetch('/api/auth/login-tokens/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -98,7 +98,7 @@ export default function LoginTokensPage() {
     if (!confirm('Are you sure you want to delete this token?')) return
     
     try {
-      const response = await fetch('/api/v2/auth/login-tokens', {
+      const response = await fetch('/api/auth/login-tokens', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'

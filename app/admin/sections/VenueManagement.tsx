@@ -44,7 +44,7 @@ export default function VenueManagement() {
   const fetchVenues = async () => {
     setIsLoading(true)
     try {
-      const res = await fetch('/api/v2/admin/venues')
+      const res = await fetch('/api/admin/venues')
       if (res.ok) {
         const data = await res.json()
         setVenues(data.venues)
@@ -94,7 +94,7 @@ export default function VenueManagement() {
     if (!confirm('Are you sure you want to delete this venue?')) return
     
     try {
-      const res = await fetch(`/api/v2/admin/venues/${id}`, { method: 'DELETE' })
+      const res = await fetch(`/api/admin/venues/${id}`, { method: 'DELETE' })
       if (res.ok) {
         fetchVenues()
         alert('Venue deleted successfully')
@@ -111,8 +111,8 @@ export default function VenueManagement() {
     e.preventDefault()
     
     const url = editingVenue 
-      ? `/api/v2/admin/venues/${editingVenue.id}`
-      : '/api/v2/admin/venues'
+      ? `/api/admin/venues/${editingVenue.id}`
+      : '/api/admin/venues'
     const method = editingVenue ? 'PUT' : 'POST'
     
     try {

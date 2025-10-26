@@ -56,7 +56,7 @@ export default function AboutContentManagement() {
 
   const fetchContent = async () => {
     try {
-      const response = await fetch('/api/v2/admin/content/about')
+      const response = await fetch('/api/admin/content/about')
       if (response.ok) {
         const data = await response.json()
         setContent(data)
@@ -75,7 +75,7 @@ export default function AboutContentManagement() {
 
     setIsSaving(true)
     try {
-      const response = await fetch('/api/v2/admin/content/about', {
+      const response = await fetch('/api/admin/content/about', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -103,7 +103,7 @@ export default function AboutContentManagement() {
 
     setIsSaving(true)
     try {
-      const response = await fetch('/api/v2/admin/content/about', {
+      const response = await fetch('/api/admin/content/about', {
         method: 'DELETE',
       })
 

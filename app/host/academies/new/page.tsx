@@ -48,7 +48,7 @@ export default function NewAcademyPage() {
         Array.from(documents).forEach((f, idx) => form.append(`documents_${idx}`, f))
       }
 
-      const res = await fetch('/api/v2/utils/host/academies', { method: 'POST', body: form })
+      const res = await fetch('/api/host/academies', { method: 'POST', body: form })
       const data = await res.json().catch(() => ({}))
       if (!res.ok) {
         throw new Error(data?.error || 'Failed to submit academy for approval')

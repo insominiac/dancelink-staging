@@ -64,7 +64,7 @@ export default function DanceStyleManagement() {
   const fetchStyles = async () => {
     setIsLoading(true)
     try {
-      const res = await fetch('/api/v2/admin/dance-styles')
+      const res = await fetch('/api/admin/dance-styles')
       if (res.ok) {
         const data = await res.json()
         // API returns { success: true, data: styles }
@@ -144,7 +144,7 @@ export default function DanceStyleManagement() {
     if (!confirm('Are you sure you want to delete this dance style?')) return
     
     try {
-      const res = await fetch(`/api/v2/admin/dance-styles/${id}`, { method: 'DELETE' })
+      const res = await fetch(`/api/admin/dance-styles/${id}`, { method: 'DELETE' })
       if (res.ok) {
         fetchStyles()
         alert('Dance style deleted successfully')
@@ -161,8 +161,8 @@ export default function DanceStyleManagement() {
     e.preventDefault()
     
     const url = editingStyle 
-      ? `/api/v2/admin/dance-styles/${editingStyle.id}`
-      : '/api/v2/admin/dance-styles'
+      ? `/api/admin/dance-styles/${editingStyle.id}`
+      : '/api/admin/dance-styles'
     const method = editingStyle ? 'PUT' : 'POST'
     
     try {

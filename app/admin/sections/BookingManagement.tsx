@@ -41,7 +41,7 @@ export default function BookingManagement({ helperData }: { helperData: any }) {
   const fetchBookings = async () => {
     setIsLoading(true)
     try {
-      const res = await fetch('/api/v2/admin/bookings')
+      const res = await fetch('/api/admin/bookings')
       if (res.ok) {
         const data = await res.json()
         setBookings(data.bookings)
@@ -85,7 +85,7 @@ export default function BookingManagement({ helperData }: { helperData: any }) {
     if (!confirm('Are you sure you want to delete this booking?')) return
     
     try {
-      const res = await fetch(`/api/v2/admin/bookings/${id}`, { method: 'DELETE' })
+      const res = await fetch(`/api/admin/bookings/${id}`, { method: 'DELETE' })
       if (res.ok) {
         fetchBookings()
         alert('Booking deleted successfully')
@@ -102,8 +102,8 @@ export default function BookingManagement({ helperData }: { helperData: any }) {
     e.preventDefault()
     
     const url = editingBooking 
-      ? `/api/v2/admin/bookings/${editingBooking.id}`
-      : '/api/v2/admin/bookings'
+      ? `/api/admin/bookings/${editingBooking.id}`
+      : '/api/admin/bookings'
     const method = editingBooking ? 'PUT' : 'POST'
     
     // Clean up data based on booking type

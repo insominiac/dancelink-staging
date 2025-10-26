@@ -1,5 +1,4 @@
 import { PushNotificationService } from './push-notifications';
-import { NotificationType, NotificationPriority } from '@prisma/client';
 import prisma from './db';
 import { emailService, NewUserWelcomeData, NewUserAdminNotificationData } from './email';
 
@@ -38,7 +37,7 @@ export class NotificationTriggers {
 
       await PushNotificationService.createAndSendNotification(
         booking.userId,
-        NotificationType.BOOKING_CONFIRMATION,
+        'BOOKING_CONFIRMATION',
         title,
         message,
         {
@@ -102,16 +101,11 @@ export class NotificationTriggers {
       // Also create database notifications
       const notifications = userIds.map(userId => ({
         userId,
-        type: NotificationType.CLASS_REMINDER,
+        type: 'CLASS_REMINDER',
         title,
         message: message,
-        priority: NotificationPriority.HIGH,
+        priority: 'HIGH',
         actionUrl: `/classes/${classId}`,
-        relatedEntityId: classId,
-        relatedEntityType: 'class',
-        deliveryMethod: 'PUSH' as const,
-        isDelivered: true,
-        deliveredAt: new Date()
       }));
 
       await prisma.notification.createMany({
@@ -162,16 +156,11 @@ export class NotificationTriggers {
       // Create database notifications
       const notifications = userIds.map(userId => ({
         userId,
-        type: NotificationType.EVENT_REMINDER,
+        type: 'EVENT_REMINDER',
         title,
         message: message,
-        priority: reminderType === '1h' ? NotificationPriority.HIGH : NotificationPriority.NORMAL,
+        priority: reminderType === '1h' ? 'HIGH' : 'NORMAL',
         actionUrl: `/events/${eventId}`,
-        relatedEntityId: eventId,
-        relatedEntityType: 'event',
-        deliveryMethod: 'PUSH' as const,
-        isDelivered: true,
-        deliveredAt: new Date()
       }));
 
       await prisma.notification.createMany({
@@ -212,7 +201,7 @@ export class NotificationTriggers {
 
       await PushNotificationService.createAndSendNotification(
         booking.userId,
-        NotificationType.PAYMENT_CONFIRMATION,
+        'PAYMENT_CONFIRMATION',
         title,
         message,
         {
@@ -255,7 +244,7 @@ export class NotificationTriggers {
 
       await PushNotificationService.createAndSendNotification(
         booking.userId,
-        NotificationType.PAYMENT_FAILED,
+        'PAYMENT_FAILED',
         title,
         message,
         {
@@ -314,16 +303,11 @@ export class NotificationTriggers {
       // Create database notifications
       const notifications = userIds.map(userId => ({
         userId,
-        type: NotificationType.CLASS_CANCELLED,
+        type: 'CLASS_CANCELLED',
         title,
         message: message,
-        priority: NotificationPriority.URGENT,
+        priority: 'URGENT',
         actionUrl: `/classes/${classId}`,
-        relatedEntityId: classId,
-        relatedEntityType: 'class',
-        deliveryMethod: 'PUSH' as const,
-        isDelivered: true,
-        deliveredAt: new Date()
       }));
 
       await prisma.notification.createMany({
@@ -354,7 +338,7 @@ export class NotificationTriggers {
 
       await PushNotificationService.createAndSendNotification(
         userId,
-        NotificationType.WAITLIST_SPOT_AVAILABLE,
+        'WAITLIST_SPOT_AVAILABLE',
         title,
         message,
         {
@@ -409,16 +393,11 @@ export class NotificationTriggers {
       // Create database notifications
       const notifications = toUserIds.map(userId => ({
         userId,
-        type: NotificationType.INSTRUCTOR_MESSAGE,
+        type: 'INSTRUCTOR_MESSAGE',
         title,
         message: `${subject}: ${truncatedMessage}`,
-        priority: NotificationPriority.NORMAL,
+        priority: 'NORMAL',
         actionUrl: `/dashboard/messages`,
-        relatedEntityId: fromUserId,
-        relatedEntityType: 'user',
-        deliveryMethod: 'PUSH' as const,
-        isDelivered: true,
-        deliveredAt: new Date()
       }));
 
       await prisma.notification.createMany({
@@ -475,14 +454,11 @@ export class NotificationTriggers {
       // Create database notifications
       const notifications = userIds.map(userId => ({
         userId,
-        type: NotificationType.SYSTEM_ANNOUNCEMENT,
+        type: 'SYSTEM_ANNOUNCEMENT',
         title: `📢 ${title}`,
         message: message,
-        priority: priority as NotificationPriority,
+        priority: priority,
         actionUrl: '/announcements',
-        deliveryMethod: 'PUSH' as const,
-        isDelivered: true,
-        deliveredAt: new Date()
       }));
 
       // Insert in batches to avoid overwhelming the database

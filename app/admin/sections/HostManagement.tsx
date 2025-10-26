@@ -82,7 +82,7 @@ export default function HostManagement() {
       if (filters.country) params.set('country', filters.country)
       if (filters.city) params.set('city', filters.city)
 
-      const response = await fetch(`/api/v2/admin/hosts?${params}`)
+      const response = await fetch(`/api/admin/hosts?${params}`)
       if (!response.ok) throw new Error('Failed to fetch hosts')
 
       const data = await response.json()
@@ -99,7 +99,7 @@ export default function HostManagement() {
   const fetchHostDetails = async (hostId: string) => {
     setIsLoadingDetails(true)
     try {
-      const response = await fetch(`/api/v2/admin/hosts/${hostId}`)
+      const response = await fetch(`/api/admin/hosts/${hostId}`)
       if (!response.ok) throw new Error('Failed to fetch host details')
 
       const data = await response.json()
@@ -114,7 +114,7 @@ export default function HostManagement() {
 
   const handleHostAction = async (hostId: string, action: 'approve' | 'reject' | 'suspend' | 'reactivate', reason?: string) => {
     try {
-      const response = await fetch(`/api/v2/admin/hosts/${hostId}`, {
+      const response = await fetch(`/api/admin/hosts/${hostId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action, rejectionReason: reason })

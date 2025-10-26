@@ -29,13 +29,13 @@ export default function NewMessagePage() {
     if (!user) return
     ;(async () => {
       try {
-        const profRes = await fetch(`/api/v2/utils/instructor/profile/${user.id}`)
+        const profRes = await fetch(`/api/instructor/profile/${user.id}`)
         if (!profRes.ok) throw new Error('Instructor not found')
         const prof = await profRes.json()
         const iid = prof.instructor.id as string
         setInstructorId(iid)
 
-        const clsRes = await fetch(`/api/v2/utils/instructor/classes?instructorId=${iid}&status=active&page=1&pageSize=100`)
+        const clsRes = await fetch(`/api/instructor/classes?instructorId=${iid}&status=active&page=1&pageSize=100`)
         if (clsRes.ok) {
           const data = await clsRes.json()
           setClasses((data.items || []).map((c: any) => ({ id: c.id, title: c.title, scheduleTime: c.scheduleTime || null })))
@@ -51,7 +51,7 @@ export default function NewMessagePage() {
       if (!instructorId) return
       if (search.trim().length < 2) { setOptions([]); return }
       const params = new URLSearchParams({ instructorId, search, page: '1', pageSize: '10' })
-      const res = await fetch(`/api/v2/utils/instructor/students?${params.toString()}`)
+      const res = await fetch(`/api/instructor/students?${params.toString()}`)
       if (res.ok) {
         const data = await res.json()
         setOptions(data.items.map((s: any) => ({ id: s.id, name: s.name, email: s.email })))
@@ -77,13 +77,13 @@ export default function NewMessagePage() {
       let res: Response
       if (mode === 'direct') {
         if (!selected.length) throw new Error('Add at least one recipient')
-        res = await fetch('/api/v2/utils/instructor/messages', {
+        res = await fetch('/api/instructor/messages', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ instructorId, recipientUserIds: selected.map(s => s.id), subject, body })
         })
       } else {
         if (!classId) throw new Error('Select a class')
-        res = await fetch('/api/v2/utils/instructor/messages/class', {
+        res = await fetch('/api/instructor/messages/class', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ instructorId, classId, subject, body })
         })

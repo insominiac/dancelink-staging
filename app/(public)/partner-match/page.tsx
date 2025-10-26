@@ -366,7 +366,7 @@ export default function PartnerMatchPage() {
         params.append('limit', '12')
         params.append('offset', reset ? '0' : (currentPage * 12).toString())
 
-        const response = await fetch(`/api/v2/public/partner-search?${params.toString()}`)
+        const response = await fetch(`/api/public/partner-search?${params.toString()}`)
         const data = await response.json()
 
         if (data.success && data.data.profiles && data.data.profiles.length > 0) {

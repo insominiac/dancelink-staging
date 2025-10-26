@@ -22,15 +22,15 @@ export default function StudentDetailsPage({ params }: { params: { userId: strin
       setLoading(true)
       setError(null)
       try {
-        const profRes = await fetch(`/api/v2/utils/instructor/profile/${user.id}`)
+        const profRes = await fetch(`/api/instructor/profile/${user.id}`)
         if (!profRes.ok) throw new Error('Instructor not found')
         const prof = await profRes.json()
         const iid = prof.instructor.id as string
         setInstructorId(iid)
 
         const [detailRes, classesRes] = await Promise.all([
-          fetch(`/api/v2/utils/instructor/students/${params.userId}?instructorId=${iid}`),
-          fetch(`/api/v2/utils/instructor/classes?instructorId=${iid}&status=active&page=1&pageSize=100`),
+          fetch(`/api/instructor/students/${params.userId}?instructorId=${iid}`),
+          fetch(`/api/instructor/classes?instructorId=${iid}&status=active&page=1&pageSize=100`),
         ])
         if (!detailRes.ok) throw new Error('Failed to load student')
         const detail = await detailRes.json()
@@ -53,7 +53,7 @@ export default function StudentDetailsPage({ params }: { params: { userId: strin
     if (!instructorId) return
     setBusy(true)
     try {
-      const res = await fetch(`/api/v2/utils/instructor/students/${params.userId}/notes`, {
+      const res = await fetch(`/api/instructor/students/${params.userId}/notes`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ instructorId, note }),
@@ -70,7 +70,7 @@ export default function StudentDetailsPage({ params }: { params: { userId: strin
     if (!instructorId || !enrollClassId) return
     setBusy(true)
     try {
-      const res = await fetch(`/api/v2/utils/instructor/students/${params.userId}/enroll`, {
+      const res = await fetch(`/api/instructor/students/${params.userId}/enroll`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ instructorId, classId: enrollClassId }),
@@ -80,7 +80,7 @@ export default function StudentDetailsPage({ params }: { params: { userId: strin
         throw new Error(err.error || 'Failed to enroll')
       }
       // reload
-      const detailRes = await fetch(`/api/v2/utils/instructor/students/${params.userId}?instructorId=${instructorId}`)
+      const detailRes = await fetch(`/api/instructor/students/${params.userId}?instructorId=${instructorId}`)
       if (detailRes.ok) setData((await detailRes.json()).data)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to enroll')
@@ -94,13 +94,13 @@ export default function StudentDetailsPage({ params }: { params: { userId: strin
     if (!confirm('Cancel this enrollment?')) return
     setBusy(true)
     try {
-      const res = await fetch(`/api/v2/utils/instructor/students/${params.userId}/cancel`, {
+      const res = await fetch(`/api/instructor/students/${params.userId}/cancel`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ instructorId, bookingId }),
       })
       if (!res.ok) throw new Error('Failed to cancel')
-      const detailRes = await fetch(`/api/v2/utils/instructor/students/${params.userId}?instructorId=${instructorId}`)
+      const detailRes = await fetch(`/api/instructor/students/${params.userId}?instructorId=${instructorId}`)
       if (detailRes.ok) setData((await detailRes.json()).data)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to cancel')

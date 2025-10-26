@@ -35,7 +35,7 @@ export default function InstructorStudentsPage() {
     setIsLoading(true)
     setError(null)
     try {
-      const profRes = await fetch(`/api/v2/utils/instructor/profile/${user.id}`)
+      const profRes = await fetch(`/api/instructor/profile/${user.id}`)
       if (!profRes.ok) throw new Error('Instructor profile not found')
       const prof = await profRes.json()
       const iid = prof.instructor.id as string
@@ -43,7 +43,7 @@ export default function InstructorStudentsPage() {
 
       const params = new URLSearchParams({ instructorId: iid, page: String(page), pageSize: String(pageSize) })
       if (q.trim()) params.set('search', q.trim())
-      const res = await fetch(`/api/v2/utils/instructor/students?${params.toString()}`)
+      const res = await fetch(`/api/instructor/students?${params.toString()}`)
       if (!res.ok) throw new Error('Failed to load students')
       const data = await res.json()
       setItems(data.items)
@@ -65,7 +65,7 @@ export default function InstructorStudentsPage() {
           <p className="text-gray-600 mt-2">View and manage your enrolled students</p>
         </div>
         <div className="flex items-center gap-2">
-          <a href={`/api/v2/utils/instructor/students/export?instructorId=${instructorId || ''}`} className="px-3 py-2 border rounded text-sm">Export CSV</a>
+          <a href={`/api/instructor/students/export?instructorId=${instructorId || ''}`} className="px-3 py-2 border rounded text-sm">Export CSV</a>
         </div>
       </div>
 

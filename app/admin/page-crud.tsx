@@ -83,7 +83,7 @@ export default function AdminPanel() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch('/api/v2/admin/users')
+      const res = await fetch('/api/admin/users')
       if (!res.ok) throw new Error('Failed to fetch users')
       const data = await res.json()
       setUsers(data.users)
@@ -125,7 +125,7 @@ export default function AdminPanel() {
     }
 
     try {
-      const res = await fetch(`/api/v2/admin/users/${id}`, {
+      const res = await fetch(`/api/admin/users/${id}`, {
         method: 'DELETE'
       })
       
@@ -143,8 +143,8 @@ export default function AdminPanel() {
   const handleSaveUser = async () => {
     try {
       const url = editingItem 
-        ? `/api/v2/admin/users/${editingItem.id}`
-        : '/api/v2/admin/users'
+        ? `/api/admin/users/${editingItem.id}`
+        : '/api/admin/users'
       
       const method = editingItem ? 'PUT' : 'POST'
       

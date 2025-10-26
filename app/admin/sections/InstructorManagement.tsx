@@ -43,7 +43,7 @@ export default function InstructorManagement() {
   const fetchInstructors = async () => {
     setIsLoading(true)
     try {
-      const res = await fetch('/api/v2/admin/instructors')
+      const res = await fetch('/api/admin/instructors')
       if (res.ok) {
         const data = await res.json()
         setInstructors(data.instructors)
@@ -89,7 +89,7 @@ export default function InstructorManagement() {
     if (!confirm('Are you sure you want to delete this instructor profile?')) return
     
     try {
-      const res = await fetch(`/api/v2/admin/instructors/${id}`, { method: 'DELETE' })
+      const res = await fetch(`/api/admin/instructors/${id}`, { method: 'DELETE' })
       if (res.ok) {
         fetchInstructors()
         alert('Instructor deleted successfully')
@@ -106,8 +106,8 @@ export default function InstructorManagement() {
     e.preventDefault()
     
     const url = editingInstructor 
-      ? `/api/v2/admin/instructors/${editingInstructor.id}`
-      : '/api/v2/admin/instructors'
+      ? `/api/admin/instructors/${editingInstructor.id}`
+      : '/api/admin/instructors'
     const method = editingInstructor ? 'PUT' : 'POST'
     
     try {

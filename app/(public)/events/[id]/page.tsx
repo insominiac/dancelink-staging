@@ -45,7 +45,7 @@ export default function EventDetailPage({ params }: { params: { id: string } }) 
   const fetchEventDetails = async () => {
     setIsLoading(true)
     try {
-      const res = await fetch(`/api/v2/public/events/${params.id}`)
+      const res = await fetch(`/api/public/events/${params.id}`)
       if (res.ok) {
         const data = await res.json()
         setEventData(data.event)

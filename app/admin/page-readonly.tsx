@@ -57,7 +57,7 @@ export default function AdminPanel() {
       setRecentActivity(statsData.recentActivity)
       
       // Fetch tables info
-      const tablesRes = await fetch('/api/v2/admin/tables')
+      const tablesRes = await fetch('/api/admin/tables')
       if (!tablesRes.ok) throw new Error('Failed to fetch tables')
       const tablesData = await tablesRes.json()
       setTables(tablesData.tables)

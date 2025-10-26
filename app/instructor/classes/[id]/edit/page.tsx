@@ -30,13 +30,13 @@ export default function EditClassPage({ params }: { params: { id: string } }) {
       setLoading(true)
       setError(null)
       try {
-        const profRes = await fetch(`/api/v2/utils/instructor/profile/${user.id}`)
+        const profRes = await fetch(`/api/instructor/profile/${user.id}`)
         if (!profRes.ok) throw new Error('Instructor not found')
         const prof = await profRes.json()
         const iid = prof.instructor.id as string
         setInstructorId(iid)
 
-        const res = await fetch(`/api/v2/utils/instructor/classes/${params.id}?instructorId=${iid}`)
+        const res = await fetch(`/api/instructor/classes/${params.id}?instructorId=${iid}`)
         if (!res.ok) throw new Error('Failed to load class')
         const data = await res.json()
         const c = data.class
@@ -84,7 +84,7 @@ export default function EditClassPage({ params }: { params: { id: string } }) {
         startDate: form.startDate ? new Date(form.startDate).toISOString() : null,
       }
 
-      const res = await fetch(`/api/v2/utils/instructor/classes/${params.id}`, {
+      const res = await fetch(`/api/instructor/classes/${params.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
