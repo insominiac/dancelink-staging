@@ -180,7 +180,7 @@ export default function ClassesPage() {
 
   return (
     <div className="min-h-[calc(100vh-200px)] bg-gray-50">
-      <SEOHead path="/classes" fallbackTitle="Dance Classes | Dance Platform" fallbackDescription="Browse dance classes by level, style, schedule and book your spot." />
+      <SEOHead path="/classes" fallbackTitle="Dance Classes | DanceLink - Connect, Learn, Dance" fallbackDescription="Browse dance classes by level, style, schedule and book your spot." />
       {/* Header Section */}
       <section 
           className="relative py-16 md:py-20 overflow-hidden"

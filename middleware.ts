@@ -82,7 +82,24 @@ export async function middleware(request: NextRequest) {
   
   // Allow public routes
   if (publicRoutes.some(route => path === route) || path.startsWith('/_next') || path.startsWith('/favicon')) {
-    return NextResponse.next()
+    // Ensure i18next language cookie is set for public pages
+    const supported = ['en', 'ko', 'vi', 'es']
+    const urlLang = request.nextUrl.searchParams.get('lang')?.toLowerCase()
+    const cookieLang = request.cookies.get('i18next')?.value?.toLowerCase()
+    const accept = request.headers.get('accept-language') || ''
+    const primaryAccept = accept.split(',')[0]?.split('-')[0]?.toLowerCase()
+
+    let lang = cookieLang && supported.includes(cookieLang) ? cookieLang : undefined
+    if (!lang) {
+      const candidate = urlLang && supported.includes(urlLang) ? urlLang : primaryAccept
+      lang = supported.includes(candidate || '') ? (candidate as string) : 'en'
+    }
+
+    const res = NextResponse.next()
+    if (!cookieLang || cookieLang !== lang) {
+      res.cookies.set('i18next', lang, { path: '/', maxAge: 60 * 60 * 24 * 365 })
+    }
+    return res
   }
 
   // Get authentication data from session cookies

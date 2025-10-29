@@ -116,7 +116,7 @@ export default function ClassDetailPage({ params }: { params: { id: string } }) 
               description: classData.description,
               provider: {
                 '@type': 'Organization',
-                name: 'Dance Platform'
+                name: 'DanceLink - Connect, Learn, Dance'
               },
               hasCourseInstance: {
                 '@type': 'CourseInstance',

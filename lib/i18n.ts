@@ -238,7 +238,10 @@ const resources = {
         searchEvents: 'Search Events',
         availabilityLabel: 'Event Availability',
         filters: {
-          all: 'All Types'
+          all: 'All Types',
+          type: 'Event Type',
+          date: 'Date',
+          location: 'Location'
         },
         priceRanges: {
           anyPrice: 'Any Price',
@@ -256,25 +259,6 @@ const resources = {
           socialDance: 'Social Dance',
           gala: 'Gala',
           kidsEvent: 'Kids Event'
-        },
-        filters: {
-          type: 'Event Type',
-          date: 'Date',
-          location: 'Location'
-        },
-        priceRanges: {
-          anyPrice: 'Cualquier Precio',
-          under25: 'Menos de $25',
-          from25to50: '$25 - $50',
-          from50to100: '$50 - $100',
-          over100: 'Más de $100'
-        },
-        types: {
-          workshop: 'Workshop',
-          competition: 'Competition',
-          performance: 'Performance',
-          social: 'Social',
-          masterclass: 'Masterclass'
         },
         details: {
           date: 'Date',

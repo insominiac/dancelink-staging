@@ -1,12 +1,12 @@
 export function generateMetadata(path: string, seoData?: any) {
   if (!seoData) {
     return {
-      title: 'Dance Platform',
+      title: 'DanceLink - Connect, Learn, Dance',
       description: 'Professional dance classes and events platform'
     }
   }
 
-  const title = seoData.title || seoData.ogTitle || 'Dance Platform'
+  const title = seoData.title || seoData.ogTitle || 'DanceLink - Connect, Learn, Dance'
   const description = seoData.description || seoData.ogDescription || 'Professional dance classes and events platform'
   const images = seoData.ogImage ? [{ url: seoData.ogImage }] : []
 
@@ -35,7 +35,7 @@ export function generateMetadata(path: string, seoData?: any) {
       type: seoData.ogType || 'website',
       url: seoData.ogUrl,
       images,
-      siteName: 'Dance Platform'
+      siteName: 'DanceLink - Connect, Learn, Dance'
     },
     twitter: {
       card: seoData.twitterCard || 'summary_large_image',

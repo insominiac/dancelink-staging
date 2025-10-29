@@ -13,7 +13,7 @@ interface SEOHeadProps {
 
 export default function SEOHead({ 
   path, 
-  fallbackTitle = 'Dance Platform',
+  fallbackTitle = 'DanceLink - Connect, Learn, Dance',
   fallbackDescription = 'Professional dance classes and events platform',
   fallbackImage = '/default-og-image.jpg'
 }: SEOHeadProps) {
@@ -72,7 +72,7 @@ export default function SEOHead({
       <meta property="og:type" content={ogType} />
       <meta property="og:image" content={ogImage} />
       {ogUrl && <meta property="og:url" content={ogUrl} />}
-      <meta property="og:site_name" content="Dance Platform" />
+      <meta property="og:site_name" content="DanceLink - Connect, Learn, Dance" />
       
       {/* Twitter */}
       <meta name="twitter:card" content={twitterCard} />
@@ -114,12 +114,12 @@ export default function SEOHead({
 export function generateMetadata(path: string, seoData?: any) {
   if (!seoData) {
     return {
-      title: 'Dance Platform',
+      title: 'DanceLink - Connect, Learn, Dance',
       description: 'Professional dance classes and events platform'
     }
   }
 
-  const title = seoData.title || seoData.ogTitle || 'Dance Platform'
+  const title = seoData.title || seoData.ogTitle || 'DanceLink - Connect, Learn, Dance'
   const description = seoData.description || seoData.ogDescription || 'Professional dance classes and events platform'
   const images = seoData.ogImage ? [{ url: seoData.ogImage }] : []
 
@@ -136,7 +136,7 @@ export function generateMetadata(path: string, seoData?: any) {
       type: seoData.ogType || 'website',
       url: seoData.ogUrl,
       images,
-      siteName: 'Dance Platform'
+      siteName: 'DanceLink - Connect, Learn, Dance'
     },
     twitter: {
       card: seoData.twitterCard || 'summary_large_image',

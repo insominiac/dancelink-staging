@@ -55,7 +55,7 @@ export default function EventsClient({
   initialPageContent: EventsPageContent | null
   initialLang: string
 }) {
-  const { t } = useTranslation('common')
+  const { t, i18n } = useTranslation('common')
   const [isMounted, setIsMounted] = useState(false)
   const [events, setEvents] = useState<Event[]>(initialEvents || [])
   const [filteredEvents, setFilteredEvents] = useState<Event[]>(initialEvents || [])
@@ -67,6 +67,13 @@ export default function EventsClient({
   useEffect(() => {
     setIsMounted(true)
   }, [])
+
+  // Ensure client i18n matches server-detected language
+  useEffect(() => {
+    if (initialLang && i18n.language !== initialLang) {
+      i18n.changeLanguage(initialLang)
+    }
+  }, [initialLang, i18n])
 
   // Only fetch if no initial server data
   useEffect(() => {

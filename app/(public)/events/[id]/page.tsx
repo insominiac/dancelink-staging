@@ -138,7 +138,7 @@ export default function EventDetailPage({ params }: { params: { id: string } }) 
               },
               organizer: {
                 '@type': 'Organization',
-                name: 'Dance Platform'
+                name: 'DanceLink - Connect, Learn, Dance'
               }
             }) }}
           />
