@@ -10,6 +10,9 @@
       "maxDuration": 30
     }
   },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "https://dance-api-omega.vercel.app/api/$1" }
+  ],
   "headers": [
     {
       "source": "/api/swagger",

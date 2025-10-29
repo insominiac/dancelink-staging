@@ -17,7 +17,15 @@ const nextConfig = {
   // Vercel-specific optimizations
   poweredByHeader: false,
   compress: true,
-  swcMinify: true
+  swcMinify: true,
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://dance-api-omega.vercel.app/api/:path*'
+      }
+    ]
+  }
 }
 
 module.exports = nextConfig
