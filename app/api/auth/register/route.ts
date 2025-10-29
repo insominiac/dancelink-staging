@@ -1,0 +1,160 @@
+import { NextRequest, NextResponse } from 'next/server'
+import prisma from '@/app/lib/db'
+import { 
+  hashPassword, 
+  isValidEmail, 
+  isValidPassword, 
+  createSession 
+} from '@/app/lib/auth'
+import { NotificationTriggers } from '@/app/lib/notification-triggers'
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { email, password, fullName, phone, registerAsHost, businessName, businessType, description, experienceYears, country, city } = body
+
+    // Validate required fields
+    if (!email || !password || !fullName) {
+      return NextResponse.json(
+        { error: 'Email, password, and full name are required' },
+        { status: 400 }
+      )
+    }
+
+    // Validate email format
+    if (!isValidEmail(email)) {
+      return NextResponse.json(
+        { error: 'Invalid email format' },
+        { status: 400 }
+      )
+    }
+
+    // Validate password strength
+    const passwordValidation = isValidPassword(password)
+    if (!passwordValidation.valid) {
+      return NextResponse.json(
+        { error: passwordValidation.message },
+        { status: 400 }
+      )
+    }
+
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email: email.toLowerCase() }
+    })
+
+    if (existingUser) {
+      return NextResponse.json(
+        { error: 'User with this email already exists' },
+        { status: 409 }
+      )
+    }
+
+    // Hash password
+    const passwordHash = await hashPassword(password)
+
+    // Determine user role
+    const userRole = registerAsHost ? 'HOST' : 'USER'
+    
+    // Create user
+    const user = await prisma.user.create({
+      data: {
+        email: email.toLowerCase(),
+        fullName: fullName.trim(),
+        phone: phone?.trim() || null,
+        passwordHash,
+        role: userRole,
+        isVerified: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        role: true,
+        isVerified: true,
+        createdAt: true
+      }
+    })
+
+    // If registering as host, create host profile
+    if (registerAsHost) {
+      if (!businessName || !businessType || !country || !city) {
+        // Rollback user creation if host data is incomplete
+        await prisma.user.delete({ where: { id: user.id } })
+        return NextResponse.json(
+          { error: 'Business name, business type, country, and city are required for host registration' },
+          { status: 400 }
+        )
+      }
+      
+      await prisma.host.create({
+        data: {
+          userId: user.id,
+          businessName: businessName.trim(),
+          businessType: businessType.trim(),
+          description: description?.trim() || null,
+          experienceYears: experienceYears ? parseInt(experienceYears) : null,
+          country: country.trim(),
+          city: city.trim(),
+          applicationStatus: 'PENDING'
+        }
+      })
+    }
+
+    // Create session
+    const token = await createSession(user)
+
+    // Send welcome email and admin notifications asynchronously
+    // Don't await this to avoid blocking the response
+    NotificationTriggers.sendNewUserRegistrationNotifications(user.id).catch(error => {
+      console.error('Error sending new user registration notifications:', error)
+    })
+
+    const message = registerAsHost 
+      ? 'Host application submitted successfully! Your account is pending admin approval.'
+      : 'Registration successful'
+
+    return NextResponse.json(
+      {
+        message,
+        user: {
+          ...user,
+          requiresApproval: registerAsHost
+        },
+        token
+      },
+      { status: 201 }
+    )
+
+  } catch (error) {
+    console.error('Registration error:', error)
+    
+    // More detailed error handling
+    if (error instanceof Error) {
+      console.error('Error message:', error.message)
+      console.error('Error stack:', error.stack)
+      
+      // Check for Prisma-specific errors
+      if (error.message.includes('Unknown field')) {
+        return NextResponse.json(
+          { error: 'Database schema error: ' + error.message },
+          { status: 500 }
+        )
+      }
+      
+      if (error.message.includes('Connection')) {
+        return NextResponse.json(
+          { error: 'Database connection error' },
+          { status: 500 }
+        )
+      }
+    }
+    
+    return NextResponse.json(
+      { error: 'Internal server error', details: process.env.NODE_ENV === 'development' ? String(error) : undefined },
+      { status: 500 }
+    )
+  }
+}
