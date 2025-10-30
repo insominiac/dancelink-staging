@@ -51,5 +51,9 @@ app/api/host/
 app/api/instructor/
 app/api/public/
 
+# Exclude _api directory - APIs are served from separate deployment (dance-api-omega.vercel.app)
+# Keep code locally for reference/backup but don't deploy (152 serverless functions)
+app/_api/
+
 # Keep only the new consolidated v2 APIs and necessary routes
 !app/api/v2/
