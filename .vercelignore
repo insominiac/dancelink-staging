@@ -53,7 +53,11 @@ app/api/public/
 
 # Exclude _api directory - APIs are served from separate deployment (dance-api-omega.vercel.app)
 # Keep code locally for reference/backup but don't deploy (152 serverless functions)
+app/_api
 app/_api/
+app/_api/**
+app/_api/**/route.ts
+app/_api/**/route.js
 
 # Keep only the new consolidated v2 APIs and necessary routes
 !app/api/v2/

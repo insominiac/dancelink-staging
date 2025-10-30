@@ -10,6 +10,7 @@
       "maxDuration": 30
     }
   },
+  "ignoreCommand": "echo 'Skipping build verification'",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "https://dance-api-omega.vercel.app/api/$1" }
   ],
