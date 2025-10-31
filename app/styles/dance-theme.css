@@ -686,8 +686,8 @@ div[style*="background: linear-gradient(135deg, var(--primary-dark)"] {
   }
   
   .dance-nav-link {
-    font-size: 1.3rem;
-    padding: 1rem 2rem;
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
     border-radius: 50px;
     border: 2px solid transparent;
     transition: all 0.3s ease;
@@ -709,12 +709,12 @@ div[style*="background: linear-gradient(135deg, var(--primary-dark)"] {
   /* Mobile auth buttons and additional menu items */
   .dance-nav-menu .md\:hidden a,
   .dance-nav-menu .md\:hidden button {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
   }
   
   .dance-nav-menu .dance-btn {
-    font-size: 1.1rem;
-    padding: 1rem 1.5rem;
+    font-size: 0.95rem;
+    padding: 0.75rem 1.25rem;
   }
 }
 
