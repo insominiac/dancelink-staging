@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { put, del } from '@vercel/blob'
 
+export const runtime = 'edge'
+
 const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
 const maxSize = 5 * 1024 * 1024 // 5MB
 
