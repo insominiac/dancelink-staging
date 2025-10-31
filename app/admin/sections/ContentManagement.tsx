@@ -660,10 +660,9 @@ export default function ContentManagement() {
     }
 
     try {
-      // Extract filename from URL
-      const filename = homepageContent.heroBackgroundImage.split('/').pop()
-      if (filename) {
-        await fetch(`/api/admin/upload/hero-bg?filename=${filename}`, {
+      // Delete via Blob URL
+      if (homepageContent.heroBackgroundImage) {
+        await fetch(`/api/admin/upload/hero-bg?url=${encodeURIComponent(homepageContent.heroBackgroundImage)}`, {
           method: 'DELETE'
         })
       }
