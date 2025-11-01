@@ -268,7 +268,7 @@ export default function HomePage() {
               ? <TranslatedText text={homepageContent.heroSubtitle} />
               : (isMounted ? t('hero.description') : 'Where dancers unite, stories unfold, and connections are made through the universal language of movement. Join our vibrant community today.')}
           </p>
-          <div className="flex gap-4 justify-center flex-wrap">
+          <div className="flex cta-group justify-center flex-wrap">
             <Link href="/classes" className="dance-btn dance-btn-primary hover:transform hover:scale-105 transition-all duration-300">
               {homepageContent?.heroButtonText 
                 ? <TranslatedText text={homepageContent.heroButtonText} /> 
@@ -427,28 +427,28 @@ export default function HomePage() {
             ) : (
               <>
                 <div>
-                  <div className="text-5xl font-bold mb-2" style={{color: 'var(--primary-gold)'}}>
+                  <div className="text-5xl font-bold mb-2 stats-number" style={{color: 'var(--primary-gold)'}}>
                     {staticStats.students.toLocaleString()}+
                   </div>
-                  <div className="text-white opacity-80">{t('stats.happyStudents')}</div>
+                  <div className="text-white opacity-80 stats-label">{t('stats.happyStudents')}</div>
                 </div>
                 <div>
-                  <div className="text-5xl font-bold mb-2" style={{color: 'var(--primary-gold)'}}>
+                  <div className="text-5xl font-bold mb-2 stats-number" style={{color: 'var(--primary-gold)'}}>
                     {staticStats.danceStyles.toLocaleString()}+
                   </div>
-                  <div className="text-white opacity-80">{t('stats.danceStyles')}</div>
+                  <div className="text-white opacity-80 stats-label">{t('stats.danceStyles')}</div>
                 </div>
                 <div>
-                  <div className="text-5xl font-bold mb-2" style={{color: 'var(--primary-gold)'}}>
+                  <div className="text-5xl font-bold mb-2 stats-number" style={{color: 'var(--primary-gold)'}}>
                     {staticStats.instructors.toLocaleString()}+
                   </div>
-                  <div className="text-white opacity-80">{t('stats.expertInstructors')}</div>
+                  <div className="text-white opacity-80 stats-label">{t('stats.expertInstructors')}</div>
                 </div>
                 <div>
-                  <div className="text-5xl font-bold mb-2" style={{color: 'var(--primary-gold)'}}>
+                  <div className="text-5xl font-bold mb-2 stats-number" style={{color: 'var(--primary-gold)'}}>
                     {staticStats.venues.toLocaleString()}
                   </div>
-                  <div className="text-white opacity-80">{t('stats.studioLocations')}</div>
+                  <div className="text-white opacity-80 stats-label">{t('stats.studioLocations')}</div>
                 </div>
               </>
             )}
