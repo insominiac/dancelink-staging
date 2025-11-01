@@ -3,8 +3,20 @@ import { writeFile, mkdir } from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
 
+// IMPORTANT: This is a legacy, filesystem-based upload route kept only for reference.
+// Guard against usage on serverless/read-only environments (e.g., Vercel) to avoid EROFS/ENOENT.
+function isReadOnlyEnv() {
+  return process.env.VERCEL === '1' || process.env.NODE_ENV === 'production'
+}
+
 export async function POST(request: NextRequest) {
   try {
+    if (isReadOnlyEnv()) {
+      return NextResponse.json({
+        error: 'Filesystem uploads are disabled in this environment. Use /api/admin/upload/hero-bg (Blob storage).'
+      }, { status: 400 })
+    }
+
     const formData = await request.formData()
     const file = formData.get('file') as File
     
@@ -63,6 +75,12 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
+    if (isReadOnlyEnv()) {
+      return NextResponse.json({
+        error: 'Filesystem deletes are disabled in this environment. Use /api/admin/upload/hero-bg?url=... (Blob storage).'
+      }, { status: 400 })
+    }
+
     const { searchParams } = new URL(request.url)
     const filename = searchParams.get('filename')
     

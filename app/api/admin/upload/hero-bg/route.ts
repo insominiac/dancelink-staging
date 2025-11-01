@@ -8,6 +8,12 @@ const maxSize = 5 * 1024 * 1024 // 5MB
 
 export async function POST(request: NextRequest) {
   try {
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+      return NextResponse.json({
+        error: 'Blob storage token not configured. Set BLOB_READ_WRITE_TOKEN.'
+      }, { status: 500 })
+    }
+
     const formData = await request.formData()
     const file = formData.get('file') as File | null
     if (!file) {
