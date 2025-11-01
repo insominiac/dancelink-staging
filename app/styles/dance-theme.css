@@ -139,6 +139,9 @@ html {
   scroll-behavior: smooth;
   /* Responsive root font size: scales down slightly on small screens */
   font-size: clamp(14px, 2.3vw, 16px);
+  /* Prevent iOS Safari text autosizing from inflating nav text */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -688,13 +691,15 @@ div[style*="background: linear-gradient(135deg, var(--primary-dark)"] {
   }
   
   .dance-nav-link {
-    font-size: 1rem;
+    font-size: 1rem !important;
     padding: 1rem 2rem;
     border-radius: 50px;
     border: 2px solid transparent;
     transition: all 0.3s ease;
     text-align: center;
     min-width: 160px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
   
   .dance-nav-link:hover {
