@@ -74,7 +74,7 @@ export default async function EventsPage() {
   const rawLang = (cookieLang || acceptLang || 'en').toLowerCase()
   const lang = /^[a-z]{2}$/.test(rawLang) ? (rawLang as string) : 'en'
 
-  // Fetch events and page content on server (via external API)
+  // Fetch events and page content from external API (no-store)
   const [eventsRes, contentRes] = await Promise.all([
     fetch(apiUrl('public/events'), { cache: 'no-store' }),
     fetch(apiUrl('public/content/events'), { cache: 'no-store' })
