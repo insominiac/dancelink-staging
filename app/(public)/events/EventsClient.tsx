@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import TranslatedText, { useAutoTranslate } from '../../components/TranslatedText'
 import '@/lib/i18n'
 import { formatDateRangeSafe, isEmptyDate } from '@/app/lib/date'
+import { apiUrl } from '@/app/lib/api'
 
 interface Event {
   id: string
@@ -84,12 +85,9 @@ export default function EventsClient({
     const run = async () => {
       setIsLoading(true)
       try {
-        const base = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '')
-        const evUrl = base ? `${base}/api/public/events` : '/api/public/events'
-        const pcUrl = base ? `${base}/api/public/content/events` : '/api/public/content/events'
         const [evRes, pcRes] = await Promise.all([
-          fetch(evUrl),
-          fetch(pcUrl)
+          fetch(apiUrl('public/events')),
+          fetch(apiUrl('public/content/events'))
         ])
         if (evRes.ok) {
           const data = await evRes.json()

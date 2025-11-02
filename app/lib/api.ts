@@ -1,8 +1,9 @@
 export function getApiBase(): string {
-  // Prefer explicit public env for both server and client
+  // On the client, always use relative URLs to avoid CORS; Next.js rewrites will proxy.
+  if (typeof window !== 'undefined') return ''
+  // On the server, prefer the explicit public env (works in Vercel too)
   const base = process.env.NEXT_PUBLIC_API_BASE_URL
   if (base && typeof base === 'string' && base.trim()) return base.replace(/\/$/, '')
-  // Fallback to relative '/api' which will be proxied by Next.js rewrites
   return ''
 }
 
