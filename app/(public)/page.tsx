@@ -133,13 +133,15 @@ export default function HomePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const base = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '')
+        const url = (p: string) => base ? `${base}${p}` : p
         const [statsRes, featuredRes, homepageRes, settingsRes, danceStylesRes, eventsRes] = await Promise.all([
-          fetch('/api/public/stats'),
-          fetch('/api/public/featured'),
-          fetch('/api/public/content/homepage'),
-          fetch('/api/public/content/settings'),
-          fetch('/api/public/dance-styles'),
-          fetch('/api/public/events')
+          fetch(url('/api/public/stats')),
+          fetch(url('/api/public/featured')),
+          fetch(url('/api/public/content/homepage')),
+          fetch(url('/api/public/content/settings')),
+          fetch(url('/api/public/dance-styles')),
+          fetch(url('/api/public/events'))
         ])
 
         if (statsRes.ok) {

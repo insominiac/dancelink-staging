@@ -84,9 +84,12 @@ export default function EventsClient({
     const run = async () => {
       setIsLoading(true)
       try {
+        const base = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '')
+        const evUrl = base ? `${base}/api/public/events` : '/api/public/events'
+        const pcUrl = base ? `${base}/api/public/content/events` : '/api/public/content/events'
         const [evRes, pcRes] = await Promise.all([
-          fetch('/api/public/events'),
-          fetch('/api/public/content/events')
+          fetch(evUrl),
+          fetch(pcUrl)
         ])
         if (evRes.ok) {
           const data = await evRes.json()

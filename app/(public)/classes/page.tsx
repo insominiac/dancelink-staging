@@ -60,7 +60,9 @@ export default function ClassesPage() {
   const fetchClasses = async () => {
     setIsLoading(true)
     try {
-      const res = await fetch('/api/public/classes')
+      const base = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '')
+      const url = base ? `${base}/api/public/classes` : '/api/public/classes'
+      const res = await fetch(url)
       if (res.ok) {
         const data = await res.json()
         setClasses(data.classes)
@@ -76,7 +78,9 @@ export default function ClassesPage() {
   const fetchSeo = async () => {
     try {
       // Fetch SEO content for the classes page from DB
-      const res = await fetch('/api/seo?path=/classes')
+      const base = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '')
+      const url = base ? `${base}/api/seo?path=/classes` : '/api/seo?path=/classes'
+      const res = await fetch(url)
       if (res.ok) {
         const data = await res.json()
         if (data?.seoData) {
