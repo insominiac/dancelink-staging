@@ -8,8 +8,12 @@ export function getApiBase(): string {
 }
 
 export function apiUrl(path: string): string {
-  const base = getApiBase()
   const clean = path.replace(/^\/?/, '')
+  // Always use local routes for content APIs
+  if (clean.startsWith('public/content/') || clean.startsWith('admin/content/')) {
+    return `/api/${clean}`
+  }
+  const base = getApiBase()
   return base ? `${base}/api/${clean}` : `/api/${clean}`
 }
 
