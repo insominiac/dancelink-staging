@@ -303,7 +303,11 @@ export default function AdminPanel() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center gap-4">
-              <h1 className="text-2xl font-bold text-gray-900">Admin Panel</h1>
+              <Link href="/" className="flex items-center">
+                <span className="text-2xl font-bold text-purple-600 dance-logo" style={{fontSize: '1.75rem'}}>DanceLink</span>
+              </Link>
+              <span className="text-gray-300 text-2xl">|</span>
+              <h1 className="text-xl font-bold text-gray-900">Admin Panel</h1>
               <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm">
                 Full CRUD Access
               </span>

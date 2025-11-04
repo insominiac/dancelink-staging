@@ -168,12 +168,10 @@ export default function ClassesPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-[calc(100vh-200px)] bg-gray-50">
-        <div className="dance-container py-16">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 mb-4 mx-auto" style={{borderBottomColor: 'var(--primary-gold)'}}></div>
-            <p className="text-gray-600">{(seo?.customMeta?.loadingText) || (isMounted ? t('ui.loading') : 'Loading...')}</p>
-          </div>
+      <div className="min-h-[calc(100vh-200px)] bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mb-4 mx-auto" style={{borderBottomColor: 'var(--primary-gold)'}}></div>
+          <p className="text-gray-600">{(seo?.customMeta?.loadingText) || (isMounted ? t('ui.loading') : 'Loading...')}</p>
         </div>
       </div>
     )
@@ -330,7 +328,7 @@ export default function ClassesPage() {
               if (!cls.maxStudents || cls.maxStudents <= 0) missing.push('capacity')
               if (!cls.classInstructors || cls.classInstructors.length === 0) missing.push('instructor')
               const bookable = missing.length === 0
-              const disabledReason = !bookable ? `Booking unavailable: missing ${missing.join(', ')}.` : undefined
+              const disabledReason = !bookable ? `Awaiting venue or instructor confirmation.` : undefined
 
               return (
                 <div key={cls.id} className="bg-white rounded-xl shadow-md overflow-hidden group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col border border-gray-100">
@@ -339,7 +337,7 @@ export default function ClassesPage() {
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50"></div>
                     
                     {/* Badges - Level and Availability */}
-                    <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
+                    <div className="absolute top-4 left-4 right-4 flex flex-wrap items-start gap-2 justify-between">
                       <span className={`px-3 py-1 text-xs rounded-full font-semibold ${
                         cls.level === 'Beginner' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' :
                         cls.level === 'Intermediate' ? 'bg-amber-100 text-amber-700 border border-amber-200' :
@@ -363,7 +361,7 @@ export default function ClassesPage() {
                     
                     {/* Title */}
                     <div className="absolute bottom-4 left-4 right-4">
-                      <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2 group-hover:text-indigo-600 transition-colors leading-tight">
+                      <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2 group-hover:text-indigo-600 transition-colors leading-tight break-words">
                         <TranslatedText text={cls.title} />
                       </h3>
                       <p className="text-sm font-medium text-gray-600 uppercase tracking-wide">
@@ -430,49 +428,51 @@ export default function ClassesPage() {
                     </div>
 
                     {/* Price and Actions */}
-                    <div className="mt-auto">
-                      <div className="flex items-center justify-between mb-4 pb-4 border-t border-gray-100">
-                        <div className="pt-4">
+                    <div className="mt-auto pt-4">
+                      <div className="flex items-center justify-between mb-4 pb-4 border-t border-gray-100 pt-4">
+                        <div>
                           <span className="text-2xl font-bold text-gray-900">${cls.price}</span>
                           <span className="text-sm text-gray-500 ml-1">/class</span>
                         </div>
                       </div>
                       
-                      <div className="flex gap-3">
-                        <Link
-                          href={`/classes/${cls.id}`}
-                          className="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 text-center rounded-lg font-medium transition-all duration-300 hover:transform hover:scale-105"
-                        >
-                          {isMounted ? t('classes.viewDetails') : 'View Details'}
-                        </Link>
-                        {spotsLeft > 0 ? (
-                          <button
-                            onClick={() => handleBookNow(cls)}
-                            disabled={bookingClass === cls.id || !bookable}
-                            title={!bookable ? disabledReason : undefined}
-                            className="flex-1 px-4 py-3 text-white font-semibold rounded-lg transition-all duration-300 hover:transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                            style={{
-                              background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'
-                            }}
-                            onMouseEnter={(e) => e.currentTarget.style.background = 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose)), linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1))'}
-                            onMouseLeave={(e) => e.currentTarget.style.background = 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'}
+                      <div className="flex flex-col gap-3">
+                        <div className="flex flex-col sm:flex-row gap-3">
+                          <Link
+                            href={`/classes/${cls.id}`}
+                            className="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 text-center rounded-lg font-medium transition-all duration-300 hover:transform hover:scale-105"
                           >
-                            {bookingClass === cls.id ? (
-                              <div className="flex items-center justify-center">
-                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                                {isMounted ? t('classes.booking') : 'Booking...'}
-                              </div>
-                            ) : (
-                              isMounted ? t('classes.bookNow') : 'Book Now'
-                            )}
-                          </button>
-                        ) : (
-                          <button className="flex-1 px-4 py-3 bg-gray-400 text-white font-semibold rounded-lg cursor-not-allowed">
-                            {isMounted ? t('classes.classFull') : 'Class Full'}
-                          </button>
-                        )}
+                            {isMounted ? t('classes.viewDetails') : 'View Details'}
+                          </Link>
+                          {spotsLeft > 0 ? (
+                            <button
+                              onClick={() => handleBookNow(cls)}
+                              disabled={bookingClass === cls.id || !bookable}
+                              title={!bookable ? disabledReason : undefined}
+                              className="flex-1 px-4 py-3 text-white font-semibold rounded-lg transition-all duration-300 hover:transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                              style={{
+                                background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.background = 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose)), linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1))'}
+                              onMouseLeave={(e) => e.currentTarget.style.background = 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'}
+                            >
+                              {bookingClass === cls.id ? (
+                                <div className="flex items-center justify-center">
+                                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                  {isMounted ? t('classes.booking') : 'Booking...'}
+                                </div>
+                              ) : (
+                                isMounted ? t('classes.bookNow') : 'Book Now'
+                              )}
+                            </button>
+                          ) : (
+                            <button className="flex-1 px-4 py-3 bg-gray-400 text-white font-semibold rounded-lg cursor-not-allowed">
+                              {isMounted ? t('classes.classFull') : 'Class Full'}
+                            </button>
+                          )}
+                        </div>
                         {!bookable && (
-                          <p className="text-xs text-gray-600 mt-2">{disabledReason}</p>
+                          <p className="text-xs text-orange-600 text-center font-medium bg-orange-50 py-2 px-3 rounded-lg border border-orange-200">{disabledReason}</p>
                         )}
                       </div>
                     </div>

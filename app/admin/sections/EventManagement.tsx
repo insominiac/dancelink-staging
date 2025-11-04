@@ -191,6 +191,32 @@ export default function EventManagement({ helperData }: { helperData: any }) {
         </button>
       </div>
 
+      {/* Missing Fields Alert */}
+      {(() => {
+        const missingVenue = events.filter(e => !e.venue?.name).length
+        
+        return missingVenue > 0 ? (
+          <div className="mb-6 p-4 bg-orange-50 border-l-4 border-orange-500 rounded-lg">
+            <div className="flex items-start">
+              <div className="flex-shrink-0">
+                <span className="text-2xl">⚠️</span>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-bold text-orange-800 mb-2">Events with Missing Information</h3>
+                <div className="text-sm text-orange-700 space-y-1">
+                  {missingVenue > 0 && (
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold">{missingVenue}</span> event{missingVenue !== 1 ? 's' : ''} missing venue assignment
+                    </div>
+                  )}
+                </div>
+                <p className="text-xs text-orange-600 mt-2">Events with missing venue will show "Awaiting venue or instructor confirmation" to users.</p>
+              </div>
+            </div>
+          </div>
+        ) : null
+      })()}
+
       <div className="bg-white rounded-xl shadow-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -223,8 +249,15 @@ export default function EventManagement({ helperData }: { helperData: any }) {
                     <div>{formatDateSafe(event.startDate)}</div>
                     <div>{event.startTime} - {event.endTime}</div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">
-                    {event.venue?.name || 'No venue'}
+                  <td className="px-6 py-4 text-sm">
+                    {event.venue?.name ? (
+                      <span className="text-gray-500">{event.venue.name}</span>
+                    ) : (
+                      <div className="flex items-center gap-1 text-orange-600 font-medium">
+                        <span>⚠️</span>
+                        <span>No venue</span>
+                      </div>
+                    )}
                   </td>
                   <td className="px-6 py-4 text-sm font-medium">
                     ${event.price}

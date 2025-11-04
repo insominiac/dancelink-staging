@@ -7,18 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum SeatLockItemType {
-  CLASS
-  EVENT
-}
-
-enum SeatLockStatus {
-  ACTIVE
-  RELEASED
-  CANCELLED
-  EXPIRED
-}
-
 model SeatLock {
   id         String           @id @default(cuid())
   itemType   SeatLockItemType
@@ -59,6 +47,7 @@ model User {
   forumPosts         ForumPost[]
   forumReplies       ForumReply[]
   approvedHosts      Host[]              @relation("ApprovedHosts")
+  host               Host?
   instructor         Instructor?
   loginAttempts      LoginAttempt[]
   createdLoginTokens LoginToken[]        @relation("CreatedLoginTokens")
@@ -70,7 +59,6 @@ model User {
   transactions       Transaction[]
   partnerProfile     UserProfile?
   userStyles         UserStyle[]
-  host               Host?
 
   @@index([role])
   @@index([createdAt])
@@ -117,16 +105,16 @@ model Class {
   startDate        DateTime?           @map("start_date")
   venueId          String?             @map("venue_id")
   status           ClassStatus         @default(DRAFT)
+  hostId           String?             @map("host_id")
   bookings         Booking[]
   analytics        ClassAnalytics[]
   attendance       ClassAttendance[]
   classInstructors ClassInstructor[]
   classStyles      ClassStyle[]
+  host             Host?               @relation("HostClasses", fields: [hostId], references: [id])
   venue            Venue?              @relation(fields: [venueId], references: [id])
   engagement       StudentEngagement[]
   feedback         StudentFeedback[]
-  host             Host?               @relation("HostClasses", fields: [hostId], references: [id])
-  hostId           String?             @map("host_id")
 
   @@index([createdAt])
   @@index([isActive])
@@ -155,12 +143,12 @@ model Event {
   isFeatured       Boolean      @default(false) @map("is_featured")
   createdAt        DateTime     @default(now()) @map("created_at")
   updatedAt        DateTime     @updatedAt @map("updated_at")
+  hostId           String?      @map("host_id")
   bookings         Booking[]
   eventStyles      EventStyle[]
+  host             Host?        @relation("HostEvents", fields: [hostId], references: [id])
   organizer        User?        @relation(fields: [organizerUserId], references: [id])
   venue            Venue        @relation(fields: [venueId], references: [id])
-  host             Host?        @relation("HostEvents", fields: [hostId], references: [id])
-  hostId           String?      @map("host_id")
 
   @@index([venueId])
   @@index([startDate, startTime])
@@ -169,26 +157,26 @@ model Event {
 }
 
 model Venue {
-  id           String   @id @default(cuid())
-  name         String
-  addressLine1 String   @map("address_line1")
-  addressLine2 String?  @map("address_line2")
-  city         String
-  state        String
-  country      String
-  postalCode   String   @map("postal_code")
-  latitude     Decimal? @db.Decimal(9, 6)
-  longitude    Decimal? @db.Decimal(9, 6)
-  phone        String?
-  websiteUrl   String?  @map("website_url")
-  status       VenueStatus @default(DRAFT)
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  classes      Class[]
-  events       Event[]
-  host         Host?   @relation("HostVenues", fields: [hostId], references: [id])
-  hostId       String? @map("host_id")
+  id                  String               @id @default(cuid())
+  name                String
+  addressLine1        String               @map("address_line1")
+  addressLine2        String?              @map("address_line2")
+  city                String
+  state               String
+  country             String
+  postalCode          String               @map("postal_code")
+  latitude            Decimal?             @db.Decimal(9, 6)
+  longitude           Decimal?             @db.Decimal(9, 6)
+  phone               String?
+  websiteUrl          String?              @map("website_url")
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
+  hostId              String?              @map("host_id")
+  status              VenueStatus          @default(DRAFT)
+  classes             Class[]
   competitionRequests CompetitionRequest[]
+  events              Event[]
+  host                Host?                @relation("HostVenues", fields: [hostId], references: [id])
 
   @@index([name])
   @@index([city])
@@ -196,21 +184,19 @@ model Venue {
   @@map("venues")
 }
 
-// New models for Host features
 model Academy {
-  id        String      @id @default(cuid())
-  hostId    String      @map("host_id")
-  name      String
+  id          String      @id @default(cuid())
+  hostId      String      @map("host_id")
+  name        String
   description String?
-  website   String?
-  city      String?
-  country   String?
-  logoUrl   String?     @map("logo_url")
-  status    VenueStatus @default(PENDING_APPROVAL)
-  createdAt DateTime    @default(now()) @map("created_at")
-  updatedAt DateTime    @updatedAt @map("updated_at")
-
-  host      Host        @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  website     String?
+  city        String?
+  country     String?
+  logoUrl     String?     @map("logo_url")
+  status      VenueStatus @default(PENDING_APPROVAL)
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+  host        Host        @relation(fields: [hostId], references: [id], onDelete: Cascade)
 
   @@index([hostId])
   @@index([status])
@@ -218,20 +204,19 @@ model Academy {
 }
 
 model CompetitionRequest {
-  id                    String                     @id @default(cuid())
-  hostId                String                     @map("host_id")
-  name                  String
-  startDate             DateTime                   @map("start_date")
-  endDate               DateTime                   @map("end_date")
-  venueId               String?                    @map("venue_id")
-  description           String?
-  expectedParticipants  Int?                       @map("expected_participants")
-  status                CompetitionRequestStatus   @default(PENDING)
-  createdAt             DateTime                   @default(now()) @map("created_at")
-  updatedAt             DateTime                   @updatedAt @map("updated_at")
-
-  host                  Host                       @relation(fields: [hostId], references: [id], onDelete: Cascade)
-  venue                 Venue?                     @relation(fields: [venueId], references: [id])
+  id                   String                   @id @default(cuid())
+  hostId               String                   @map("host_id")
+  name                 String
+  startDate            DateTime                 @map("start_date")
+  endDate              DateTime                 @map("end_date")
+  venueId              String?                  @map("venue_id")
+  description          String?
+  expectedParticipants Int?                     @map("expected_participants")
+  status               CompetitionRequestStatus @default(PENDING)
+  createdAt            DateTime                 @default(now()) @map("created_at")
+  updatedAt            DateTime                 @updatedAt @map("updated_at")
+  host                 Host                     @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  venue                Venue?                   @relation(fields: [venueId], references: [id])
 
   @@index([hostId])
   @@index([status])
@@ -829,36 +814,153 @@ model LoginAttempt {
 }
 
 model Host {
-  id                 String              @id @default(cuid())
-  userId             String              @unique @map("user_id")
-  businessName       String              @map("business_name")
-  businessType       String              @map("business_type")
-  description        String?
-  experienceYears    Int?                @map("experience_years")
-  country            String
-  city               String
-  isVerified         Boolean             @default(false) @map("is_verified")
-  isApproved         Boolean             @default(false) @map("is_approved")
-  applicationStatus  HostApplicationStatus @default(PENDING) @map("application_status")
-  rejectionReason    String?             @map("rejection_reason")
-  approvedAt         DateTime?           @map("approved_at")
-  approvedByUserId   String?             @map("approved_by_user_id")
-  createdAt          DateTime            @default(now()) @map("created_at")
-  updatedAt          DateTime            @updatedAt @map("updated_at")
-  
-  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  approvedBy         User?               @relation("ApprovedHosts", fields: [approvedByUserId], references: [id])
-  venues             Venue[]             @relation("HostVenues")
-  classes            Class[]             @relation("HostClasses")
-  events             Event[]             @relation("HostEvents")
-  academies          Academy[]
+  id                  String                @id @default(cuid())
+  userId              String                @unique @map("user_id")
+  businessName        String                @map("business_name")
+  businessType        String                @map("business_type")
+  description         String?
+  experienceYears     Int?                  @map("experience_years")
+  country             String
+  city                String
+  isVerified          Boolean               @default(false) @map("is_verified")
+  isApproved          Boolean               @default(false) @map("is_approved")
+  applicationStatus   HostApplicationStatus @default(PENDING) @map("application_status")
+  rejectionReason     String?               @map("rejection_reason")
+  approvedAt          DateTime?             @map("approved_at")
+  approvedByUserId    String?               @map("approved_by_user_id")
+  createdAt           DateTime              @default(now()) @map("created_at")
+  updatedAt           DateTime              @updatedAt @map("updated_at")
+  academies           Academy[]
+  classes             Class[]               @relation("HostClasses")
   competitionRequests CompetitionRequest[]
-  
+  events              Event[]               @relation("HostEvents")
+  approvedBy          User?                 @relation("ApprovedHosts", fields: [approvedByUserId], references: [id])
+  user                User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  venues              Venue[]               @relation("HostVenues")
+
   @@index([userId])
   @@index([isApproved])
   @@index([applicationStatus])
   @@index([country, city])
   @@map("hosts")
+}
+
+model SiteSettings {
+  id              String   @id @default(cuid())
+  siteName        String   @map("site_name")
+  siteDescription String   @map("site_description")
+  contactEmail    String   @map("contact_email")
+  phoneNumber     String?  @map("phone_number")
+  address         String?
+  socialMedia     Json?    @map("social_media")
+  footer          Json?
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("site_settings")
+}
+
+model HomepageContent {
+  id                  String   @id @default(cuid())
+  heroTitle           String
+  heroSubtitle        String
+  heroButtonText      String?
+  heroBackgroundImage String?
+  aboutTitle          String?
+  aboutDescription    String?
+  testimonialsEnabled Boolean  @default(true)
+  newsletterEnabled   Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@map("homepage_content")
+}
+
+model AboutPageContent {
+  id                    String   @id @default(cuid())
+  heroTitle             String?
+  heroSubtitle          String?
+  heroBadgeText         String?
+  statsTitle            String?
+  statsDescription      String?
+  storyTitle            String?
+  storyDescription1     String?
+  storyDescription2     String?
+  whyChooseUsTitle      String?
+  heroFeatures          Json?
+  stats                 Json?
+  features              Json?
+  newsletterTitle       String?
+  newsletterDescription String?
+  newsletterBenefits    Json?
+  ctaTitle              String?
+  ctaDescription        String?
+  ctaBadgeText          String?
+  ctaButtons            Json?
+  ctaFeatures           Json?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("about_page_content")
+}
+
+model EventsPageContent {
+  id                  String   @id @default(cuid())
+  heroBadgeText       String?
+  heroTitle           String?
+  heroSubtitle        String?
+  featuredTitle       String?
+  featuredDescription String?
+  searchTitle         String?
+  searchDescription   String?
+  ctaBadgeText        String?
+  ctaTitle            String?
+  ctaDescription      String?
+  heroFeatures        Json?
+  ctaButtons          Json?
+  ctaFeatures         Json?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@map("events_page_content")
+}
+
+model InstructorsPageContent {
+  id                   String   @id @default(cuid())
+  heroBadgeText        String?
+  heroTitle            String?
+  heroSubtitle         String?
+  statsSection         Json?
+  noInstructorsSection Json?
+  errorSection         Json?
+  ctaSection           Json?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@map("instructors_page_content")
+}
+
+model ContactPageContent {
+  id           String   @id @default(cuid())
+  heroTitle    String?
+  heroSubtitle String?
+  sections     Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("contact_page_content")
+}
+
+enum SeatLockItemType {
+  CLASS
+  EVENT
+}
+
+enum SeatLockStatus {
+  ACTIVE
+  RELEASED
+  CANCELLED
+  EXPIRED
 }
 
 enum UserRole {
@@ -967,19 +1069,4 @@ enum CompetitionRequestStatus {
   PENDING
   APPROVED
   REJECTED
-}
-
-model SiteSettings {
-  id                  String   @id @default(cuid())
-  siteName            String   @map("site_name")
-  siteDescription     String   @map("site_description")
-  contactEmail        String   @map("contact_email")
-  phoneNumber         String?  @map("phone_number")
-  address             String?
-  socialMedia         Json?    @map("social_media")
-  footer              Json?
-  createdAt           DateTime @default(now()) @map("created_at")
-  updatedAt           DateTime @updatedAt @map("updated_at")
-
-  @@map("site_settings")
 }

@@ -257,70 +257,85 @@ export default function HomePage() {
             style={{ objectFit: 'cover', zIndex: 0 }}
           />
         )}
-        <div className="dance-hero-content relative z-20">
-          <p className="dance-hero-subtitle">{isMounted ? t('hero.subtitle') : 'Connect Through Movement'}</p>
-          <h1 className="dance-hero-title dance-font">
-            {homepageContent?.heroTitle
-              ? <TranslatedText text={homepageContent.heroTitle} />
-              : (siteSettings?.siteName || (heroNeedsAuto ? <TranslatedText text="Master the Art of Dance" /> : heroKeyText))}
-          </h1>
-          <p className="dance-hero-description">
-            {homepageContent?.heroSubtitle
-              ? <TranslatedText text={homepageContent.heroSubtitle} />
-              : (isMounted ? t('hero.description') : 'Where dancers unite, stories unfold, and connections are made through the universal language of movement. Join our vibrant community today.')}
-          </p>
-          <div className="flex cta-group justify-center flex-wrap">
-            <Link href="/classes" className="dance-btn dance-btn-primary hover:transform hover:scale-105 transition-all duration-300">
-              {homepageContent?.heroButtonText 
-                ? <TranslatedText text={homepageContent.heroButtonText} /> 
-                : (isMounted ? t('hero.exploreClasses') : 'Explore Classes')}
-            </Link>
-            <Link href="/contact" className="dance-btn dance-btn-secondary hover:transform hover:scale-105 transition-all duration-300">
-              🎉 {isMounted ? t('hero.bookFreeTrial') : 'Book Free Trial'}
-            </Link>
+        
+        {isLoading ? (
+          <div className="dance-hero-content relative z-20">
+            <div className="flex flex-col items-center justify-center min-h-[calc(100vh-200px)]">
+              <div className="relative mb-6">
+                <div className="animate-spin rounded-full h-16 w-16 border-4 border-yellow-500 border-t-transparent"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-2xl">💃</span>
+                </div>
+              </div>
+              <p className="text-white text-lg font-medium animate-pulse">Loading content...</p>
+            </div>
           </div>
-          
-        </div>
+        ) : (
+          <div className="dance-hero-content relative z-20">
+            <p className="dance-hero-subtitle">{homepageContent?.heroSubtitle ? <TranslatedText text={homepageContent.heroSubtitle} /> : null}</p>
+            <h1 className="dance-hero-title dance-font">
+              {homepageContent?.heroTitle ? <TranslatedText text={homepageContent.heroTitle} /> : null}
+            </h1>
+            <p className="dance-hero-description">
+              {homepageContent?.heroSubtitle ? <TranslatedText text={homepageContent.heroSubtitle} /> : null}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center cta-group">
+              <Link href="/classes" className="dance-btn dance-btn-primary w-full sm:w-auto text-center hover:transform hover:scale-105 transition-all duration-300">
+                {homepageContent?.heroButtonText ? <TranslatedText text={homepageContent.heroButtonText} /> : null}
+              </Link>
+              <Link href="/contact" className="dance-btn dance-btn-secondary w-full sm:w-auto text-center hover:transform hover:scale-105 transition-all duration-300">
+                {isMounted ? t('hero.bookFreeTrial') : null}
+              </Link>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* About Section */}
       <section className="py-20" style={{background: 'var(--neutral-light)'}}>
         <div className="dance-container">
-          <div className="dance-section-header reveal active">
-            <h2 className="dance-section-title">
-              {homepageContent?.aboutTitle 
-                ? <TranslatedText text={homepageContent.aboutTitle} />
-                : (isMounted ? t('about.title') : 'Why Choose DanceLink?')}
-            </h2>
-            <p>
-              {homepageContent?.aboutDescription 
-                ? <TranslatedText text={homepageContent.aboutDescription} />
-                : (isMounted ? t('about.description') : 'Experience the difference of professional instruction and passionate community')}
-            </p>
-          </div>
-          <div className="dance-card-grid text-black">
-            <div className="dance-card reveal active">
-              <div className="text-center">
-                <div className="text-5xl mb-4" style={{background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>🎓</div>
-                <h3 className="text-xl font-semibold mb-3" style={{color: 'var(--primary-dark)'}}>{isMounted ? t('about.expertInstructors') : 'Expert Instructors'}</h3>
-                <p className="text-black" style={{color: 'black'}}>{isMounted ? t('about.expertInstructorsDesc') : 'Learn from certified professionals with years of experience in their craft'}</p>
+          {isLoading ? (
+            <div className="text-center py-16">
+              <div className="inline-flex items-center justify-center space-x-2">
+                <div className="animate-spin rounded-full h-8 w-8 border-3 border-purple-600 border-t-transparent"></div>
+                <span className="text-lg font-medium" style={{color: 'var(--primary-dark)'}}>Loading content...</span>
               </div>
             </div>
-            <div className="dance-card reveal active">
-              <div className="text-center">
-                <div className="text-5xl mb-4" style={{background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>🏃</div>
-                <h3 className="text-xl font-semibold mb-3" style={{color: 'var(--primary-dark)'}}>{isMounted ? t('about.allLevelsWelcome') : 'All Levels Welcome'}</h3>
-                <p className="text-black" style={{color: 'black'}}>{isMounted ? t('about.allLevelsWelcomeDesc') : 'From complete beginners to advanced dancers, we have the perfect class for you'}</p>
+          ) : (
+            <>
+              <div className="dance-section-header reveal active">
+                <h2 className="dance-section-title">
+                  {homepageContent?.aboutTitle ? <TranslatedText text={homepageContent.aboutTitle} /> : null}
+                </h2>
+                <p>
+                  {homepageContent?.aboutDescription ? <TranslatedText text={homepageContent.aboutDescription} /> : null}
+                </p>
               </div>
-            </div>
-            <div className="dance-card reveal active">
-              <div className="text-center">
-                <div className="text-5xl mb-4" style={{background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>📍</div>
-                <h3 className="text-xl font-semibold mb-3" style={{color: 'var(--primary-dark)'}}>{isMounted ? t('about.modernFacilities') : 'Modern Facilities'}</h3>
-                <p className="text-black" style={{color: 'black'}}>{isMounted ? t('about.modernFacilitiesDesc') : 'Dance in beautiful studios equipped with the latest sound systems and amenities'}</p>
+              <div className="dance-card-grid text-black">
+                <div className="dance-card reveal active">
+                  <div className="text-center">
+                    <div className="text-5xl mb-4" style={{background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>🎓</div>
+                    <h3 className="text-xl font-semibold mb-3" style={{color: 'var(--primary-dark)'}}>{isMounted ? t('about.expertInstructors') : 'Expert Instructors'}</h3>
+                    <p className="text-black" style={{color: 'black'}}>{isMounted ? t('about.expertInstructorsDesc') : 'Learn from certified professionals with years of experience in their craft'}</p>
+                  </div>
+                </div>
+                <div className="dance-card reveal active">
+                  <div className="text-center">
+                    <div className="text-5xl mb-4" style={{background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>🏃</div>
+                    <h3 className="text-xl font-semibold mb-3" style={{color: 'var(--primary-dark)'}}>{isMounted ? t('about.allLevelsWelcome') : 'All Levels Welcome'}</h3>
+                    <p className="text-black" style={{color: 'black'}}>{isMounted ? t('about.allLevelsWelcomeDesc') : 'From complete beginners to advanced dancers, we have the perfect class for you'}</p>
+                  </div>
+                </div>
+                <div className="dance-card reveal active">
+                  <div className="text-center">
+                    <div className="text-5xl mb-4" style={{background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>📍</div>
+                    <h3 className="text-xl font-semibold mb-3" style={{color: 'var(--primary-dark)'}}>{isMounted ? t('about.modernFacilities') : 'Modern Facilities'}</h3>
+                    <p className="text-black" style={{color: 'black'}}>{isMounted ? t('about.modernFacilitiesDesc') : 'Dance in beautiful studios equipped with the latest sound systems and amenities'}</p>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            </>
+          )}
         </div>
       </section>
 

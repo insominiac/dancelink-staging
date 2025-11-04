@@ -247,6 +247,45 @@ export default function ClassManagement({ helperData }: { helperData: any }) {
         </button>
       </div>
 
+      {/* Missing Fields Alert */}
+      {(() => {
+        const missingSchedule = classes.filter(c => !c.scheduleDays).length
+        const missingDates = classes.filter(c => !c.startDate || !c.endDate).length
+        const missingInstructors = classes.filter(c => !c.classInstructors || c.classInstructors.length === 0).length
+        const hasMissingFields = missingSchedule > 0 || missingDates > 0 || missingInstructors > 0
+        
+        return hasMissingFields ? (
+          <div className="mb-6 p-4 bg-orange-50 border-l-4 border-orange-500 rounded-lg">
+            <div className="flex items-start">
+              <div className="flex-shrink-0">
+                <span className="text-2xl">⚠️</span>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-bold text-orange-800 mb-2">Classes with Missing Information</h3>
+                <div className="text-sm text-orange-700 space-y-1">
+                  {missingInstructors > 0 && (
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold">{missingInstructors}</span> class{missingInstructors !== 1 ? 'es' : ''} missing instructor assignment
+                    </div>
+                  )}
+                  {missingSchedule > 0 && (
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold">{missingSchedule}</span> class{missingSchedule !== 1 ? 'es' : ''} missing schedule information
+                    </div>
+                  )}
+                  {missingDates > 0 && (
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold">{missingDates}</span> class{missingDates !== 1 ? 'es' : ''} missing start/end dates
+                    </div>
+                  )}
+                </div>
+                <p className="text-xs text-orange-600 mt-2">Classes with missing fields will show "Awaiting venue or instructor confirmation" to users.</p>
+              </div>
+            </div>
+          </div>
+        ) : null
+      })()}
+
       <div className="bg-white rounded-xl shadow-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -267,7 +306,15 @@ export default function ClassManagement({ helperData }: { helperData: any }) {
                 <tr key={classItem.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
                     <div>
-                      <div className="text-sm font-medium text-gray-900">{classItem.title}</div>
+                      <div className="text-sm font-medium text-gray-900 flex items-center gap-2">
+                        <span>{classItem.title}</span>
+                        {(!classItem.classInstructors || classItem.classInstructors.length === 0) && (
+                          <span className="px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-700 font-semibold flex items-center gap-1">
+                            <span>⚠️</span>
+                            <span>No Instructor</span>
+                          </span>
+                        )}
+                      </div>
                       <div className="text-sm text-gray-500">
                         {classItem._count?.bookings || 0} bookings
                       </div>
@@ -278,21 +325,36 @@ export default function ClassManagement({ helperData }: { helperData: any }) {
                       {classItem.level}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">
-                    <div>{classItem.scheduleDays || 'Not set'}</div>
-                    <div>{classItem.scheduleTime || ''}</div>
+                  <td className="px-6 py-4 text-sm">
+                    {classItem.scheduleDays ? (
+                      <>
+                        <div>{classItem.scheduleDays}</div>
+                        <div className="text-gray-500">{classItem.scheduleTime || ''}</div>
+                      </>
+                    ) : (
+                      <div className="flex items-center gap-1 text-orange-600 font-medium">
+                        <span>⚠️</span>
+                        <span>Not set</span>
+                      </div>
+                    )}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">
+                  <td className="px-6 py-4 text-sm">
                     <div className="text-xs">
                       {classItem.startDate ? (
-                        <div>Start: {new Date(classItem.startDate).toLocaleDateString()}</div>
+                        <div className="text-gray-500">Start: {new Date(classItem.startDate).toLocaleDateString()}</div>
                       ) : (
-                        <div className="text-gray-400">No start date</div>
+                        <div className="flex items-center gap-1 text-orange-600 font-medium">
+                          <span>⚠️</span>
+                          <span>No start date</span>
+                        </div>
                       )}
                       {classItem.endDate ? (
-                        <div>End: {new Date(classItem.endDate).toLocaleDateString()}</div>
+                        <div className="text-gray-500">End: {new Date(classItem.endDate).toLocaleDateString()}</div>
                       ) : (
-                        <div className="text-gray-400">No end date</div>
+                        <div className="flex items-center gap-1 text-orange-600 font-medium">
+                          <span>⚠️</span>
+                          <span>No end date</span>
+                        </div>
                       )}
                     </div>
                   </td>

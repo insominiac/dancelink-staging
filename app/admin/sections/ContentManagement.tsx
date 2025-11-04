@@ -40,6 +40,37 @@ interface SiteSettings {
     facebook: string
     instagram: string
     twitter: string
+    youtube?: string
+    tiktok?: string
+    linkedin?: string
+  }
+  footer?: {
+    enabled?: boolean
+    layout?: string
+    backgroundColor?: string
+    showTagline?: boolean
+    tagline?: string
+    copyrightYear?: string
+    copyrightText?: string
+    customCopyrightText?: string
+    showSocialLinks?: boolean
+    socialLinksTitle?: string
+    showQuickLinks?: boolean
+    quickLinks?: { title: string; url: string; openInNewTab: boolean }[]
+    showContact?: boolean
+    contactSection?: {
+      title?: string
+      showEmail?: boolean
+      showPhone?: boolean
+      showAddress?: boolean
+    }
+    newsletter?: {
+      enabled?: boolean
+      title?: string
+      description?: string
+      buttonText?: string
+    }
+    customHTML?: string
   }
 }
 
@@ -233,7 +264,36 @@ export default function ContentManagement() {
     socialMedia: {
       facebook: "https://facebook.com/dancestudio",
       instagram: "https://instagram.com/dancestudio",
-      twitter: "https://twitter.com/dancestudio"
+      twitter: "https://twitter.com/dancestudio",
+      youtube: "",
+      tiktok: "",
+      linkedin: ""
+    },
+    footer: {
+      enabled: true,
+      layout: 'columns',
+      backgroundColor: 'gray-900',
+      showTagline: true,
+      tagline: 'Connecting dancers worldwide through movement and passion',
+      copyrightYear: new Date().getFullYear().toString(),
+      copyrightText: 'All rights reserved.',
+      showSocialLinks: true,
+      socialLinksTitle: 'Follow Us',
+      showQuickLinks: true,
+      quickLinks: [],
+      showContact: true,
+      contactSection: {
+        title: 'Get in Touch',
+        showEmail: true,
+        showPhone: true,
+        showAddress: true,
+      },
+      newsletter: {
+        enabled: true,
+        title: 'Stay Updated',
+        description: 'Get the latest updates on classes, events, and dance tips!',
+        buttonText: 'Subscribe',
+      },
     }
   })
   const [isLoading, setIsLoading] = useState(true)
@@ -241,6 +301,36 @@ export default function ContentManagement() {
   const [lastUpdated, setLastUpdated] = useState<string>('')
   const [activeTab, setActiveTab] = useState<'overview' | 'homepage' | 'about' | 'events' | 'instructors' | 'contact' | 'settings' | 'footer'>('overview')
   const [isUploadingBg, setIsUploadingBg] = useState(false)
+
+  // Helper function to update footer settings
+  const updateFooterSetting = (path: string, value: any) => {
+    setSiteSettings(prev => {
+      const newSettings = { ...prev }
+      const pathParts = path.split('.')
+      
+      if (pathParts.length === 1) {
+        return {
+          ...prev,
+          footer: {
+            ...prev.footer,
+            [pathParts[0]]: value
+          }
+        }
+      } else if (pathParts.length === 2) {
+        return {
+          ...prev,
+          footer: {
+            ...prev.footer,
+            [pathParts[0]]: {
+              ...prev.footer?.[pathParts[0] as keyof typeof prev.footer] as any,
+              [pathParts[1]]: value
+            }
+          }
+        }
+      }
+      return newSettings
+    })
+  }
 
   useEffect(() => {
     fetchData()
@@ -290,7 +380,23 @@ export default function ContentManagement() {
 
       if (settingsRes.ok) {
         const settingsData = await settingsRes.json()
-        setSiteSettings(settingsData)
+        // Merge with defaults to ensure all footer properties exist
+        setSiteSettings(prev => ({
+          ...prev,
+          ...settingsData,
+          footer: {
+            ...prev.footer,
+            ...settingsData.footer,
+            contactSection: {
+              ...prev.footer?.contactSection,
+              ...settingsData.footer?.contactSection,
+            },
+            newsletter: {
+              ...prev.footer?.newsletter,
+              ...settingsData.footer?.newsletter,
+            },
+          },
+        }))
       }
 
       if (aboutRes.ok) {
@@ -958,33 +1064,42 @@ export default function ContentManagement() {
   )
 
   const renderFooterTab = () => (
-    <div className="bg-white rounded-xl shadow-lg p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xl font-semibold">Footer Management</h3>
+    <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl shadow-lg p-6">
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <span className="text-3xl">🦶</span>
+            Footer Management
+          </h3>
+          <p className="text-sm text-gray-500 mt-1">Customize your website footer appearance and content</p>
+        </div>
         <div className="flex gap-3">
           <button
             onClick={resetToDefaults}
             disabled={isSaving}
-            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition disabled:opacity-50"
+            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 shadow-md"
           >
-            Reset Footer to Defaults
+            🔄 Reset to Defaults
           </button>
           <button
             onClick={saveSiteSettings}
             disabled={isSaving}
-            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50"
+            className="px-6 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 shadow-md font-medium"
           >
-            {isSaving ? 'Saving...' : 'Save Footer Settings'}
+            {isSaving ? '💾 Saving...' : '✅ Save Footer Settings'}
           </button>
         </div>
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-6">
         {/* Footer General Settings */}
-        <div className="border border-gray-200 rounded-lg p-6">
-          <h4 className="text-lg font-semibold mb-4">General Footer Settings</h4>
+        <div className="border-2 border-purple-100 rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 mb-6">
+            <span className="text-2xl">⚙️</span>
+            <h4 className="text-xl font-bold text-gray-900">General Footer Settings</h4>
+          </div>
           <div className="space-y-4">
-            <div className="flex items-center">
+            <div className="flex items-center p-3 bg-purple-50 rounded-lg border border-purple-200 hover:bg-purple-100 transition-colors">
               <input
                 type="checkbox"
                 id="footerEnabled"
@@ -996,11 +1111,12 @@ export default function ContentManagement() {
                     enabled: e.target.checked
                   }
                 })}
-                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                className="h-5 w-5 text-purple-600 focus:ring-2 focus:ring-purple-500 border-gray-300 rounded cursor-pointer"
               />
-              <label htmlFor="footerEnabled" className="ml-2 block text-sm text-gray-900">
-                Enable Footer
+              <label htmlFor="footerEnabled" className="ml-3 block text-base font-medium text-gray-900 cursor-pointer">
+                ✨ Enable Footer
               </label>
+              <span className="ml-auto text-sm text-gray-500">Turn footer on/off</span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -1047,25 +1163,25 @@ export default function ContentManagement() {
         </div>
 
         {/* Tagline and Copyright */}
-        <div className="border border-gray-200 rounded-lg p-6">
-          <h4 className="text-lg font-semibold mb-4">Tagline & Copyright</h4>
+        <div className="border-2 border-blue-100 rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 mb-6">
+            <span className="text-2xl">©️</span>
+            <h4 className="text-xl font-bold text-gray-900">Tagline & Copyright</h4>
+          </div>
           <div className="space-y-4">
-            <div className="flex items-center mb-4">
+            <div className="flex items-center mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors">
               <input
                 type="checkbox"
                 id="showTagline"
                 checked={siteSettings.footer?.showTagline ?? true}
-                onChange={(e) => setSiteSettings({
-                  ...siteSettings,
-                  footer: {
-                    ...siteSettings.footer,
-                    showTagline: e.target.checked
-                  }
-                })}
-                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                onChange={(e) => {
+                  console.log('Tagline toggle changed to:', e.target.checked)
+                  updateFooterSetting('showTagline', e.target.checked)
+                }}
+                className="h-5 w-5 text-blue-600 focus:ring-2 focus:ring-blue-500 border-gray-300 rounded cursor-pointer"
               />
-              <label htmlFor="showTagline" className="ml-2 block text-sm text-gray-900">
-                Show Tagline
+              <label htmlFor="showTagline" className="ml-3 block text-base font-medium text-gray-900 cursor-pointer">
+                💬 Show Tagline
               </label>
             </div>
             <div>
@@ -1138,25 +1254,25 @@ export default function ContentManagement() {
         </div>
 
         {/* Social Media Links */}
-        <div className="border border-gray-200 rounded-lg p-6">
-          <h4 className="text-lg font-semibold mb-4">Social Media Links</h4>
+        <div className="border-2 border-pink-100 rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 mb-6">
+            <span className="text-2xl">📱</span>
+            <h4 className="text-xl font-bold text-gray-900">Social Media Links</h4>
+          </div>
           <div className="space-y-4">
-            <div className="flex items-center mb-4">
+            <div className="flex items-center mb-4 p-3 bg-pink-50 rounded-lg border border-pink-200 hover:bg-pink-100 transition-colors">
               <input
                 type="checkbox"
                 id="showSocialLinks"
                 checked={siteSettings.footer?.showSocialLinks ?? true}
-                onChange={(e) => setSiteSettings({
-                  ...siteSettings,
-                  footer: {
-                    ...siteSettings.footer,
-                    showSocialLinks: e.target.checked
-                  }
-                })}
-                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                onChange={(e) => {
+                  console.log('Social links toggle changed to:', e.target.checked)
+                  updateFooterSetting('showSocialLinks', e.target.checked)
+                }}
+                className="h-5 w-5 text-pink-600 focus:ring-2 focus:ring-pink-500 border-gray-300 rounded cursor-pointer"
               />
-              <label htmlFor="showSocialLinks" className="ml-2 block text-sm text-gray-900">
-                Show Social Links in Footer
+              <label htmlFor="showSocialLinks" className="ml-3 block text-base font-medium text-gray-900 cursor-pointer">
+                🌐 Show Social Links in Footer
               </label>
             </div>
             <div>
@@ -1277,10 +1393,13 @@ export default function ContentManagement() {
         </div>
 
         {/* Quick Links */}
-        <div className="border border-gray-200 rounded-lg p-6">
-          <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+        <div className="border-2 border-indigo-100 rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 mb-6">
+            <span className="text-2xl">🔗</span>
+            <h4 className="text-xl font-bold text-gray-900">Quick Links</h4>
+          </div>
           <div className="space-y-4">
-            <div className="flex items-center mb-4">
+            <div className="flex items-center mb-4 p-3 bg-indigo-50 rounded-lg border border-indigo-200 hover:bg-indigo-100 transition-colors">
               <input
                 type="checkbox"
                 id="showQuickLinks"
@@ -1292,10 +1411,10 @@ export default function ContentManagement() {
                     showQuickLinks: e.target.checked
                   }
                 })}
-                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                className="h-5 w-5 text-indigo-600 focus:ring-2 focus:ring-indigo-500 border-gray-300 rounded cursor-pointer"
               />
-              <label htmlFor="showQuickLinks" className="ml-2 block text-sm text-gray-900">
-                Show Quick Navigation Links
+              <label htmlFor="showQuickLinks" className="ml-3 block text-base font-medium text-gray-900 cursor-pointer">
+                🚀 Show Quick Navigation Links
               </label>
             </div>
             <div className="space-y-3">
@@ -1395,10 +1514,13 @@ export default function ContentManagement() {
         </div>
 
         {/* Contact Information */}
-        <div className="border border-gray-200 rounded-lg p-6">
-          <h4 className="text-lg font-semibold mb-4">Contact Information</h4>
+        <div className="border-2 border-green-100 rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 mb-6">
+            <span className="text-2xl">📧</span>
+            <h4 className="text-xl font-bold text-gray-900">Contact Information</h4>
+          </div>
           <div className="space-y-4">
-            <div className="flex items-center mb-4">
+            <div className="flex items-center mb-4 p-3 bg-green-50 rounded-lg border border-green-200 hover:bg-green-100 transition-colors">
               <input
                 type="checkbox"
                 id="showContact"
@@ -1410,10 +1532,10 @@ export default function ContentManagement() {
                     showContact: e.target.checked
                   }
                 })}
-                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                className="h-5 w-5 text-green-600 focus:ring-2 focus:ring-green-500 border-gray-300 rounded cursor-pointer"
               />
-              <label htmlFor="showContact" className="ml-2 block text-sm text-gray-900">
-                Show Contact Information in Footer
+              <label htmlFor="showContact" className="ml-3 block text-base font-medium text-gray-900 cursor-pointer">
+                ☎️ Show Contact Information in Footer
               </label>
             </div>
             <div>
@@ -1435,8 +1557,8 @@ export default function ContentManagement() {
                 placeholder="Get in Touch"
               />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="flex items-center">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="flex items-center p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 hover:shadow-sm transition-all">
                 <input
                   type="checkbox"
                   id="showEmail"
@@ -1451,13 +1573,13 @@ export default function ContentManagement() {
                       }
                     }
                   })}
-                  className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                  className="h-5 w-5 text-green-600 focus:ring-2 focus:ring-green-500 border-gray-300 rounded cursor-pointer"
                 />
-                <label htmlFor="showEmail" className="ml-2 block text-sm text-gray-900">
-                  Show Email
+                <label htmlFor="showEmail" className="ml-3 block text-sm font-medium text-gray-900 cursor-pointer">
+                  ✉️ Show Email
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-center p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 hover:shadow-sm transition-all">
                 <input
                   type="checkbox"
                   id="showPhone"
@@ -1472,13 +1594,13 @@ export default function ContentManagement() {
                       }
                     }
                   })}
-                  className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                  className="h-5 w-5 text-green-600 focus:ring-2 focus:ring-green-500 border-gray-300 rounded cursor-pointer"
                 />
-                <label htmlFor="showPhone" className="ml-2 block text-sm text-gray-900">
-                  Show Phone
+                <label htmlFor="showPhone" className="ml-3 block text-sm font-medium text-gray-900 cursor-pointer">
+                  📞 Show Phone
                 </label>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-center p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 hover:shadow-sm transition-all">
                 <input
                   type="checkbox"
                   id="showAddress"
@@ -1493,10 +1615,10 @@ export default function ContentManagement() {
                       }
                     }
                   })}
-                  className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                  className="h-5 w-5 text-green-600 focus:ring-2 focus:ring-green-500 border-gray-300 rounded cursor-pointer"
                 />
-                <label htmlFor="showAddress" className="ml-2 block text-sm text-gray-900">
-                  Show Address
+                <label htmlFor="showAddress" className="ml-3 block text-sm font-medium text-gray-900 cursor-pointer">
+                  📍 Show Address
                 </label>
               </div>
             </div>
@@ -1504,10 +1626,13 @@ export default function ContentManagement() {
         </div>
 
         {/* Newsletter Signup */}
-        <div className="border border-gray-200 rounded-lg p-6">
-          <h4 className="text-lg font-semibold mb-4">Newsletter Signup</h4>
+        <div className="border-2 border-yellow-100 rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 mb-6">
+            <span className="text-2xl">📬</span>
+            <h4 className="text-xl font-bold text-gray-900">Newsletter Signup</h4>
+          </div>
           <div className="space-y-4">
-            <div className="flex items-center mb-4">
+            <div className="flex items-center mb-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200 hover:bg-yellow-100 transition-colors">
               <input
                 type="checkbox"
                 id="newsletterEnabled"
@@ -1522,10 +1647,10 @@ export default function ContentManagement() {
                     }
                   }
                 })}
-                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                className="h-5 w-5 text-yellow-600 focus:ring-2 focus:ring-yellow-500 border-gray-300 rounded cursor-pointer"
               />
-              <label htmlFor="newsletterEnabled" className="ml-2 block text-sm text-gray-900">
-                Enable Newsletter Signup in Footer
+              <label htmlFor="newsletterEnabled" className="ml-3 block text-base font-medium text-gray-900 cursor-pointer">
+                📧 Enable Newsletter Signup in Footer
               </label>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1591,8 +1716,12 @@ export default function ContentManagement() {
         </div>
 
         {/* Custom HTML */}
-        <div className="border border-gray-200 rounded-lg p-6">
-          <h4 className="text-lg font-semibold mb-4">Custom HTML</h4>
+        <div className="border-2 border-red-100 rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 mb-6">
+            <span className="text-2xl">💻</span>
+            <h4 className="text-xl font-bold text-gray-900">Custom HTML</h4>
+            <span className="ml-2 px-2 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-full">Advanced</span>
+          </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Custom Footer HTML</label>
             <textarea

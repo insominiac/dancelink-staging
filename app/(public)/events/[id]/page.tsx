@@ -59,10 +59,8 @@ export default function EventDetailPage({ params }: { params: { id: string } }) 
 
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
-        </div>
+      <div className="min-h-[calc(100vh-200px)] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
       </div>
     )
   }

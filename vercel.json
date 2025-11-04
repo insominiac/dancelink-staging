@@ -12,6 +12,8 @@
   },
   "ignoreCommand": "echo 'Skipping build verification'",
   "rewrites": [
+    { "source": "/api/public/content/(.*)", "destination": "/api/public/content/$1" },
+    { "source": "/api/admin/content/(.*)", "destination": "/api/admin/content/$1" },
     { "source": "/api/(.*)", "destination": "https://dance-api-omega.vercel.app/api/$1" }
   ],
   "headers": [

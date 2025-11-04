@@ -139,16 +139,14 @@ export default function EventsClient({
 
   if (isLoading || !pageContent) {
     return (
-      <div className="dance-container">
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{borderBottomColor: 'var(--primary-gold)'}}></div>
-        </div>
+      <div className="min-h-[calc(100vh-200px)] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{borderBottomColor: 'var(--primary-gold)'}}></div>
       </div>
     )
   }
 
   // Translate hero title client-side for languages without static resources
-  const heroTitleTranslated = useAutoTranslate(pageContent?.heroTitle || '')
+  const heroTitleTranslated = useAutoTranslate(pageContent?.heroTitle)
   const heroTitleParts = (heroTitleTranslated || '').trim().split(' ')
   const heroTitleLast = heroTitleParts.pop() || ''
   const heroTitleLeading = heroTitleParts.join(' ')
@@ -271,7 +269,7 @@ export default function EventsClient({
                           </span>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
                         <div>
                           <span className="text-3xl font-bold" style={{color: 'var(--primary-dark)'}}>${event.price}</span>
                           <span className="text-sm ml-1" style={{color: 'var(--neutral-gray)'}}>/person</span>

@@ -23,6 +23,37 @@ interface SiteSettings {
     facebook: string
     instagram: string
     twitter: string
+    youtube?: string
+    tiktok?: string
+    linkedin?: string
+  }
+  footer?: {
+    enabled?: boolean
+    layout?: string
+    backgroundColor?: string
+    showTagline?: boolean
+    tagline?: string
+    copyrightYear?: string
+    copyrightText?: string
+    customCopyrightText?: string
+    showSocialLinks?: boolean
+    socialLinksTitle?: string
+    showQuickLinks?: boolean
+    quickLinks?: { title: string; url: string; openInNewTab: boolean }[]
+    showContact?: boolean
+    contactSection?: {
+      title?: string
+      showEmail?: boolean
+      showPhone?: boolean
+      showAddress?: boolean
+    }
+    newsletter?: {
+      enabled?: boolean
+      title?: string
+      description?: string
+      buttonText?: string
+    }
+    customHTML?: string
   }
 }
 
@@ -237,59 +268,60 @@ export default function PublicLayout({
       {/* Dynamic Footer */}
       {siteSettings?.footer?.enabled !== false && (
         <footer 
-          className={`footer text-white py-12 mt-auto ${
-            siteSettings?.footer?.backgroundColor === 'gray-800' ? 'bg-gray-800' :
-            siteSettings?.footer?.backgroundColor === 'gray-700' ? 'bg-gray-700' :
-            siteSettings?.footer?.backgroundColor === 'purple-900' ? 'bg-purple-900' :
-            siteSettings?.footer?.backgroundColor === 'blue-900' ? 'bg-blue-900' :
-            siteSettings?.footer?.backgroundColor === 'black' ? 'bg-black' :
-            'bg-gray-900'
+          className={`footer mt-auto ${
+            siteSettings?.footer?.backgroundColor === 'gray-800' ? 'bg-gray-800 text-white' :
+            siteSettings?.footer?.backgroundColor === 'gray-700' ? 'bg-gray-700 text-white' :
+            siteSettings?.footer?.backgroundColor === 'purple-900' ? 'bg-purple-900 text-white' :
+            siteSettings?.footer?.backgroundColor === 'blue-900' ? 'bg-blue-900 text-white' :
+            siteSettings?.footer?.backgroundColor === 'black' ? 'bg-black text-white' :
+            'bg-gray-900 text-white'
           }`}
         >
-          <div className={`dance-container ${
-            siteSettings?.footer?.layout === 'columns' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8' :
-            siteSettings?.footer?.layout === 'compact' ? 'flex flex-col md:flex-row justify-between items-center' :
-            'text-center'
-          }`}>
+          <div className="py-12 px-6 md:px-8 lg:px-12">
+            <div className={`max-w-7xl mx-auto ${
+              siteSettings?.footer?.layout === 'columns' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 lg:gap-12' :
+              siteSettings?.footer?.layout === 'compact' ? 'flex flex-col md:flex-row justify-between items-center gap-8' :
+              'text-center'
+            }`}>
             
             {/* Newsletter Section */}
             {siteSettings?.footer?.newsletter?.enabled && siteSettings?.footer?.layout === 'columns' && (
-              <div className="footer-section">
-                <h3 className="text-lg font-semibold mb-4" style={{color: 'var(--primary-gold)'}}>
-                  <TranslatedText text={siteSettings.footer.newsletter.title} fallback={siteSettings.footer.newsletter.title} />
+              <div className="footer-section space-y-4">
+                <h3 className="text-lg font-bold mb-4 tracking-wide" style={{color: 'var(--primary-gold)'}}>
+                  {siteSettings.footer.newsletter.title || ''}
                 </h3>
-                <p className="text-gray-300 text-sm mb-4">
-                  <TranslatedText text={siteSettings.footer.newsletter.description} fallback={siteSettings.footer.newsletter.description} />
+                <p className="text-sm leading-relaxed mb-6 text-white opacity-90">
+                  {siteSettings.footer.newsletter.description || ''}
                 </p>
-                <div className="flex">
+                <div className="flex flex-col gap-3">
                   <input
                     type="email"
                     placeholder={isMounted ? t('footer.emailPlaceholder') : 'Enter your email'}
-                    className="flex-1 px-3 py-2 bg-gray-800 border border-gray-600 rounded-l text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all"
                   />
-                  <button className="px-4 py-2 bg-yellow-500 text-black rounded-r hover:bg-yellow-400 transition-colors">
-                    <TranslatedText text={siteSettings.footer.newsletter.buttonText} fallback={siteSettings.footer.newsletter.buttonText} />
+                  <button className="w-full px-6 py-3 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition-colors shadow-lg hover:shadow-xl">
+                    {siteSettings.footer.newsletter.buttonText || 'Subscribe'}
                   </button>
                 </div>
               </div>
             )}
 
             {/* Quick Links */}
-            {siteSettings?.footer?.showQuickLinks && siteSettings?.footer?.quickLinks?.length > 0 && siteSettings?.footer?.layout === 'columns' && (
-              <div className="footer-section">
-                <h3 className="text-lg font-semibold mb-4" style={{color: 'var(--primary-gold)'}}>
+            {siteSettings?.footer?.showQuickLinks && siteSettings?.footer?.quickLinks && siteSettings.footer.quickLinks.length > 0 && siteSettings?.footer?.layout === 'columns' && (
+              <div className="footer-section space-y-4">
+                <h3 className="text-lg font-bold mb-4 tracking-wide" style={{color: 'var(--primary-gold)'}}>
                   {isMounted ? t('footer.quickLinks') : 'Quick Links'}
                 </h3>
-                <ul className="space-y-2">
+                <ul className="space-y-3">
                   {siteSettings.footer.quickLinks.map((link, index) => (
                     <li key={index}>
                       <Link 
                         href={link.url}
                         target={link.openInNewTab ? '_blank' : undefined}
                         rel={link.openInNewTab ? 'noopener noreferrer' : undefined}
-                        className="text-gray-300 hover:text-yellow-300 transition-colors duration-300 text-sm"
+                        className="text-sm opacity-90 hover:opacity-100 hover:text-yellow-300 transition-all duration-300 inline-block hover:translate-x-1"
                       >
-                        <TranslatedText text={link.title} fallback={link.title} />
+                        {link.title}
                       </Link>
                     </li>
                   ))}
@@ -299,36 +331,34 @@ export default function PublicLayout({
 
             {/* Contact Information */}
             {siteSettings?.footer?.showContact && siteSettings?.footer?.layout === 'columns' && (
-              <div className="footer-section">
-                <h3 className="text-lg font-semibold mb-4" style={{color: 'var(--primary-gold)'}}>
-                  {siteSettings?.footer?.contactSection?.title 
-                    ? <TranslatedText text={siteSettings.footer.contactSection.title} fallback={siteSettings.footer.contactSection.title} />
-                    : (isMounted ? t('footer.getInTouch') : 'Get in Touch')}
+              <div className="footer-section space-y-4">
+                <h3 className="text-lg font-bold mb-4 tracking-wide" style={{color: 'var(--primary-gold)'}}>
+                  {siteSettings?.footer?.contactSection?.title || (isMounted ? t('footer.getInTouch') : 'Get in Touch')}
                 </h3>
-                <div className="space-y-2 text-sm text-gray-300">
+                <div className="space-y-3 text-sm text-white opacity-90">
                   {siteSettings?.footer?.contactSection?.showEmail && siteSettings?.contactEmail && (
-                    <p className="flex items-center">
-                      <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <p className="flex items-center gap-3 hover:opacity-100 transition-opacity">
+                      <svg className="w-5 h-5 flex-shrink-0 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
                         <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
                       </svg>
-                      {siteSettings.contactEmail}
+                      <span className="break-all text-white">{siteSettings.contactEmail}</span>
                     </p>
                   )}
                   {siteSettings?.footer?.contactSection?.showPhone && siteSettings?.phoneNumber && (
-                    <p className="flex items-center">
-                      <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <p className="flex items-center gap-3 hover:opacity-100 transition-opacity">
+                      <svg className="w-5 h-5 flex-shrink-0 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
                       </svg>
-                      {siteSettings.phoneNumber}
+                      <span className="text-white">{siteSettings.phoneNumber}</span>
                     </p>
                   )}
                   {siteSettings?.footer?.contactSection?.showAddress && siteSettings?.address && (
-                    <p className="flex items-start">
-                      <svg className="w-4 h-4 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <p className="flex items-start gap-3 hover:opacity-100 transition-opacity">
+                      <svg className="w-5 h-5 flex-shrink-0 mt-0.5 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/>
                       </svg>
-                      {siteSettings.address}
+                      <span className="text-white">{siteSettings.address}</span>
                     </p>
                   )}
                 </div>
@@ -337,16 +367,14 @@ export default function PublicLayout({
 
             {/* Social Media Links */}
             {siteSettings?.footer?.showSocialLinks && siteSettings?.footer?.layout === 'columns' && (
-              <div className="footer-section">
-                <h3 className="text-lg font-semibold mb-4" style={{color: 'var(--primary-gold)'}}>
-                  {siteSettings?.footer?.socialLinksTitle 
-                    ? <TranslatedText text={siteSettings.footer.socialLinksTitle} fallback={siteSettings.footer.socialLinksTitle} />
-                    : (isMounted ? t('footer.followUs') : 'Follow Us')}
+              <div className="footer-section space-y-4">
+                <h3 className="text-lg font-bold mb-4 tracking-wide" style={{color: 'var(--primary-gold)'}}>
+                  {siteSettings?.footer?.socialLinksTitle || (isMounted ? t('footer.followUs') : 'Follow Us')}
                 </h3>
-                <div className="flex flex-wrap gap-4">
+                <div className="flex items-center flex-wrap gap-3">
                   {siteSettings?.socialMedia?.facebook && (
                     <a href={siteSettings.socialMedia.facebook} target="_blank" rel="noopener noreferrer" 
-                       className="social-link hover:text-yellow-300 transition-colors duration-300"
+                       className="social-link p-2 rounded-lg hover:bg-white/10 transition-all duration-300 hover:scale-110 opacity-90 hover:opacity-100 inline-flex items-center justify-center text-white"
                        aria-label="Facebook">
                       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -355,7 +383,7 @@ export default function PublicLayout({
                   )}
                   {siteSettings?.socialMedia?.instagram && (
                     <a href={siteSettings.socialMedia.instagram} target="_blank" rel="noopener noreferrer" 
-                       className="social-link hover:text-yellow-300 transition-colors duration-300"
+                       className="social-link p-2 rounded-lg hover:bg-white/10 transition-all duration-300 hover:scale-110 opacity-90 hover:opacity-100 inline-flex items-center justify-center text-white"
                        aria-label="Instagram">
                       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987 6.62 0 11.987-5.367 11.987-11.987C24.014 5.367 18.637.001 12.017.001zM8.449 16.988c-1.297 0-2.448-.435-3.396-1.168-.949-.734-1.423-1.647-1.423-2.738 0-.734.18-1.297.54-1.689.36-.393.81-.589 1.35-.589.54 0 .99.196 1.35.589.36.392.54.955.54 1.689 0 1.091-.474 2.004-1.423 2.738-.948.733-2.099 1.168-3.396 1.168z"/>
@@ -364,7 +392,7 @@ export default function PublicLayout({
                   )}
                   {siteSettings?.socialMedia?.twitter && (
                     <a href={siteSettings.socialMedia.twitter} target="_blank" rel="noopener noreferrer" 
-                       className="social-link hover:text-yellow-300 transition-colors duration-300"
+                       className="social-link p-2 rounded-lg hover:bg-white/10 transition-all duration-300 hover:scale-110 opacity-90 hover:opacity-100 inline-flex items-center justify-center text-white"
                        aria-label="Twitter">
                       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
@@ -373,7 +401,7 @@ export default function PublicLayout({
                   )}
                   {siteSettings?.socialMedia?.youtube && (
                     <a href={siteSettings.socialMedia.youtube} target="_blank" rel="noopener noreferrer" 
-                       className="social-link hover:text-yellow-300 transition-colors duration-300"
+                       className="social-link p-2 rounded-lg hover:bg-white/10 transition-all duration-300 hover:scale-110 opacity-90 hover:opacity-100 inline-flex items-center justify-center text-white"
                        aria-label="YouTube">
                       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
@@ -382,7 +410,7 @@ export default function PublicLayout({
                   )}
                   {siteSettings?.socialMedia?.tiktok && (
                     <a href={siteSettings.socialMedia.tiktok} target="_blank" rel="noopener noreferrer" 
-                       className="social-link hover:text-yellow-300 transition-colors duration-300"
+                       className="social-link p-2 rounded-lg hover:bg-white/10 transition-all duration-300 hover:scale-110 opacity-90 hover:opacity-100 inline-flex items-center justify-center text-white"
                        aria-label="TikTok">
                       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
@@ -391,7 +419,7 @@ export default function PublicLayout({
                   )}
                   {siteSettings?.socialMedia?.linkedin && (
                     <a href={siteSettings.socialMedia.linkedin} target="_blank" rel="noopener noreferrer" 
-                       className="social-link hover:text-yellow-300 transition-colors duration-300"
+                       className="social-link p-2 rounded-lg hover:bg-white/10 transition-all duration-300 hover:scale-110 opacity-90 hover:opacity-100 inline-flex items-center justify-center text-white"
                        aria-label="LinkedIn">
                       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
@@ -408,7 +436,7 @@ export default function PublicLayout({
                 {/* Tagline */}
                 {siteSettings?.footer?.showTagline && siteSettings?.footer?.tagline && (
                   <p className="text-lg mb-6" style={{color: 'var(--primary-gold)'}}>
-                    <TranslatedText text={siteSettings.footer.tagline} fallback={siteSettings.footer.tagline} />
+                    {siteSettings.footer.tagline}
                   </p>
                 )}
                 
@@ -473,7 +501,7 @@ export default function PublicLayout({
                 )}
                 
                 {/* Quick Links for centered layout */}
-                {siteSettings?.footer?.showQuickLinks && siteSettings?.footer?.quickLinks?.length > 0 && (
+                {siteSettings?.footer?.showQuickLinks && siteSettings?.footer?.quickLinks && siteSettings.footer.quickLinks.length > 0 && (
                   <div className="flex flex-wrap justify-center gap-4 mb-6">
                     {siteSettings.footer.quickLinks.map((link, index) => (
                       <Link 
@@ -483,7 +511,7 @@ export default function PublicLayout({
                         rel={link.openInNewTab ? 'noopener noreferrer' : undefined}
                         className="text-gray-300 hover:text-yellow-300 transition-colors duration-300 text-sm"
                       >
-                        <TranslatedText text={link.title} fallback={link.title} />
+                        {link.title}
                       </Link>
                     ))}
                   </div>
@@ -498,17 +526,16 @@ export default function PublicLayout({
                 dangerouslySetInnerHTML={{ __html: siteSettings.footer.customHTML }}
               />
             )}
-          </div>
+            </div>
           
           {/* Copyright - Always at bottom */}
-          <div className={`border-t border-gray-700 mt-8 pt-6 text-center ${
-            siteSettings?.footer?.layout === 'compact' ? 'mt-4 pt-4' : ''
-          }`}>
-            <p className="footer-text text-gray-400 text-sm">
+          <div className="border-t border-white/10 mt-8 pt-8 px-6 md:px-8 lg:px-12">
+            <p className="footer-text text-sm text-center text-white opacity-75">
               {siteSettings?.footer?.customCopyrightText || (
                 `© ${siteSettings?.footer?.copyrightYear || new Date().getFullYear()} ${siteSettings?.siteName || (isMounted ? t('nav.siteName') : 'DanceLink')}. ${siteSettings?.footer?.copyrightText || (isMounted ? t('footer.allRightsReserved') : 'All rights reserved.')}`
               )}
             </p>
+          </div>
           </div>
         </footer>
       )}

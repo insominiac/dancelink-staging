@@ -7,17 +7,30 @@ import TranslatedText from '../../components/TranslatedText'
 export default function FloatingCTA() {
   const [isVisible, setIsVisible] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)
+  const [delayComplete, setDelayComplete] = useState(false)
+
+  useEffect(() => {
+    // 5-second delay before allowing the popup to show
+    const delayTimer = setTimeout(() => {
+      setDelayComplete(true)
+    }, 5000)
+
+    return () => clearTimeout(delayTimer)
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
-      // Show the CTA after scrolling 200px
+      // Show the CTA after scrolling 200px AND after the 5-second delay
       const scrolled = window.scrollY > 200
-      setIsVisible(scrolled)
+      setIsVisible(scrolled && delayComplete)
     }
 
     window.addEventListener('scroll', handleScroll)
+    // Check scroll position immediately in case user already scrolled
+    handleScroll()
+    
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [delayComplete])
 
   if (!isVisible) return null
 
