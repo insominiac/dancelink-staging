@@ -11,20 +11,15 @@ export function apiUrl(path: string): string {
   const clean = path.replace(/^\/?/, '')
   // Always use local routes for content APIs
   if (clean.startsWith('public/content/') || clean.startsWith('admin/content/')) {
-    // On server, we need absolute URLs for fetch
-    if (typeof window === 'undefined') {
-      const port = process.env.PORT || '3000'
-      return `http://localhost:${port}/api/${clean}`
-    }
     return `/api/${clean}`
   }
-  const base = getApiBase()
-  // On server, we need absolute URLs for fetch
-  if (typeof window === 'undefined') {
-    const fullBase = base || `http://localhost:${process.env.PORT || '3000'}`
-    return `${fullBase}/api/${clean}`
+  // On the client, use the base URL or relative paths
+  if (typeof window !== 'undefined') {
+    const base = getApiBase()
+    return base ? `${base}/api/${clean}` : `/api/${clean}`
   }
-  return base ? `${base}/api/${clean}` : `/api/${clean}`
+  // On the server, use relative URLs so Vercel rewrites can work
+  return `/api/${clean}`
 }
 
 export async function apiFetch(path: string, init?: RequestInit) {
