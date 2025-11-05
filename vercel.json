@@ -45,6 +45,8 @@
     }
   ],
   "env": {
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "USE_LOCAL_DB": "false",
+    "DATABASE_URL": "postgresql://postgres:aPMPPHUmTcMEgBUoTpFeFNDSuyymwwkU@interchange.proxy.rlwy.net:18791/railway?sslmode=require"
   }
 }
