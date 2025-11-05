@@ -49,7 +49,8 @@ export async function GET() {
       ctaButtons: rec.ctaButtons,
       ctaFeatures: rec.ctaFeatures,
     })
-  } catch {
+  } catch (error) {
+    console.error('[Events Content API Error]', error)
     return NextResponse.json(DEFAULT_CONTENT)
   }
 }

@@ -75,21 +75,26 @@ export default async function EventsPage() {
   const rawLang = (cookieLang || acceptLang || 'en').toLowerCase()
   const lang = /^[a-z]{2}$/.test(rawLang) ? (rawLang as string) : 'en'
 
-  // Fetch events and page content from external API (no-store)
-  const [eventsRes, contentRes] = await Promise.all([
-    fetch(apiUrl('public/events'), { cache: 'no-store' }),
-    fetch(apiUrl('public/content/events'), { cache: 'no-store' })
-  ])
-
   let events: Event[] = []
   let pageContent: EventsPageContent | null = null
 
-  if (eventsRes.ok) {
-    const data = await eventsRes.json()
-    events = data.events || []
-  }
-  if (contentRes.ok) {
-    pageContent = await contentRes.json()
+  try {
+    // Fetch events and page content from external API (no-store)
+    const [eventsRes, contentRes] = await Promise.all([
+      fetch(apiUrl('public/events'), { cache: 'no-store' }),
+      fetch(apiUrl('public/content/events'), { cache: 'no-store' })
+    ])
+
+    if (eventsRes.ok) {
+      const data = await eventsRes.json()
+      events = data.events || []
+    }
+    if (contentRes.ok) {
+      pageContent = await contentRes.json()
+    }
+  } catch (error) {
+    console.error('[Events Page Data Fetch Error]', error)
+    // Continue with empty data, component should handle loading states
   }
 
   // SSR translate dynamic content when not English
