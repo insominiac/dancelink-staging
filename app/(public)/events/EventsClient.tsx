@@ -184,7 +184,7 @@ export default function EventsClient({
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            {pageContent.heroFeatures.map((feature, index) => (
+            {pageContent.heroFeatures && pageContent.heroFeatures.map((feature, index) => (
               <React.Fragment key={index}>
                 <div className="flex items-center">
                   <div className="flex items-center text-white/90">
@@ -192,7 +192,7 @@ export default function EventsClient({
                     <span className="font-medium"><TranslatedText text={feature.text} /></span>
                   </div>
                 </div>
-                {index < pageContent.heroFeatures.length - 1 && (
+                {index < (pageContent.heroFeatures?.length || 0) - 1 && (
                   <div className="hidden sm:block text-white/60 mx-4">•</div>
                 )}
               </React.Fragment>
@@ -466,7 +466,7 @@ export default function EventsClient({
                 <Link href={pageContent.ctaButtons.secondary.href} className="dance-btn dance-btn-outline hover:transform hover:scale-105 hover:shadow-2xl transition-all duration-300 px-6 py-3">{pageContent.ctaButtons.secondary.text ? <TranslatedText text={pageContent.ctaButtons.secondary.text} /> : null}</Link>
               </div>
               <div className="dance-card-grid">
-                {pageContent.ctaFeatures.map((feature, index) => (
+                {pageContent.ctaFeatures && pageContent.ctaFeatures.map((feature, index) => (
                   <div key={index} className="group text-center">
                     <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">{feature.icon}</div>
                     <h4 className="font-bold text-white mb-2">{feature.title}</h4>

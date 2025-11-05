@@ -39,6 +39,7 @@ export async function GET() {
     if (maybe && typeof maybe === 'object') return NextResponse.json(maybe)
     return NextResponse.json(DEFAULT_CONTENT)
   } catch (e) {
+    console.error('[Homepage API Error]', e)
     return NextResponse.json(DEFAULT_CONTENT)
   }
 }

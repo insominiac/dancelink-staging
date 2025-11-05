@@ -11,9 +11,19 @@ export function apiUrl(path: string): string {
   const clean = path.replace(/^\/?/, '')
   // Always use local routes for content APIs
   if (clean.startsWith('public/content/') || clean.startsWith('admin/content/')) {
+    // On server, we need absolute URLs for fetch
+    if (typeof window === 'undefined') {
+      const port = process.env.PORT || '3000'
+      return `http://localhost:${port}/api/${clean}`
+    }
     return `/api/${clean}`
   }
   const base = getApiBase()
+  // On server, we need absolute URLs for fetch
+  if (typeof window === 'undefined') {
+    const fullBase = base || `http://localhost:${process.env.PORT || '3000'}`
+    return `${fullBase}/api/${clean}`
+  }
   return base ? `${base}/api/${clean}` : `/api/${clean}`
 }
 
