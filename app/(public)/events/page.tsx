@@ -78,19 +78,19 @@ export default async function EventsPage() {
   let events: Event[] = []
   let pageContent: EventsPageContent | null = null
 
+  // Only fetch critical data for initial render (featured events and page content)
+  // Non-critical data will be fetched client-side with lazy loading
   try {
-    // Fetch events and page content from external API (no-store)
-    const [eventsRes, contentRes] = await Promise.all([
-      fetch(apiUrl('public/events'), { cache: 'no-store' }),
-      fetch(apiUrl('public/content/events'), { cache: 'no-store' })
-    ])
-
+    const contentRes = await fetch(apiUrl('public/content/events'), { cache: 'no-store' })
+    if (contentRes.ok) {
+      pageContent = await contentRes.json()
+    }
+    
+    // Fetch only featured events for initial render
+    const eventsRes = await fetch(apiUrl('public/events?featuredOnly=true'), { cache: 'no-store' })
     if (eventsRes.ok) {
       const data = await eventsRes.json()
       events = data.events || []
-    }
-    if (contentRes.ok) {
-      pageContent = await contentRes.json()
     }
   } catch (error) {
     console.error('[Events Page Data Fetch Error]', error)

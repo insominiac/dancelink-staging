@@ -64,6 +64,7 @@ export default function EventsClient({
   const [isLoading, setIsLoading] = useState(!initialEvents?.length || !initialPageContent)
   const [filters, setFilters] = useState({ eventType: 'all', month: 'all', priceRange: 'all' })
   const [searchTerm, setSearchTerm] = useState('')
+  const [hasFetchedAllEvents, setHasFetchedAllEvents] = useState(false)
 
   useEffect(() => {
     setIsMounted(true)
@@ -76,36 +77,58 @@ export default function EventsClient({
     }
   }, [initialLang, i18n])
 
-  // Only fetch if no initial server data
+  // Lazy load all events when component mounts (if we only have featured events)
   useEffect(() => {
-    if (initialEvents?.length && initialPageContent) {
-      setIsLoading(false)
-      return
-    }
-    const run = async () => {
-      setIsLoading(true)
-      try {
-        const [evRes, pcRes] = await Promise.all([
-          fetch(apiUrl('public/events'), { cache: 'no-store' }),
-          fetch(apiUrl('public/content/events'), { cache: 'no-store' })
-        ])
-        if (evRes.ok) {
-          const data = await evRes.json()
-          setEvents(data.events)
-          setFilteredEvents(data.events)
+    // Only fetch all events if we don't have them yet and we only have featured events
+    if (!hasFetchedAllEvents && initialEvents.length > 0 && initialEvents.every(e => e.isFeatured)) {
+      const fetchAllEvents = async () => {
+        setIsLoading(true)
+        try {
+          const evRes = await fetch(apiUrl('public/events'), { cache: 'no-store' })
+          if (evRes.ok) {
+            const data = await evRes.json()
+            setEvents(data.events)
+            setFilteredEvents(data.events)
+            setHasFetchedAllEvents(true)
+          }
+        } catch (e) {
+          console.error('Error fetching all events:', e)
+        } finally {
+          setIsLoading(false)
         }
-        if (pcRes.ok) {
-          const content = await pcRes.json()
-          setPageContent(content)
-        }
-      } catch (e) {
-        // ignore
-      } finally {
-        setIsLoading(false)
       }
+      
+      fetchAllEvents()
     }
-    run()
-  }, [initialEvents, initialPageContent])
+    // If we don't have any initial events, fetch all events
+    else if (!hasFetchedAllEvents && initialEvents.length === 0) {
+      const fetchAllEvents = async () => {
+        setIsLoading(true)
+        try {
+          const [evRes, pcRes] = await Promise.all([
+            fetch(apiUrl('public/events'), { cache: 'no-store' }),
+            fetch(apiUrl('public/content/events'), { cache: 'no-store' })
+          ])
+          if (evRes.ok) {
+            const data = await evRes.json()
+            setEvents(data.events)
+            setFilteredEvents(data.events)
+          }
+          if (pcRes.ok) {
+            const content = await pcRes.json()
+            setPageContent(content)
+          }
+          setHasFetchedAllEvents(true)
+        } catch (e) {
+          console.error('Error fetching events and content:', e)
+        } finally {
+          setIsLoading(false)
+        }
+      }
+      
+      fetchAllEvents()
+    }
+  }, [hasFetchedAllEvents, initialEvents])
 
   useEffect(() => {
     let filtered = [...events]

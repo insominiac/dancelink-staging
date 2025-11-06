@@ -7,13 +7,20 @@ export async function GET(request: NextRequest) {
   try {
     await ensureDbConnection()
     const locale = resolveLocale(request, 'en')
+    
+    // Check if we only want featured events
+    const url = new URL(request.url)
+    const featuredOnly = url.searchParams.get('featuredOnly') === 'true'
+    
     // Fetch only published events that haven't ended
     const events = await prisma.event.findMany({
       where: {
         status: 'PUBLISHED',
         endDate: {
           gte: new Date() // Only show future/ongoing events
-        }
+        },
+        // If featuredOnly is true, only fetch featured events
+        ...(featuredOnly && { isFeatured: true })
       },
       include: {
         venue: {
