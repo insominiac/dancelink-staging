@@ -28,7 +28,7 @@ interface Event {
   imageUrl?: string
 }
 
-interface EventsPageContent {
+interface NewEventsPageContent {
   heroTitle: string
   heroSubtitle: string
   eventsTitle: string
@@ -37,20 +37,19 @@ interface EventsPageContent {
   noEventsDescription: string
 }
 
-export default function EventsClient({
+export default function NewEventsClient({
   initialEvents,
   initialPageContent,
   initialLang,
 }: {
   initialEvents: Event[]
-  initialPageContent: EventsPageContent | null
+  initialPageContent: NewEventsPageContent | null
   initialLang: string
 }) {
   const { t, i18n } = useTranslation('common')
   const [isMounted, setIsMounted] = useState(false)
   const [events, setEvents] = useState<Event[]>(initialEvents || [])
-  const [filteredEvents, setFilteredEvents] = useState<Event[]>(initialEvents || [])
-  const [pageContent, setPageContent] = useState<EventsPageContent | null>(initialPageContent)
+  const [pageContent, setPageContent] = useState<NewEventsPageContent | null>(initialPageContent)
   const [isLoading, setIsLoading] = useState(!initialEvents?.length || !initialPageContent)
   const [filters, setFilters] = useState({ eventType: 'all', month: 'all', priceRange: 'all' })
   const [searchTerm, setSearchTerm] = useState('')
@@ -87,7 +86,7 @@ export default function EventsClient({
         return price >= min && (max ? price <= max : true)
       })
     }
-    setFilteredEvents(filtered)
+    setEvents(filtered)
   }, [events, filters, searchTerm])
 
   const getSpotsLeft = (event: Event) => event.maxAttendees - event.currentAttendees
@@ -190,14 +189,14 @@ export default function EventsClient({
           {/* Results Count */}
           <div className="mb-8 text-center">
             <p className="text-lg" style={{color: 'var(--neutral-gray)'}}>
-              <span className="font-semibold" style={{color: 'var(--primary-gold)'}}>{filteredEvents.length}</span> events found
+              <span className="font-semibold" style={{color: 'var(--primary-gold)'}}>{events.length}</span> events found
             </p>
           </div>
 
           {/* Events Grid */}
-          {filteredEvents.length > 0 ? (
+          {events.length > 0 ? (
             <div className="dance-card-grid mb-16">
-              {filteredEvents.map((event) => {
+              {events.map((event) => {
                 const spotsLeft = getSpotsLeft(event)
                 return (
                   <div key={event.id} className="dance-card group relative overflow-hidden transform hover:-translate-y-2 transition-all duration-500">
@@ -266,33 +265,50 @@ export default function EventsClient({
                         </div>
                         <div className="flex items-center" style={{color: 'var(--primary-dark)'}}>
                           <span className="mr-3 text-lg">👥</span>
-                          <span className="font-medium">
-                            {spotsLeft > 0 
-                              ? (isMounted ? t('classes.schedule.spotsLeftCount', { count: spotsLeft }) : `${spotsLeft} spots left`)
-                              : (isMounted ? t('classes.schedule.soldOut') : 'Sold out')
-                            }
-                          </span>
+                          <span className="font-medium">{event.maxAttendees} max attendees</span>
                         </div>
                       </div>
-                      <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                      <div className="mb-6">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm font-medium" style={{color: 'var(--neutral-gray)'}}>{isMounted ? t('events.availabilityLabel') : 'Event Availability'}</span>
+                          <span className={`text-sm font-bold ${spotsLeft <= 0 ? 'text-red-500' : spotsLeft <= 10 ? 'text-orange-500' : 'text-green-500'}`}>
+                            {spotsLeft > 0 ? (isMounted ? t('events.spotsLeftCount', { count: spotsLeft }) : `${spotsLeft} spots left`) : (isMounted ? t('events.soldOut') : 'Event Full')}
+                          </span>
+                        </div>
+                        <div className="w-full rounded-full h-2 overflow-hidden" style={{backgroundColor: 'var(--neutral-light)'}}>
+                          <div className={`h-full transition-all duration-500 ${spotsLeft <= 0 ? 'bg-red-500' : spotsLeft <= 10 ? 'bg-orange-500' : 'bg-green-500'}`} style={{width: `${Math.max(5, (spotsLeft / event.maxAttendees) * 100)}%`}}></div>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between">
                         <div>
                           <span className="text-3xl font-bold" style={{color: 'var(--primary-dark)'}}>${event.price}</span>
                           <span className="text-sm ml-1" style={{color: 'var(--neutral-gray)'}}>/person</span>
                         </div>
-                        <Link href={`/events/${event.id}`} className="dance-btn dance-btn-accent hover:transform hover:scale-105 transition-all duration-300 px-4 py-2 text-sm">
-                          {isMounted ? t('ui.viewDetails') : 'View Details'}
-                        </Link>
+                        <div className="flex gap-2">
+                          <Link href={`/events/${event.id}`} className="dance-btn dance-btn-secondary hover:transform hover:scale-105 transition-all duration-300 px-3 py-2 text-sm">{isMounted ? t('ui.viewDetails') : 'View Details'}</Link>
+                          {spotsLeft > 0 ? (
+                            <Link href={`/events/${event.id}`} className="dance-btn dance-btn-accent hover:transform hover:scale-105 transition-all duration-300 px-4 py-2 text-sm">{isMounted ? t('ui.bookNow') : 'Book Now'}</Link>
+                          ) : (
+                            <button className="dance-btn px-4 py-2 text-sm" style={{backgroundColor: 'var(--neutral-gray)', color: 'white', cursor: 'not-allowed'}}>{isMounted ? t('events.soldOut') : 'Sold Out'}</button>
+                          )}
+                        </div>
                       </div>
+                      {spotsLeft <= 10 && spotsLeft > 0 && (
+                        <div className="absolute -top-2 -right-2 text-white text-xs font-bold px-3 py-1 rounded-full transform rotate-12 shadow-lg" style={{background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'}}>Almost Full!</div>
+                      )}
                     </div>
                   </div>
-                )
-              })}
+                )})}
             </div>
           ) : (
-            <div className="text-center py-16">
-              <div className="text-6xl mb-6">🎭</div>
-              <h3 className="text-2xl font-bold mb-4" style={{color: 'var(--primary-dark)'}}>{pageContent.noEventsTitle ? <TranslatedText text={pageContent.noEventsTitle} /> : null}</h3>
-              <p className="max-w-md mx-auto" style={{color: 'var(--neutral-gray)'}}>{pageContent.noEventsDescription ? <TranslatedText text={pageContent.noEventsDescription} /> : null}</p>
+            /* No Events */
+            <div className="text-center py-20">
+              <div className="dance-card max-w-md mx-auto">
+                <div className="text-6xl mb-4">🎉</div>
+                <h3 className="text-2xl font-bold mb-4" style={{color: 'var(--primary-dark)'}}>{pageContent.noEventsTitle ? <TranslatedText text={pageContent.noEventsTitle} /> : 'No events found'}</h3>
+                <p className="text-lg mb-6" style={{color: 'var(--neutral-gray)'}}>{pageContent.noEventsDescription ? <TranslatedText text={pageContent.noEventsDescription} /> : 'No events match your search criteria. Try adjusting your filters or search terms.'}</p>
+                <button onClick={() => { setFilters({ eventType: 'all', month: 'all', priceRange: 'all' }); setSearchTerm('') }} className="dance-btn dance-btn-accent hover:transform hover:scale-105 transition-all duration-300 px-4 py-2 text-sm">Clear All Filters</button>
+              </div>
             </div>
           )}
         </div>

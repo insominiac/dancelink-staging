@@ -158,6 +158,7 @@ export default function PublicLayout({
               <li><Link href="/about" className="dance-nav-link">{isMounted ? t('nav.about') : 'About'}</Link></li>
               <li><Link href="/contact" className="dance-nav-link">{isMounted ? t('nav.contact') : 'Contact'}</Link></li>
               <li><Link href="/become-a-host" className="dance-nav-link">{isMounted ? t('nav.becomeHost') : 'Become a Host'}</Link></li>
+
               {/* Mobile Auth (hide when logged in) */}
               {isMounted && !isAuthenticated && (
                 <li className="md:hidden border-t border-gray-200 pt-4 mt-4">

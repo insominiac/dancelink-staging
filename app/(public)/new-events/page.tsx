@@ -1,5 +1,5 @@
 import { headers } from 'next/headers'
-import NewEventsClient from './EventsClient'
+import NewEventsClient from './NewEventsClient'
 import { translationService } from '@/lib/translation-service'
 import { generateMetadata as genMeta } from '@/app/lib/seo'
 import { apiUrl } from '@/app/lib/api'
