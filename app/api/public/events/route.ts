@@ -5,12 +5,16 @@ import { translationService } from '@/lib/translation-service'
 
 export async function GET(request: NextRequest) {
   try {
+    console.log('[Events API] Attempting to connect to database...')
     await ensureDbConnection()
+    console.log('[Events API] Database connection established')
     const locale = resolveLocale(request, 'en')
     
     // Check if we only want featured events
     const url = new URL(request.url)
     const featuredOnly = url.searchParams.get('featuredOnly') === 'true'
+    
+    console.log('[Events API] Fetching events with featuredOnly:', featuredOnly)
     
     // Fetch only published events that haven't ended
     const events = await prisma.event.findMany({
@@ -54,6 +58,8 @@ export async function GET(request: NextRequest) {
         { startDate: 'asc' }
       ]
     })
+    
+    console.log('[Events API] Found', events.length, 'events')
 
     // Calculate current attendees for each event
     let eventsWithAttendeeCount = await Promise.all(events.map(async (event) => {
@@ -131,9 +137,9 @@ export async function GET(request: NextRequest) {
       total: eventsWithAttendeeCount.length 
     })
   } catch (error) {
-    console.error('Error fetching public events:', error)
+    console.error('[Events API] Error fetching public events:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch events' },
+      { error: 'Failed to fetch events', details: error.message },
       { status: 500 }
     )
   }
