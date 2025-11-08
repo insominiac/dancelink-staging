@@ -25,7 +25,7 @@ interface Event {
   imageUrl?: string
 }
 
-interface NewEventsPageContent {
+interface EventsPageContent {
   // Hero Section
   heroTitle: string
   heroSubtitle: string
@@ -41,16 +41,16 @@ interface NewEventsPageContent {
 
 export async function generateMetadata() {
   try {
-    const res = await fetch(apiUrl('seo?path=/new-events'), { cache: 'no-store' })
+    const res = await fetch(apiUrl('seo?path=/events'), { cache: 'no-store' })
     if (res.ok) {
       const data = await res.json()
-      return genMeta('/new-events', data.seoData)
+      return genMeta('/events', data.seoData)
     }
   } catch {}
-  return genMeta('/new-events', null)
+  return genMeta('/events', null)
 }
 
-export default async function NewEventsPage() {
+export default async function EventsPage() {
   // Detect language from cookie or Accept-Language
   const h = headers()
   const cookie = h.get('cookie') || ''
@@ -61,7 +61,7 @@ export default async function NewEventsPage() {
   const lang = /^[a-z]{2}$/.test(rawLang) ? (rawLang as string) : 'en'
 
   let events: Event[] = []
-  let pageContent: NewEventsPageContent | null = null
+  let pageContent: EventsPageContent | null = null
 
   try {
     // Fetch all events
@@ -72,7 +72,7 @@ export default async function NewEventsPage() {
     }
     
     // Fetch page content
-    const contentRes = await fetch(apiUrl('public/content/new-events'), { cache: 'no-store' })
+    const contentRes = await fetch(apiUrl('public/content/events'), { cache: 'no-store' })
     if (contentRes.ok) {
       pageContent = await contentRes.json()
     }
@@ -105,11 +105,11 @@ export default async function NewEventsPage() {
 
   if (lang && lang !== 'en' && pageContent) {
     const contentTexts: string[] = []
-    const keys: Array<keyof NewEventsPageContent> = [
+    const keys: Array<keyof EventsPageContent> = [
       'heroTitle', 'heroSubtitle', 'eventsTitle', 'eventsDescription', 
       'noEventsTitle', 'noEventsDescription'
     ]
-    const keyIndex: { key: keyof NewEventsPageContent }[] = []
+    const keyIndex: { key: keyof EventsPageContent }[] = []
     keys.forEach((k) => {
       const v = (pageContent as any)[k]
       if (typeof v === 'string' && v.trim()) {
