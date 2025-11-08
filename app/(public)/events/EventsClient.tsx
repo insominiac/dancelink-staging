@@ -31,10 +31,18 @@ interface Event {
 interface EventsPageContent {
   heroTitle: string
   heroSubtitle: string
-  eventsTitle: string
-  eventsDescription: string
-  noEventsTitle: string
-  noEventsDescription: string
+  
+  // Featured Events
+  featuredTitle: string
+  featuredDescription: string
+  
+  // Search
+  searchTitle: string
+  searchDescription: string
+  
+  // No Events
+  noEventsTitle?: string
+  noEventsDescription?: string
 }
 
 export default function EventsClient({
@@ -51,7 +59,7 @@ export default function EventsClient({
   const [events, setEvents] = useState<Event[]>(initialEvents || [])
   const [filteredEvents, setFilteredEvents] = useState<Event[]>(initialEvents || [])
   const [pageContent, setPageContent] = useState<EventsPageContent | null>(initialPageContent)
-  const [isLoading, setIsLoading] = useState(!initialEvents?.length || !initialPageContent)
+  const [isLoading, setIsLoading] = useState(!initialPageContent)
   const [filters, setFilters] = useState({ eventType: 'all', month: 'all', priceRange: 'all' })
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -144,8 +152,14 @@ export default function EventsClient({
         <div className="dance-container">
           {/* Events Section Header */}
           <div className="dance-section-header mb-12">
-            <h2 className="dance-section-title">{pageContent.eventsTitle ? <TranslatedText text={pageContent.eventsTitle} /> : null}</h2>
-            <p className="max-w-2xl mx-auto">{pageContent.eventsDescription ? <TranslatedText text={pageContent.eventsDescription} /> : null}</p>
+            <h2 className="dance-section-title">{pageContent.featuredTitle ? <TranslatedText text={pageContent.featuredTitle} /> : null}</h2>
+            <p className="max-w-2xl mx-auto">{pageContent.featuredDescription ? <TranslatedText text={pageContent.featuredDescription} /> : null}</p>
+          </div>
+
+          {/* Search Section Header */}
+          <div className="dance-section-header mb-12">
+            <h2 className="dance-section-title">{pageContent.searchTitle ? <TranslatedText text={pageContent.searchTitle} /> : null}</h2>
+            <p className="max-w-2xl mx-auto">{pageContent.searchDescription ? <TranslatedText text={pageContent.searchDescription} /> : null}</p>
           </div>
 
           {/* Search and Filters */}

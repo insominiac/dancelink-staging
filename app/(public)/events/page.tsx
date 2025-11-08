@@ -1,5 +1,5 @@
 import { headers } from 'next/headers'
-import NewEventsClient from './EventsClient'
+import EventsClient from './EventsClient'
 import { translationService } from '@/lib/translation-service'
 import { generateMetadata as genMeta } from '@/app/lib/seo'
 import { apiUrl } from '@/app/lib/api'
@@ -30,13 +30,17 @@ interface EventsPageContent {
   heroTitle: string
   heroSubtitle: string
   
-  // Events Section
-  eventsTitle: string
-  eventsDescription: string
+  // Featured Events
+  featuredTitle: string
+  featuredDescription: string
+  
+  // Search
+  searchTitle: string
+  searchDescription: string
   
   // No Events
-  noEventsTitle: string
-  noEventsDescription: string
+  noEventsTitle?: string
+  noEventsDescription?: string
 }
 
 export async function generateMetadata() {
@@ -74,10 +78,21 @@ export default async function EventsPage() {
     // Fetch page content
     const contentRes = await fetch(apiUrl('public/content/events'), { cache: 'no-store' })
     if (contentRes.ok) {
-      pageContent = await contentRes.json()
+      const data = await contentRes.json()
+      // Map the API response to the expected structure
+      pageContent = {
+        heroTitle: data.heroTitle,
+        heroSubtitle: data.heroSubtitle,
+        featuredTitle: data.featuredTitle,
+        featuredDescription: data.featuredDescription,
+        searchTitle: data.searchTitle,
+        searchDescription: data.searchDescription,
+        noEventsTitle: data.noEventsTitle || 'No events found',
+        noEventsDescription: data.noEventsDescription || 'Check back later for new events'
+      }
     }
   } catch (error) {
-    console.error('[New Events Page Data Fetch Error]', error)
+    console.error('[Events Page Data Fetch Error]', error)
   }
 
   // SSR translate dynamic content when not English
@@ -106,8 +121,8 @@ export default async function EventsPage() {
   if (lang && lang !== 'en' && pageContent) {
     const contentTexts: string[] = []
     const keys: Array<keyof EventsPageContent> = [
-      'heroTitle', 'heroSubtitle', 'eventsTitle', 'eventsDescription', 
-      'noEventsTitle', 'noEventsDescription'
+      'heroTitle', 'heroSubtitle', 'featuredTitle', 'featuredDescription', 
+      'searchTitle', 'searchDescription', 'noEventsTitle', 'noEventsDescription'
     ]
     const keyIndex: { key: keyof EventsPageContent }[] = []
     keys.forEach((k) => {
@@ -128,5 +143,5 @@ export default async function EventsPage() {
     } catch {}
   }
 
-  return <NewEventsClient initialEvents={events} initialPageContent={pageContent} initialLang={lang} />
+  return <EventsClient initialEvents={events} initialPageContent={pageContent} initialLang={lang} />
 }
