@@ -32,6 +32,28 @@ export function apiUrl(path: string): string {
     return `/api/${clean}`
   }
   
+  // For public events API, use local routes instead of external proxy
+  if (clean.startsWith('public/events')) {
+    // On server, we need absolute URLs for fetch
+    if (typeof window === 'undefined') {
+      // In development, construct full URL
+      if (process.env.NODE_ENV === 'development') {
+        const port = process.env.PORT || '3000'
+        return `http://localhost:${port}/api/${clean}`
+      }
+      // In production (Vercel), use the Vercel URL directly
+      const vercelUrl = process.env.VERCEL_URL
+      if (vercelUrl) {
+        return `https://${vercelUrl}/api/${clean}`
+      }
+      // Fallback
+      const port = process.env.PORT || '3000'
+      return `http://localhost:${port}/api/${clean}`
+    }
+    // On client, use relative URLs
+    return `/api/${clean}`
+  }
+  
   // For external APIs, use the base URL or proxy through rewrites
   const base = getApiBase()
   // On server, we need absolute URLs for fetch

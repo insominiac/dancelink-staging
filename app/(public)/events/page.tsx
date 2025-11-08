@@ -73,6 +73,10 @@ export default async function EventsPage() {
     if (eventsRes.ok) {
       const data = await eventsRes.json()
       events = data.events || []
+    } else {
+      console.warn('[Events API Warning] Failed to fetch events:', eventsRes.status, eventsRes.statusText)
+      // Provide default events if API call fails
+      events = []
     }
     
     // Fetch page content
@@ -90,9 +94,34 @@ export default async function EventsPage() {
         noEventsTitle: data.noEventsTitle || 'No events found',
         noEventsDescription: data.noEventsDescription || 'Check back later for new events'
       }
+    } else {
+      console.warn('[Content API Warning] Failed to fetch content:', contentRes.status, contentRes.statusText)
+      // Provide default content if API call fails
+      pageContent = {
+        heroTitle: 'Join Our Dance Events',
+        heroSubtitle: 'Discover exciting workshops, competitions, and social gatherings in our dance community',
+        featuredTitle: 'Featured Events',
+        featuredDescription: 'Don\'t miss these special events curated just for you',
+        searchTitle: 'Find Your Perfect Event',
+        searchDescription: 'Browse through our upcoming events and find the perfect dance experience for you',
+        noEventsTitle: 'No events found',
+        noEventsDescription: 'Check back later for new events'
+      }
     }
   } catch (error) {
     console.error('[Events Page Data Fetch Error]', error)
+    // Provide default values if fetch fails completely
+    events = []
+    pageContent = {
+      heroTitle: 'Join Our Dance Events',
+      heroSubtitle: 'Discover exciting workshops, competitions, and social gatherings in our dance community',
+      featuredTitle: 'Featured Events',
+      featuredDescription: 'Don\'t miss these special events curated just for you',
+      searchTitle: 'Find Your Perfect Event',
+      searchDescription: 'Browse through our upcoming events and find the perfect dance experience for you',
+      noEventsTitle: 'No events found',
+      noEventsDescription: 'Check back later for new events'
+    }
   }
 
   // SSR translate dynamic content when not English
