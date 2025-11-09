@@ -47,16 +47,19 @@ interface EventsPageContent {
 
 export default function EventsClient({
   initialEvents,
+  initialFeaturedEvents,
   initialPageContent,
   initialLang,
 }: {
   initialEvents: Event[]
+  initialFeaturedEvents: Event[]
   initialPageContent: EventsPageContent | null
   initialLang: string
 }) {
   const { t, i18n } = useTranslation('common')
   const [isMounted, setIsMounted] = useState(false)
   const [events, setEvents] = useState<Event[]>(initialEvents || [])
+  const [featuredEvents, setFeaturedEvents] = useState<Event[]>(initialFeaturedEvents || [])
   const [filteredEvents, setFilteredEvents] = useState<Event[]>(initialEvents || [])
   const [pageContent, setPageContent] = useState<EventsPageContent | null>(initialPageContent)
   const [isLoading, setIsLoading] = useState(!initialPageContent)
@@ -69,6 +72,18 @@ export default function EventsClient({
       if (initialEvents.length === 0 && isMounted) {
         console.log('[Events Client] Initial events empty, fetching from client-side')
         try {
+          // Fetch featured events
+          const featuredRes = await fetch('/api/public/events?featuredOnly=true')
+          if (featuredRes.ok) {
+            const data = await featuredRes.json()
+            const fetchedFeaturedEvents = data.events || []
+            console.log('[Events Client] Fetched', fetchedFeaturedEvents.length, 'featured events client-side')
+            setFeaturedEvents(fetchedFeaturedEvents)
+          } else {
+            console.warn('[Events Client] Failed to fetch featured events client-side:', featuredRes.status)
+          }
+          
+          // Fetch all events
           const res = await fetch('/api/public/events')
           if (res.ok) {
             const data = await res.json()
@@ -83,6 +98,16 @@ export default function EventsClient({
           console.error('[Events Client] Error fetching events client-side:', error)
           // Try direct fetch to external API as last resort
           try {
+            // Fetch featured events
+            const featuredRes = await fetch('https://dance-api-omega.vercel.app/api/public/events?featuredOnly=true')
+            if (featuredRes.ok) {
+              const data = await featuredRes.json()
+              const fetchedFeaturedEvents = data.events || []
+              console.log('[Events Client] Fetched', fetchedFeaturedEvents.length, 'featured events from external API')
+              setFeaturedEvents(fetchedFeaturedEvents)
+            }
+            
+            // Fetch all events
             const res = await fetch('https://dance-api-omega.vercel.app/api/public/events')
             if (res.ok) {
               const data = await res.json()
@@ -188,11 +213,107 @@ export default function EventsClient({
       {/* Main Content */}
       <section className="py-16">
         <div className="dance-container">
-          {/* Events Section Header */}
-          <div className="dance-section-header mb-12">
-            <h2 className="dance-section-title">{pageContent.featuredTitle ? <TranslatedText text={pageContent.featuredTitle} /> : null}</h2>
-            <p className="max-w-2xl mx-auto">{pageContent.featuredDescription ? <TranslatedText text={pageContent.featuredDescription} /> : null}</p>
-          </div>
+          {/* Featured Events Section */}
+          {featuredEvents.length > 0 && (
+            <>
+              <div className="dance-section-header mb-12">
+                <h2 className="dance-section-title">{pageContent.featuredTitle ? <TranslatedText text={pageContent.featuredTitle} /> : null}</h2>
+                <p className="max-w-2xl mx-auto">{pageContent.featuredDescription ? <TranslatedText text={pageContent.featuredDescription} /> : null}</p>
+              </div>
+              <div className="dance-card-grid mb-16">
+                {featuredEvents.map((event) => {
+                  const spotsLeft = getSpotsLeft(event)
+                  return (
+                    <div key={event.id} className="dance-card group relative overflow-hidden transform hover:-translate-y-2 transition-all duration-500">
+                      <div className="relative h-48 overflow-hidden" style={{background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'}}>
+                        {event.imageUrl && (
+                          <Image 
+                            src={event.imageUrl} 
+                            alt={event.title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            loading="lazy"
+                            className="object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                        )}
+                        <div className="absolute inset-0" style={{background: 'rgba(26, 15, 31, 0.3)'}}></div>
+                        <div className="absolute top-4 left-4">
+                          <span className={`px-3 py-1 text-xs rounded-full font-bold text-white ${
+                            event.eventType === 'Workshop' ? 'bg-blue-500' :
+                            event.eventType === 'Competition' ? 'bg-red-500' :
+                            event.eventType === 'Performance' ? 'bg-purple-500' :
+                            event.eventType === 'Social Dance' ? 'bg-green-500' :
+                            event.eventType === 'Gala' ? 'bg-yellow-500' :
+                            'bg-blue-500'
+                          }`}>
+                            {event.eventType}
+                          </span>
+                        </div>
+                        {event.isFeatured && (
+                          <div className="absolute top-4 right-4">
+                            <span className="px-3 py-1 text-xs font-bold rounded-full flex items-center text-white" style={{background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'}}>
+                              <span className="mr-1">⭐</span> FEATURED
+                            </span>
+                          </div>
+                        )}
+                        <div className="absolute top-4 right-4">
+                          <div className={`px-3 py-1 text-xs rounded-full font-bold text-white ${
+                            spotsLeft <= 0 ? 'bg-red-500' :
+                            spotsLeft <= 10 ? 'bg-orange-500' :
+                            'bg-green-500'
+                          }`}>
+                            {spotsLeft > 0 ? (isMounted ? t('events.spotsLeftCount', { count: spotsLeft }) : `${spotsLeft} spots left`) : (isMounted ? t('events.soldOut') : 'Sold Out')}
+                          </div>
+                        </div>
+                        <div className="absolute bottom-4 left-4 right-4">
+                          <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-yellow-300 transition-colors">
+                            {event.title}
+                          </h3>
+                          <p style={{color: 'var(--neutral-light)'}} className="text-sm font-medium uppercase tracking-wide">
+                            {formatEventDate(event.startDate, event.endDate)}
+                          </p>
+                        </div>
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                      </div>
+                      <div className="p-6">
+                        <p style={{color: 'var(--neutral-gray)'}} className="mb-6 leading-relaxed line-clamp-2">
+                          {event.description}
+                        </p>
+                        <div className="space-y-3 mb-6">
+                          <div className="flex items-center" style={{color: 'var(--primary-dark)'}}>
+                            <span className="mr-3 text-lg">⏱️</span>
+                            <span className="font-medium">{event.startTime} - {event.endTime}</span>
+                          </div>
+                          <div className="flex items-center" style={{color: 'var(--primary-dark)'}}>
+                            <span className="mr-3 text-lg">📍</span>
+                            <span className="font-medium">{event.venue?.name || (isMounted ? t('classes.tbd') : 'TBD')}</span>
+                          </div>
+                          <div className="flex items-center" style={{color: 'var(--primary-dark)'}}>
+                            <span className="mr-3 text-lg">👥</span>
+                            <span className="font-medium">
+                              {spotsLeft > 0 
+                                ? (isMounted ? t('classes.schedule.spotsLeftCount', { count: spotsLeft }) : `${spotsLeft} spots left`)
+                                : (isMounted ? t('classes.schedule.soldOut') : 'Sold out')
+                              }
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                          <div>
+                            <span className="text-3xl font-bold" style={{color: 'var(--primary-dark)'}}>${event.price}</span>
+                            <span className="text-sm ml-1" style={{color: 'var(--neutral-gray)'}}>/person</span>
+                          </div>
+                          <Link href={`/events/${event.id}`} className="dance-btn dance-btn-accent hover:transform hover:scale-105 transition-all duration-300 px-4 py-2 text-sm">
+                            {isMounted ? t('ui.viewDetails') : 'View Details'}
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </>
+          )}
 
           {/* Search Section Header */}
           <div className="dance-section-header mb-12">
@@ -246,7 +367,7 @@ export default function EventsClient({
             </p>
           </div>
 
-          {/* Events Grid */}
+          {/* All Events Grid */}
           {filteredEvents.length > 0 ? (
             <div className="dance-card-grid mb-16">
               {filteredEvents.map((event) => {

@@ -65,11 +65,25 @@ export default async function EventsPage() {
   const lang = /^[a-z]{2}$/.test(rawLang) ? (rawLang as string) : 'en'
 
   let events: Event[] = []
+  let featuredEvents: Event[] = []
   let pageContent: EventsPageContent | null = null
 
   try {
+    // Fetch featured events for initial render
+    console.log('[Events Page] Attempting to fetch featured events from:', apiUrl('public/events?featuredOnly=true'))
+    const featuredEventsRes = await fetch(apiUrl('public/events?featuredOnly=true'), { cache: 'no-store' })
+    console.log('[Events Page] Featured Events API response status:', featuredEventsRes.status)
+    
+    if (featuredEventsRes.ok) {
+      const data = await featuredEventsRes.json()
+      featuredEvents = data.events || []
+      console.log('[Events Page] Successfully fetched', featuredEvents.length, 'featured events')
+    } else {
+      console.warn('[Events API Warning] Failed to fetch featured events:', featuredEventsRes.status, featuredEventsRes.statusText)
+    }
+    
     // Fetch all events
-    console.log('[Events Page] Attempting to fetch events from:', apiUrl('public/events'))
+    console.log('[Events Page] Attempting to fetch all events from:', apiUrl('public/events'))
     const eventsRes = await fetch(apiUrl('public/events'), { cache: 'no-store' })
     console.log('[Events Page] Events API response status:', eventsRes.status)
     
@@ -208,5 +222,5 @@ export default async function EventsPage() {
     } catch {}
   }
 
-  return <EventsClient initialEvents={events} initialPageContent={pageContent} initialLang={lang} />
+  return <EventsClient initialEvents={events} initialFeaturedEvents={featuredEvents} initialPageContent={pageContent} initialLang={lang} />
 }
