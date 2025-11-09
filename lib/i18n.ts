@@ -489,18 +489,6 @@ const resources = {
         payments: 'Payments',
         history: 'History'
       },
-      // Forum
-      forum: {
-        title: 'Community Forum',
-        subtitle: 'Connect with other dancers',
-        newPost: 'New Post',
-        reply: 'Reply',
-        replies: 'Replies',
-        lastReply: 'Last Reply',
-        categories: 'Categories',
-        popular: 'Popular',
-        recent: 'Recent'
-      },
       // Pricing
       pricing: {
         title: 'Pricing',
@@ -1155,6 +1143,8 @@ const resources = {
       }
     }
   },
+
+  },
   es: {
     common: {
       nav: {
@@ -1490,33 +1480,6 @@ const resources = {
         exploreClasses: '💃 Explorar Clases',
         contactUs: '📞 Contáctanos'
       },
-      // Forum Page
-      forum: {
-        title: 'Foro de la Comunidad',
-        subtitle: 'Conéctate, comparte y aprende con otros bailarines',
-        newPost: 'Nueva Publicación',
-        signInToPost: 'Iniciar Sesión para Publicar',
-        categories: {
-          all: 'Todos los Temas',
-          general: 'Discusión General',
-          technique: 'Técnicas de Danza',
-          events: 'Eventos y Sociales',
-          partners: 'Búsqueda de Pareja',
-          music: 'Música y Listas',
-          beginners: 'Rincón de Principiantes'
-        },
-        noPosts: 'Aún no hay publicaciones',
-        beFirst: '¡Sé el primero en iniciar una discusión!',
-        createFirst: 'Crear Primera Publicación',
-        loading: 'Cargando...',
-        loadingPosts: 'Cargando publicaciones...',
-        pinned: 'Fijado',
-        locked: 'Bloqueado',
-        views: 'vistas',
-        replies: 'respuestas',
-        page: 'Página',
-        of: 'de'
-      },
       // Contact Page  
       contactPage: {
         getInTouchWithUs: 'Ponte en contacto con nosotros',
@@ -1627,18 +1590,6 @@ const resources = {
         notifications: 'Notificaciones',
         payments: 'Pagos',
         history: 'Historial'
-      },
-      // Forum
-      forum: {
-        title: 'Foro de la Comunidad',
-        subtitle: 'Conecta con otros bailarines',
-        newPost: 'Nueva publicación',
-        reply: 'Responder',
-        replies: 'Respuestas',
-        lastReply: 'Última respuesta',
-        categories: 'Categorías',
-        popular: 'Popular',
-        recent: 'Reciente'
       },
       // Pricing
       pricing: {
@@ -1847,7 +1798,6 @@ const resources = {
       }
     }
   }
-}
 
 i18n
   .use(LanguageDetector)

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useCallback, useRef } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000 // 24 hours
@@ -295,7 +295,7 @@ export function TranslatedText({
 }: TranslatedTextProps) {
   const translated = useAutoTranslate(text || fallback)
   
-  return <Component className={className}>{translated}</Component>
+  return React.createElement(Component, { className: className }, translated)
 }
 
 // Export for backward compatibility
