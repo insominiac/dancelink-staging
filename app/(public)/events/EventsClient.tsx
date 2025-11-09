@@ -292,8 +292,8 @@ export default function EventsClient({
                             <span className="mr-3 text-lg">👥</span>
                             <span className="font-medium">
                               {spotsLeft > 0 
-                                ? (isMounted ? t('classes.schedule.spotsLeftCount', { count: spotsLeft }) : `${spotsLeft} spots left`)
-                                : (isMounted ? t('classes.schedule.soldOut') : 'Sold out')
+                                ? (isMounted ? t('events.spotsLeftCount', { count: spotsLeft }) : `${spotsLeft} spots left`)
+                                : (isMounted ? t('events.soldOut') : 'Sold out')
                               }
                             </span>
                           </div>
@@ -441,8 +441,8 @@ export default function EventsClient({
                           <span className="mr-3 text-lg">👥</span>
                           <span className="font-medium">
                             {spotsLeft > 0 
-                              ? (isMounted ? t('classes.schedule.spotsLeftCount', { count: spotsLeft }) : `${spotsLeft} spots left`)
-                              : (isMounted ? t('classes.schedule.soldOut') : 'Sold out')
+                              ? (isMounted ? t('events.spotsLeftCount', { count: spotsLeft }) : `${spotsLeft} spots left`)
+                              : (isMounted ? t('events.soldOut') : 'Sold out')
                             }
                           </span>
                         </div>
