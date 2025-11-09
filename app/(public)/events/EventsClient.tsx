@@ -286,7 +286,7 @@ export default function EventsClient({
                           </div>
                           <div className="flex items-center" style={{color: 'var(--primary-dark)'}}>
                             <span className="mr-3 text-lg">📍</span>
-                            <span className="font-medium">{event.venue?.name || (isMounted ? t('classes.tbd') : 'TBD')}</span>
+                            <span className="font-medium">{event.venue?.name || (isMounted ? t('events.tbd') : 'TBD')}</span>
                           </div>
                           <div className="flex items-center" style={{color: 'var(--primary-dark)'}}>
                             <span className="mr-3 text-lg">👥</span>
@@ -435,7 +435,7 @@ export default function EventsClient({
                         </div>
                         <div className="flex items-center" style={{color: 'var(--primary-dark)'}}>
                           <span className="mr-3 text-lg">📍</span>
-                          <span className="font-medium">{event.venue?.name || (isMounted ? t('classes.tbd') : 'TBD')}</span>
+                          <span className="font-medium">{event.venue?.name || (isMounted ? t('events.tbd') : 'TBD')}</span>
                         </div>
                         <div className="flex items-center" style={{color: 'var(--primary-dark)'}}>
                           <span className="mr-3 text-lg">👥</span>

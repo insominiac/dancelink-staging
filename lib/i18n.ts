@@ -234,6 +234,7 @@ const resources = {
         perPerson: '/person',
         spotsLeftCount: '{{count}} spots left',
         soldOut: 'Sold out',
+        tbd: 'TBD',
         searchPlaceholder: '🔍 Search events by name or description...',
         searchEvents: 'Search Events',
         availabilityLabel: 'Event Availability',
@@ -834,6 +835,7 @@ const resources = {
         perPerson: '/인',
         spotsLeftCount: '{{count}}명 남음',
         soldOut: '매진',
+        tbd: '미정',
         searchPlaceholder: '🔍 이벤트를 이름 또는 설명으로 검색...',
         searchEvents: '이벤트 검색',
         availabilityLabel: '이벤트 예약 현황',
@@ -1056,6 +1058,7 @@ const resources = {
         perPerson: '/người',
         spotsLeftCount: '{{count}} chỗ còn lại',
         soldOut: 'Hết chỗ',
+        tbd: 'Chưa xác định',
         searchPlaceholder: '🔍 Tìm kiếm sự kiện theo tên hoặc mô tả...',
         searchEvents: 'Tìm kiếm sự kiện',
         availabilityLabel: 'Tình trạng sự kiện',
@@ -1077,6 +1080,7 @@ const resources = {
           from50to100: '$50 - $100',
           over100: 'Trên $100'
         }
+      },
       },
       // Privacy Policy
       privacy: {
@@ -1377,6 +1381,7 @@ const resources = {
         perPerson: '/persona',
         spotsLeftCount: '{{count}} cupos disponibles',
         soldOut: 'Agotado',
+        tbd: 'Por confirmar',
         searchPlaceholder: '🔍 Buscar eventos por nombre o descripción...',
         searchEvents: 'Buscar Eventos',
         availabilityLabel: 'Disponibilidad del evento',
