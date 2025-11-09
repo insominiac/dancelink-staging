@@ -63,6 +63,44 @@ export default function EventsClient({
   const [filters, setFilters] = useState({ eventType: 'all', month: 'all', priceRange: 'all' })
   const [searchTerm, setSearchTerm] = useState('')
 
+  // Fetch events client-side if initialEvents is empty
+  useEffect(() => {
+    const fetchEventsIfNeeded = async () => {
+      if (initialEvents.length === 0 && isMounted) {
+        console.log('[Events Client] Initial events empty, fetching from client-side')
+        try {
+          const res = await fetch('/api/public/events')
+          if (res.ok) {
+            const data = await res.json()
+            const fetchedEvents = data.events || []
+            console.log('[Events Client] Fetched', fetchedEvents.length, 'events client-side')
+            setEvents(fetchedEvents)
+            setFilteredEvents(fetchedEvents)
+          } else {
+            console.warn('[Events Client] Failed to fetch events client-side:', res.status)
+          }
+        } catch (error) {
+          console.error('[Events Client] Error fetching events client-side:', error)
+          // Try direct fetch to external API as last resort
+          try {
+            const res = await fetch('https://dance-api-omega.vercel.app/api/public/events')
+            if (res.ok) {
+              const data = await res.json()
+              const fetchedEvents = data.events || []
+              console.log('[Events Client] Fetched', fetchedEvents.length, 'events from external API')
+              setEvents(fetchedEvents)
+              setFilteredEvents(fetchedEvents)
+            }
+          } catch (directError) {
+            console.error('[Events Client] Direct fetch also failed:', directError)
+          }
+        }
+      }
+    }
+    
+    fetchEventsIfNeeded()
+  }, [initialEvents, isMounted])
+
   useEffect(() => {
     setIsMounted(true)
   }, [])

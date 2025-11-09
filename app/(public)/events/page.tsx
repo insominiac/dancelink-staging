@@ -69,18 +69,39 @@ export default async function EventsPage() {
 
   try {
     // Fetch all events
+    console.log('[Events Page] Attempting to fetch events from:', apiUrl('public/events'))
     const eventsRes = await fetch(apiUrl('public/events'), { cache: 'no-store' })
+    console.log('[Events Page] Events API response status:', eventsRes.status)
+    
     if (eventsRes.ok) {
       const data = await eventsRes.json()
       events = data.events || []
+      console.log('[Events Page] Successfully fetched', events.length, 'events')
     } else {
       console.warn('[Events API Warning] Failed to fetch events:', eventsRes.status, eventsRes.statusText)
+      // Try a direct fetch to the external API as fallback
+      try {
+        console.log('[Events Page] Trying direct fetch to external API')
+        const directRes = await fetch('https://dance-api-omega.vercel.app/api/public/events', { 
+          cache: 'no-store'
+        })
+        if (directRes.ok) {
+          const data = await directRes.json()
+          events = data.events || []
+          console.log('[Events Page] Fallback fetch successful, got', events.length, 'events')
+        }
+      } catch (directError) {
+        console.error('[Events Page] Direct fetch also failed:', directError)
+      }
       // Provide default events if API call fails
       events = []
     }
     
     // Fetch page content
+    console.log('[Events Page] Attempting to fetch page content from:', apiUrl('public/content/events'))
     const contentRes = await fetch(apiUrl('public/content/events'), { cache: 'no-store' })
+    console.log('[Events Page] Content API response status:', contentRes.status)
+    
     if (contentRes.ok) {
       const data = await contentRes.json()
       // Map the API response to the expected structure
@@ -94,6 +115,7 @@ export default async function EventsPage() {
         noEventsTitle: data.noEventsTitle || 'No events found',
         noEventsDescription: data.noEventsDescription || 'Check back later for new events'
       }
+      console.log('[Events Page] Successfully fetched page content')
     } else {
       console.warn('[Content API Warning] Failed to fetch content:', contentRes.status, contentRes.statusText)
       // Provide default content if API call fails
@@ -110,8 +132,22 @@ export default async function EventsPage() {
     }
   } catch (error) {
     console.error('[Events Page Data Fetch Error]', error)
+    // Try a direct fetch to the external API as last resort
+    try {
+      console.log('[Events Page] Trying direct fetch to external API as last resort')
+      const directRes = await fetch('https://dance-api-omega.vercel.app/api/public/events', { 
+        cache: 'no-store'
+      })
+      if (directRes.ok) {
+        const data = await directRes.json()
+        events = data.events || []
+        console.log('[Events Page] Last resort fetch successful, got', events.length, 'events')
+      }
+    } catch (directError) {
+      console.error('[Events Page] Last resort direct fetch also failed:', directError)
+    }
     // Provide default values if fetch fails completely
-    events = []
+    events = events.length > 0 ? events : [] // Keep any events we might have fetched in fallback
     pageContent = {
       heroTitle: 'Join Our Dance Events',
       heroSubtitle: 'Discover exciting workshops, competitions, and social gatherings in our dance community',
