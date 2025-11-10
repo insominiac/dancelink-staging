@@ -234,7 +234,7 @@ const resources = {
         perPerson: '/person',
         spotsLeftCount: '{{count}} spots left',
         soldOut: 'Sold out',
-        tbd: 'TBD',
+        eventsFound: 'events found',
         searchPlaceholder: '🔍 Search events by name or description...',
         searchEvents: 'Search Events',
         availabilityLabel: 'Event Availability',
@@ -268,6 +268,22 @@ const resources = {
           price: 'Price',
           organizer: 'Organizer',
           attendees: 'Attendees'
+        },
+        // CTA Section
+        ctaBadgeText: 'Join the Experience',
+        ctaTitle: 'Ready to Dance?',
+        ctaDescription: 'Don\'t miss out on these exclusive dance events! Book early to secure your spot and join our vibrant community of dancers.',
+        ctaButtons: {
+          primary: '🎫 Reserve Your Spot',
+          secondary: '📞 Get Event Updates'
+        },
+        ctaFeatures: {
+          earlyBird: 'Early Bird Discounts',
+          earlyBirdDesc: 'Book in advance and save up to 25% on event tickets',
+          vip: 'VIP Experience',
+          vipDesc: 'Front row seats and exclusive meet & greets available',
+          group: 'Group Packages',
+          groupDesc: 'Bring friends and save more with special group rates'
         }
       },
       // About Page
@@ -823,7 +839,7 @@ const resources = {
         perPerson: '/인',
         spotsLeftCount: '{{count}}명 남음',
         soldOut: '매진',
-        tbd: '미정',
+        eventsFound: '이벤트 발견',
         searchPlaceholder: '🔍 이벤트를 이름 또는 설명으로 검색...',
         searchEvents: '이벤트 검색',
         availabilityLabel: '이벤트 예약 현황',
@@ -844,6 +860,22 @@ const resources = {
           from25to50: '$25 - $50',
           from50to100: '$50 - $100',
           over100: '$100 이상'
+        },
+        // CTA Section
+        ctaBadgeText: '체험에 참여하세요',
+        ctaTitle: '춤출 준비되셨나요?',
+        ctaDescription: '이 독점적인 댄스 이벤트를 놓치지 마세요! 조기 예약으로 자리를 확보하고 활기찬 댄서 커뮤니티에 참여하세요.',
+        ctaButtons: {
+          primary: '🎫 자리를 예약하세요',
+          secondary: '📞 이벤트 업데이트 받기'
+        },
+        ctaFeatures: {
+          earlyBird: '얼리버드 할인',
+          earlyBirdDesc: '사전 예약으로 이벤트 티켓 최대 25% 할인',
+          vip: 'VIP 경험',
+          vipDesc: '앞줄 좌석과 독점 미트 앤 그릿 가능',
+          group: '그룹 패키지',
+          groupDesc: '친구들과 함께 특별 그룹 요금으로 더 많은 할인'
         }
       },
       // Privacy Policy
@@ -1046,7 +1078,7 @@ const resources = {
         perPerson: '/người',
         spotsLeftCount: '{{count}} chỗ còn lại',
         soldOut: 'Hết chỗ',
-        tbd: 'Chưa xác định',
+        eventsFound: 'sự kiện được tìm thấy',
         searchPlaceholder: '🔍 Tìm kiếm sự kiện theo tên hoặc mô tả...',
         searchEvents: 'Tìm kiếm sự kiện',
         availabilityLabel: 'Tình trạng sự kiện',
@@ -1067,8 +1099,23 @@ const resources = {
           from25to50: '$25 - $50',
           from50to100: '$50 - $100',
           over100: 'Trên $100'
+        },
+        // CTA Section
+        ctaBadgeText: 'Tham gia trải nghiệm',
+        ctaTitle: 'Sẵn sàng khiêu vũ?',
+        ctaDescription: 'Đừng bỏ lỡ những sự kiện khiêu vũ độc quyền này! Đặt chỗ sớm để đảm bảo vị trí và tham gia cộng đồng vũ công năng động của chúng tôi.',
+        ctaButtons: {
+          primary: '🎫 Đặt chỗ của bạn',
+          secondary: '📞 Nhận cập nhật sự kiện'
+        },
+        ctaFeatures: {
+          earlyBird: 'Giảm giá đặt sớm',
+          earlyBirdDesc: 'Đặt chỗ trước và tiết kiệm tới 25% vé sự kiện',
+          vip: 'Trải nghiệm VIP',
+          vipDesc: 'Ghế hàng ghế đầu và gặp gỡ độc quyền có sẵn',
+          group: 'Gói nhóm',
+          groupDesc: 'Mang theo bạn bè và tiết kiệm nhiều hơn với giá nhóm đặc biệt'
         }
-      },
       },
       // Privacy Policy
       privacy: {
@@ -1142,8 +1189,6 @@ const resources = {
         }
       }
     }
-  },
-
   },
   es: {
     common: {
@@ -1371,7 +1416,7 @@ const resources = {
         perPerson: '/persona',
         spotsLeftCount: '{{count}} cupos disponibles',
         soldOut: 'Agotado',
-        tbd: 'Por confirmar',
+        eventsFound: 'eventos encontrados',
         searchPlaceholder: '🔍 Buscar eventos por nombre o descripción...',
         searchEvents: 'Buscar Eventos',
         availabilityLabel: 'Disponibilidad del evento',
@@ -1397,6 +1442,22 @@ const resources = {
           price: 'Precio',
           organizer: 'Organizador',
           attendees: 'Asistentes'
+        },
+        // CTA Section
+        ctaBadgeText: 'Únete a la Experiencia',
+        ctaTitle: '¿Listo para Bailar?',
+        ctaDescription: '¡No te pierdas estos eventos de baile exclusivos! Reserva con anticipación para asegurar tu lugar y únete a nuestra vibrante comunidad de bailarines.',
+        ctaButtons: {
+          primary: '🎫 Reserva tu Lugar',
+          secondary: '📞 Recibe Actualizaciones'
+        },
+        ctaFeatures: {
+          earlyBird: 'Descuentos por Reserva Anticipada',
+          earlyBirdDesc: 'Reserva con anticipación y ahorra hasta un 25% en entradas',
+          vip: 'Experiencia VIP',
+          vipDesc: 'Asientos en primera fila y encuentros exclusivos disponibles',
+          group: 'Paquetes para Grupos',
+          groupDesc: 'Trae amigos y ahorra más con tarifas especiales para grupos'
         }
       },
       // About Page
@@ -1479,6 +1540,33 @@ const resources = {
         },
         exploreClasses: '💃 Explorar Clases',
         contactUs: '📞 Contáctanos'
+      },
+      // Forum Page
+      forum: {
+        title: 'Foro de la Comunidad',
+        subtitle: 'Conéctate, comparte y aprende con otros bailarines',
+        newPost: 'Nueva Publicación',
+        signInToPost: 'Iniciar Sesión para Publicar',
+        categories: {
+          all: 'Todos los Temas',
+          general: 'Discusión General',
+          technique: 'Técnicas de Danza',
+          events: 'Eventos y Sociales',
+          partners: 'Búsqueda de Pareja',
+          music: 'Música y Listas',
+          beginners: 'Rincón de Principiantes'
+        },
+        noPosts: 'Aún no hay publicaciones',
+        beFirst: '¡Sé el primero en iniciar una discusión!',
+        createFirst: 'Crear Primera Publicación',
+        loading: 'Cargando...',
+        loadingPosts: 'Cargando publicaciones...',
+        pinned: 'Fijado',
+        locked: 'Bloqueado',
+        views: 'vistas',
+        replies: 'respuestas',
+        page: 'Página',
+        of: 'de'
       },
       // Contact Page  
       contactPage: {
@@ -1798,6 +1886,7 @@ const resources = {
       }
     }
   }
+}
 
 i18n
   .use(LanguageDetector)

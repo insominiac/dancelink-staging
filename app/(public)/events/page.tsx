@@ -41,6 +41,20 @@ interface EventsPageContent {
   // No Events
   noEventsTitle?: string
   noEventsDescription?: string
+  
+  // CTA Section
+  ctaBadgeText?: string
+  ctaTitle?: string
+  ctaDescription?: string
+  ctaButtons?: {
+    primary?: { text: string; href: string };
+    secondary?: { text: string; href: string };
+  };
+  ctaFeatures?: Array<{
+    icon: string;
+    title: string;
+    description: string;
+  }>;
 }
 
 export async function generateMetadata() {
@@ -127,7 +141,12 @@ export default async function EventsPage() {
         searchTitle: data.searchTitle,
         searchDescription: data.searchDescription,
         noEventsTitle: data.noEventsTitle || 'No events found',
-        noEventsDescription: data.noEventsDescription || 'Check back later for new events'
+        noEventsDescription: data.noEventsDescription || 'Check back later for new events',
+        ctaBadgeText: data.ctaBadgeText,
+        ctaTitle: data.ctaTitle,
+        ctaDescription: data.ctaDescription,
+        ctaButtons: data.ctaButtons,
+        ctaFeatures: data.ctaFeatures
       }
       console.log('[Events Page] Successfully fetched page content')
     } else {
@@ -141,7 +160,19 @@ export default async function EventsPage() {
         searchTitle: 'Find Your Perfect Event',
         searchDescription: 'Browse through our upcoming events and find the perfect dance experience for you',
         noEventsTitle: 'No events found',
-        noEventsDescription: 'Check back later for new events'
+        noEventsDescription: 'Check back later for new events',
+        ctaBadgeText: 'Join the Experience',
+        ctaTitle: 'Ready to Dance?',
+        ctaDescription: 'Don\'t miss out on these exclusive dance events! Book early to secure your spot and join our vibrant community of dancers.',
+        ctaButtons: {
+          primary: { text: '🎫 Reserve Your Spot', href: '/contact' },
+          secondary: { text: '📞 Get Event Updates', href: '/contact' }
+        },
+        ctaFeatures: [
+          { icon: '🎯', title: 'Early Bird Discounts', description: 'Book in advance and save up to 25% on event tickets' },
+          { icon: '🎆', title: 'VIP Experience', description: 'Front row seats and exclusive meet & greets available' },
+          { icon: '🎁', title: 'Group Packages', description: 'Bring friends and save more with special group rates' }
+        ]
       }
     }
   } catch (error) {
@@ -170,7 +201,19 @@ export default async function EventsPage() {
       searchTitle: 'Find Your Perfect Event',
       searchDescription: 'Browse through our upcoming events and find the perfect dance experience for you',
       noEventsTitle: 'No events found',
-      noEventsDescription: 'Check back later for new events'
+      noEventsDescription: 'Check back later for new events',
+      ctaBadgeText: 'Join the Experience',
+      ctaTitle: 'Ready to Dance?',
+      ctaDescription: 'Don\'t miss out on these exclusive dance events! Book early to secure your spot and join our vibrant community of dancers.',
+      ctaButtons: {
+        primary: { text: '🎫 Reserve Your Spot', href: '/contact' },
+        secondary: { text: '📞 Get Event Updates', href: '/contact' }
+      },
+      ctaFeatures: [
+        { icon: '🎯', title: 'Early Bird Discounts', description: 'Book in advance and save up to 25% on event tickets' },
+        { icon: '🎆', title: 'VIP Experience', description: 'Front row seats and exclusive meet & greets available' },
+        { icon: '🎁', title: 'Group Packages', description: 'Bring friends and save more with special group rates' }
+      ]
     }
   }
 
@@ -201,7 +244,8 @@ export default async function EventsPage() {
     const contentTexts: string[] = []
     const keys: Array<keyof EventsPageContent> = [
       'heroTitle', 'heroSubtitle', 'featuredTitle', 'featuredDescription', 
-      'searchTitle', 'searchDescription', 'noEventsTitle', 'noEventsDescription'
+      'searchTitle', 'searchDescription', 'noEventsTitle', 'noEventsDescription',
+      'ctaBadgeText', 'ctaTitle', 'ctaDescription'
     ]
     const keyIndex: { key: keyof EventsPageContent }[] = []
     keys.forEach((k) => {

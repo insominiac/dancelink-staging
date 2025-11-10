@@ -289,19 +289,19 @@ export default function PublicLayout({
             {siteSettings?.footer?.newsletter?.enabled && siteSettings?.footer?.layout === 'columns' && (
               <div className="footer-section space-y-4">
                 <h3 className="text-lg font-bold mb-4 tracking-wide" style={{color: 'var(--primary-gold)'}}>
-                  {siteSettings.footer.newsletter.title || ''}
+                  <TranslatedText text={siteSettings.footer.newsletter.title || t('footer.newsletter.title') || 'Stay Updated'} />
                 </h3>
                 <p className="text-sm leading-relaxed mb-6 text-white opacity-90">
-                  {siteSettings.footer.newsletter.description || ''}
+                  <TranslatedText text={siteSettings.footer.newsletter.description || t('footer.newsletter.description') || 'Get the latest updates on classes, events, and dance tips!'} />
                 </p>
                 <div className="flex flex-col gap-3">
                   <input
                     type="email"
-                    placeholder={isMounted ? t('footer.emailPlaceholder') : 'Enter your email'}
+                    placeholder={t('footer.emailPlaceholder') || 'Enter your email'}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all"
                   />
                   <button className="w-full px-6 py-3 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition-colors shadow-lg hover:shadow-xl">
-                    {siteSettings.footer.newsletter.buttonText || 'Subscribe'}
+                    <TranslatedText text={siteSettings.footer.newsletter.buttonText || t('footer.newsletter.subscribe') || 'Subscribe'} />
                   </button>
                 </div>
               </div>
@@ -311,7 +311,7 @@ export default function PublicLayout({
             {siteSettings?.footer?.showQuickLinks && siteSettings?.footer?.quickLinks && siteSettings.footer.quickLinks.length > 0 && siteSettings?.footer?.layout === 'columns' && (
               <div className="footer-section space-y-4">
                 <h3 className="text-lg font-bold mb-4 tracking-wide" style={{color: 'var(--primary-gold)'}}>
-                  {isMounted ? t('footer.quickLinks') : 'Quick Links'}
+                  <TranslatedText text={t('footer.quickLinks') || 'Quick Links'} />
                 </h3>
                 <ul className="space-y-3">
                   {siteSettings.footer.quickLinks.map((link, index) => (
@@ -334,7 +334,7 @@ export default function PublicLayout({
             {siteSettings?.footer?.showContact && siteSettings?.footer?.layout === 'columns' && (
               <div className="footer-section space-y-4">
                 <h3 className="text-lg font-bold mb-4 tracking-wide" style={{color: 'var(--primary-gold)'}}>
-                  {siteSettings?.footer?.contactSection?.title || (isMounted ? t('footer.getInTouch') : 'Get in Touch')}
+                  <TranslatedText text={siteSettings?.footer?.contactSection?.title || t('footer.getInTouch') || 'Get in Touch'} />
                 </h3>
                 <div className="space-y-3 text-sm text-white opacity-90">
                   {siteSettings?.footer?.contactSection?.showEmail && siteSettings?.contactEmail && (
@@ -370,7 +370,7 @@ export default function PublicLayout({
             {siteSettings?.footer?.showSocialLinks && siteSettings?.footer?.layout === 'columns' && (
               <div className="footer-section space-y-4">
                 <h3 className="text-lg font-bold mb-4 tracking-wide" style={{color: 'var(--primary-gold)'}}>
-                  {siteSettings?.footer?.socialLinksTitle || (isMounted ? t('footer.followUs') : 'Follow Us')}
+                  <TranslatedText text={siteSettings?.footer?.socialLinksTitle || t('footer.followUs') || 'Follow Us'} />
                 </h3>
                 <div className="flex items-center flex-wrap gap-3">
                   {siteSettings?.socialMedia?.facebook && (
@@ -437,7 +437,7 @@ export default function PublicLayout({
                 {/* Tagline */}
                 {siteSettings?.footer?.showTagline && siteSettings?.footer?.tagline && (
                   <p className="text-lg mb-6" style={{color: 'var(--primary-gold)'}}>
-                    {siteSettings.footer.tagline}
+                    <TranslatedText text={siteSettings.footer.tagline} />
                   </p>
                 )}
                 
@@ -532,8 +532,18 @@ export default function PublicLayout({
           {/* Copyright - Always at bottom */}
           <div className="border-t border-white/10 mt-8 pt-8 px-6 md:px-8 lg:px-12">
             <p className="footer-text text-sm text-center text-white opacity-75">
-              {siteSettings?.footer?.customCopyrightText || (
-                `© ${siteSettings?.footer?.copyrightYear || new Date().getFullYear()} ${siteSettings?.siteName || (isMounted ? t('nav.siteName') : 'DanceLink')}. ${siteSettings?.footer?.copyrightText || (isMounted ? t('footer.allRightsReserved') : 'All rights reserved.')}`
+              {siteSettings?.footer?.customCopyrightText ? (
+                <TranslatedText text={siteSettings.footer.customCopyrightText} />
+              ) : (
+                <>
+                  © {siteSettings?.footer?.copyrightYear || new Date().getFullYear()}{' '}
+                  {siteSettings?.siteName ? (
+                    <TranslatedText text={siteSettings.siteName} />
+                  ) : (
+                    <TranslatedText text={t('nav.siteName')} />
+                  )}
+                  . <TranslatedText text={t('footer.allRightsReserved') || 'All rights reserved.'} />
+                </>
               )}
             </p>
           </div>

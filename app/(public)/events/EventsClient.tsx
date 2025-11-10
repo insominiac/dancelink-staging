@@ -43,6 +43,20 @@ interface EventsPageContent {
   // No Events
   noEventsTitle?: string
   noEventsDescription?: string
+  
+  // CTA Section
+  ctaBadgeText?: string
+  ctaTitle?: string
+  ctaDescription?: string
+  ctaButtons?: {
+    primary?: { text: string; href: string };
+    secondary?: { text: string; href: string };
+  };
+  ctaFeatures?: Array<{
+    icon: string;
+    title: string;
+    description: string;
+  }>;
 }
 
 export default function EventsClient({
@@ -252,7 +266,7 @@ export default function EventsClient({
                         {event.isFeatured && (
                           <div className="absolute top-4 right-4">
                             <span className="px-3 py-1 text-xs font-bold rounded-full flex items-center text-white" style={{background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'}}>
-                              <span className="mr-1">⭐</span> FEATURED
+                              <span className="mr-1">⭐</span> {isMounted ? t('events.featured') : 'FEATURED'}
                             </span>
                           </div>
                         )}
@@ -267,7 +281,7 @@ export default function EventsClient({
                         </div>
                         <div className="absolute bottom-4 left-4 right-4">
                           <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-yellow-300 transition-colors">
-                            {event.title}
+                            <TranslatedText text={event.title} />
                           </h3>
                           <p style={{color: 'var(--neutral-light)'}} className="text-sm font-medium uppercase tracking-wide">
                             {formatEventDate(event.startDate, event.endDate)}
@@ -277,7 +291,7 @@ export default function EventsClient({
                       </div>
                       <div className="p-6">
                         <p style={{color: 'var(--neutral-gray)'}} className="mb-6 leading-relaxed line-clamp-2">
-                          {event.description}
+                          <TranslatedText text={event.description} />
                         </p>
                         <div className="space-y-3 mb-6">
                           <div className="flex items-center" style={{color: 'var(--primary-dark)'}}>
@@ -355,7 +369,7 @@ export default function EventsClient({
                 <option value="100-9999">{isMounted ? t('events.priceRanges.over100') : 'Over $100'}</option>
               </select>
               <button onClick={() => { setFilters({ eventType: 'all', month: 'all', priceRange: 'all' }); setSearchTerm('') }} className="dance-btn dance-btn-secondary hover:transform hover:scale-105 transition-all duration-300 px-4 py-2 text-sm">
-                Clear Filters
+                {isMounted ? t('classes.clearFilters') : 'Clear Filters'}
               </button>
             </div>
           </div>
@@ -363,7 +377,7 @@ export default function EventsClient({
           {/* Results Count */}
           <div className="mb-8 text-center">
             <p className="text-lg" style={{color: 'var(--neutral-gray)'}}>
-              <span className="font-semibold" style={{color: 'var(--primary-gold)'}}>{filteredEvents.length}</span> events found
+              <span className="font-semibold" style={{color: 'var(--primary-gold)'}}>{filteredEvents.length}</span> {isMounted ? t('events.eventsFound') : 'events found'}
             </p>
           </div>
 
@@ -401,7 +415,7 @@ export default function EventsClient({
                       {event.isFeatured && (
                         <div className="absolute top-4 right-4">
                           <span className="px-3 py-1 text-xs font-bold rounded-full flex items-center text-white" style={{background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'}}>
-                            <span className="mr-1">⭐</span> FEATURED
+                            <span className="mr-1">⭐</span> {isMounted ? t('events.featured') : 'FEATURED'}
                           </span>
                         </div>
                       )}
@@ -416,7 +430,7 @@ export default function EventsClient({
                       </div>
                       <div className="absolute bottom-4 left-4 right-4">
                         <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-yellow-300 transition-colors">
-                          {event.title}
+                          <TranslatedText text={event.title} />
                         </h3>
                         <p style={{color: 'var(--neutral-light)'}} className="text-sm font-medium uppercase tracking-wide">
                           {formatEventDate(event.startDate, event.endDate)}
@@ -426,7 +440,7 @@ export default function EventsClient({
                     </div>
                     <div className="p-6">
                       <p style={{color: 'var(--neutral-gray)'}} className="mb-6 leading-relaxed line-clamp-2">
-                        {event.description}
+                        <TranslatedText text={event.description} />
                       </p>
                       <div className="space-y-3 mb-6">
                         <div className="flex items-center" style={{color: 'var(--primary-dark)'}}>
@@ -470,6 +484,58 @@ export default function EventsClient({
           )}
         </div>
       </section>
+
+      {/* CTA Section */}
+      {pageContent.ctaTitle && (
+        <section className="py-16" style={{background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'}}>
+          <div className="dance-container text-center">
+            {pageContent.ctaBadgeText && (
+              <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white mb-5">
+                <span className="text-sm font-medium"><TranslatedText text={pageContent.ctaBadgeText} /></span>
+              </div>
+            )}
+            
+            <h2 className="text-3xl md:text-4xl font-bold mb-5 text-white">
+              <TranslatedText text={pageContent.ctaTitle} />
+            </h2>
+            
+            <p className="text-base md:text-lg text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed">
+              <TranslatedText text={pageContent.ctaDescription} />
+            </p>
+            
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+              {pageContent.ctaButtons?.primary && (
+                <Link 
+                  href={pageContent.ctaButtons.primary.href}
+                  className="px-8 py-4 bg-white text-gray-800 rounded-full font-semibold hover:transform hover:scale-105 hover:shadow-2xl transition-all duration-300"
+                  style={{color: 'var(--primary-dark)'}}
+                >
+                  <TranslatedText text={pageContent.ctaButtons.primary.text} />
+                </Link>
+              )}
+              {pageContent.ctaButtons?.secondary && (
+                <Link 
+                  href={pageContent.ctaButtons.secondary.href}
+                  className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-gray-800 hover:transform hover:scale-105 hover:shadow-2xl transition-all duration-300"
+                >
+                  <TranslatedText text={pageContent.ctaButtons.secondary.text} />
+                </Link>
+              )}
+            </div>
+            
+            {pageContent.ctaFeatures && pageContent.ctaFeatures.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 text-sm">
+                {pageContent.ctaFeatures.map((feature, index) => (
+                  <div key={index} className="opacity-90">
+                    <div className="text-2xl mb-2">{feature.icon}</div>
+                    <p><strong><TranslatedText text={feature.title} /></strong><br/><TranslatedText text={feature.description} /></p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
     </div>
   )
 }
