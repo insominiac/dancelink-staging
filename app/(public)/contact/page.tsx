@@ -160,13 +160,14 @@ export default function ContactPage() {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const response = await fetch('/api/public/content/contact')
+        const response = await fetch('/api/admin/content/contact')
         if (response.ok) {
           const data = await response.json()
           setContent(data.content)
         }
       } catch (error) {
         console.error('Error fetching contact content:', error)
+        // Continue with null content, fallbacks will be used
       } finally {
         setIsLoading(false)
       }
@@ -197,7 +198,44 @@ export default function ContactPage() {
   if (isLoading) {
     return (
       <div className="min-h-[calc(100vh-200px)]" style={{background: 'var(--neutral-light)'}}>
-        <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
+        {/* Hero Section - Loading State */}
+        <section 
+          className="relative py-16 md:py-20 overflow-hidden mt-20"
+          style={{
+            background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))'
+          }}
+        >
+          <div 
+            className="absolute inset-0 opacity-20"
+            style={{
+              backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M30 5 L35 15 L45 15 L37.5 22.5 L40 32.5 L30 25 L20 32.5 L22.5 22.5 L15 15 L25 15 Z" fill="%23ffffff" fill-opacity="0.3"/%3E%3C/svg%3E")',
+              backgroundSize: '30px 30px'
+            }}
+          ></div>
+          
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-8 left-10 text-2xl opacity-20 text-white animate-pulse">📞</div>
+            <div className="absolute top-12 right-10 text-2xl opacity-20 text-white animate-pulse" style={{animationDelay: '1s'}}>✉️</div>
+            <div className="absolute bottom-8 left-1/2 text-2xl opacity-20 text-white animate-pulse" style={{animationDelay: '2s'}}>💬</div>
+          </div>
+          
+          <div className="relative z-10 dance-container text-center">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white mb-5">
+              <span className="mr-2">📞</span>
+              <span className="text-sm font-medium">{isMounted ? <TranslatedText text={seo?.ogTitle || 'Get in touch with us'} /> : <TranslatedText text="Get in touch with us" />}</span>
+            </div>
+            
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-5 dance-font text-white">
+              Contact <span className="text-yellow-100 dance-font">Us</span>
+            </h1>
+            
+            <p className="text-base md:text-lg text-white/90 mb-7 max-w-2xl mx-auto leading-relaxed">
+              <TranslatedText text="Ready to start dancing? We're here to help you find the perfect class!" />
+            </p>
+          </div>
+        </section>
+        
+        <div className="dance-container py-16 flex-grow flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 mb-4 mx-auto" style={{borderBottomColor: 'var(--primary-gold)'}}></div>
             <p className="text-gray-600">{isMounted ? t('ui.loading') : <TranslatedText text="Loading..." />}</p>
@@ -232,15 +270,15 @@ export default function ContactPage() {
         <div className="relative z-10 dance-container text-center">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white mb-5">
             <span className="mr-2">📞</span>
-            <span className="text-sm font-medium"><TranslatedText text={seo?.ogTitle} /></span>
+            <span className="text-sm font-medium"><TranslatedText text={seo?.ogTitle || 'Get in Touch'} /></span>
           </div>
           
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-5 dance-font text-white">
-            <TranslatedText text={content?.heroTitle} />
+            <TranslatedText text={content?.heroTitle || seo?.title || 'Contact Us'} />
           </h1>
           
           <p className="text-base md:text-lg text-white/90 mb-7 max-w-2xl mx-auto leading-relaxed">
-            <TranslatedText text={content?.heroSubtitle} />
+            <TranslatedText text={content?.heroSubtitle || seo?.description || 'We are here to help you. Send us a message and we will respond soon.'} />
           </p>
           
           {/* Quick Action Buttons */}
@@ -299,8 +337,8 @@ export default function ContactPage() {
       <section className="py-16 md:py-24" style={{background: 'var(--neutral-light)'}}>
         <div className="dance-container">
           <div className="text-center mb-16">
-<h2 className="text-3xl md:text-4xl font-bold mb-6" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.formTitle} /></h2>
-<p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{color: 'var(--neutral-gray)'}}><TranslatedText text={content?.formSubtitle} /></p>
+<h2 className="text-3xl md:text-4xl font-bold mb-6" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.formTitle || "📝 Send Us a Message"} /></h2>
+<p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{color: 'var(--neutral-gray)'}}><TranslatedText text={content?.formSubtitle || "Fill out the form below and we'll get back to you within 24 hours"} /></p>
           </div>
           <div className="dance-card max-w-3xl mx-auto">
             {/* Success/Error Message */}
@@ -327,42 +365,42 @@ export default function ContactPage() {
             <form className="space-y-8" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-3" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.formFields?.nameLabel} /></label>
+                  <label className="block text-sm font-medium mb-3" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.formFields?.nameLabel || "Name *"} /></label>
                   <input 
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
                     className="w-full px-5 py-4 border-2 rounded-full focus:border-yellow-400 focus:outline-none transition border-gray-300 text-base" 
-                    placeholder={content?.formFields?.namePlaceholder} 
+                    placeholder={content?.formFields?.namePlaceholder || "Your name"} 
                     required 
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-3" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.formFields?.phoneLabel} /></label>
+                  <label className="block text-sm font-medium mb-3" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.formFields?.phoneLabel || "Phone"} /></label>
                   <input 
                     type="tel"
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
                     className="w-full px-5 py-4 border-2 rounded-full focus:border-yellow-400 focus:outline-none transition border-gray-300 text-base" 
-                    placeholder={content?.formFields?.phonePlaceholder} 
+                    placeholder={content?.formFields?.phonePlaceholder || "(123) 456-7890"} 
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-3" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.formFields?.emailLabel} /></label>
+                <label className="block text-sm font-medium mb-3" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.formFields?.emailLabel || "Email *"} /></label>
                 <input 
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
                   className="w-full px-5 py-4 border-2 rounded-full focus:border-yellow-400 focus:outline-none transition border-gray-300 text-base" 
-                  placeholder={content?.formFields?.emailPlaceholder} 
+                  placeholder={content?.formFields?.emailPlaceholder || "you@example.com"} 
                   required 
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-3" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.formFields?.interestLabel} /></label>
+                <label className="block text-sm font-medium mb-3" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.formFields?.interestLabel || "I'm interested in:"} /></label>
                 <select 
                   name="subject"
                   value={formData.subject}
@@ -382,14 +420,14 @@ export default function ContactPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-3" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.formFields?.messageLabel} /></label>
+                <label className="block text-sm font-medium mb-3" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.formFields?.messageLabel || "Message * (minimum 10 characters)"} /></label>
                 <textarea 
                   name="message"
                   value={formData.message}
                   onChange={handleInputChange}
                   className="w-full px-5 py-4 border-2 rounded-lg focus:border-yellow-400 focus:outline-none transition border-gray-300 text-base" 
                   rows={6} 
-                  placeholder={content?.formFields?.messagePlaceholder}
+                  placeholder={content?.formFields?.messagePlaceholder || "Tell us about your dance goals, experience level, or any questions you have..."}
                   required
                 ></textarea>
               </div>
@@ -412,10 +450,10 @@ export default function ContactPage() {
                       Sending...
                     </span>
                   ) : (
-                    <TranslatedText text={content?.submitButtonText} />
+                    <TranslatedText text={content?.submitButtonText || "🚀 Send Message"} />
                   )}
                 </button>
-<p className="text-sm mt-6 opacity-75 max-w-lg mx-auto"><TranslatedText text={content?.responseTimeText} /></p>
+<p className="text-sm mt-6 opacity-75 max-w-lg mx-auto"><TranslatedText text={content?.responseTimeText || "We typically respond within 2-4 hours during business hours"} /></p>
               </div>
             </form>
           </div>
@@ -426,8 +464,8 @@ export default function ContactPage() {
       <section className="py-16 md:py-24 bg-white">
         <div className="dance-container">
           <div className="text-center mb-16">
-<h2 className="text-3xl md:text-4xl font-bold mb-6" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.faqTitle} /></h2>
-<p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{color: 'var(--neutral-gray)'}}><TranslatedText text={content?.faqSubtitle} /></p>
+<h2 className="text-3xl md:text-4xl font-bold mb-6" style={{color: 'var(--primary-dark)'}}><TranslatedText text={content?.faqTitle || "❓ Frequently Asked Questions"} /></h2>
+<p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{color: 'var(--neutral-gray)'}}><TranslatedText text={content?.faqSubtitle || "Quick answers to common questions"} /></p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
             {(content?.faqs || [
