@@ -339,6 +339,117 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Join as Host or Register Section */}
+      <section className="py-20" style={{background: 'linear-gradient(135deg, var(--primary-gold) 0%, var(--accent-rose) 100%)', color: 'white', position: 'relative', overflow: 'hidden'}}>
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 left-10 text-6xl">💃</div>
+          <div className="absolute top-20 right-20 text-5xl">🕺</div>
+          <div className="absolute bottom-20 left-1/4 text-7xl">✨</div>
+          <div className="absolute bottom-10 right-1/3 text-6xl">🎵</div>
+        </div>
+        
+        <div className="dance-container relative z-10">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 dance-font" style={{color: 'white'}}>
+              🌟 {isMounted ? t('join.title') : 'Join Our Community'}
+            </h2>
+            <p className="text-xl md:text-2xl mb-2" style={{color: 'white'}}>
+              {isMounted ? t('join.subtitle') : 'Whether you want to teach or learn, we have a place for you!'}
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* Become a Host Card */}
+            <div className="bg-white rounded-2xl p-8 text-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl" style={{background: 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.98))'}}>
+              <div className="text-6xl mb-6">🎓</div>
+              <h3 className="text-3xl font-bold mb-4" style={{color: 'var(--primary-dark)'}}>
+                {isMounted ? t('join.becomeHost') : 'Become a Host'}
+              </h3>
+              <p className="text-lg mb-6" style={{color: 'var(--neutral-gray)'}}>
+                {isMounted ? t('join.hostDescription') : 'Share your passion for dance! Teach classes, host events, and build your community.'}
+              </p>
+              <ul className="text-left mb-8 space-y-3" style={{color: 'var(--neutral-gray)'}}>
+                <li className="flex items-start">
+                  <span className="text-2xl mr-3">✨</span>
+                  <span>{isMounted ? t('join.hostBenefit1') : 'Set your own schedule and rates'}</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-2xl mr-3">💰</span>
+                  <span>{isMounted ? t('join.hostBenefit2') : 'Earn money doing what you love'}</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-2xl mr-3">🌍</span>
+                  <span>{isMounted ? t('join.hostBenefit3') : 'Reach students worldwide'}</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-2xl mr-3">📊</span>
+                  <span>{isMounted ? t('join.hostBenefit4') : 'Professional tools and support'}</span>
+                </li>
+              </ul>
+              <Link href="/become-a-host" className="inline-block px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 hover:transform hover:scale-105 hover:shadow-xl" 
+                    style={{background: 'linear-gradient(135deg, var(--primary-gold), var(--accent-rose))', color: 'white'}}>
+                🚀 {isMounted ? t('join.becomeHost') : 'Become A Host'}
+              </Link>
+            </div>
+
+            {/* Join as Student Card */}
+            <div className="bg-white rounded-2xl p-8 text-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl" style={{background: 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.98))'}}>
+              <div className="text-6xl mb-6">💃</div>
+              <h3 className="text-3xl font-bold mb-4" style={{color: 'var(--primary-dark)'}}>
+                {isMounted ? t('join.joinAsStudent') : 'Join as Student'}
+              </h3>
+              <p className="text-lg mb-6" style={{color: 'var(--neutral-gray)'}}>
+                {isMounted ? t('join.studentDescription') : 'Start your dance journey today! Learn from expert instructors and connect with fellow dancers.'}
+              </p>
+              <ul className="text-left mb-8 space-y-3" style={{color: 'var(--neutral-gray)'}}>
+                <li className="flex items-start">
+                  <span className="text-2xl mr-3">🎯</span>
+                  <span>{isMounted ? t('join.studentBenefit1') : 'Access to diverse dance styles'}</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-2xl mr-3">👥</span>
+                  <span>{isMounted ? t('join.studentBenefit2') : 'Join a vibrant community'}</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-2xl mr-3">📅</span>
+                  <span>{isMounted ? t('join.studentBenefit3') : 'Flexible class schedules'}</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-2xl mr-3">🎁</span>
+                  <span>{isMounted ? t('join.studentBenefit4') : 'First class free trial'}</span>
+                </li>
+              </ul>
+              <Link href="/register" className="inline-block px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 hover:transform hover:scale-105 hover:shadow-xl" 
+                    style={{background: 'linear-gradient(135deg, var(--accent-rose), var(--primary-gold))', color: 'white'}}>
+                🎉 {isMounted ? t('join.registerNow') : 'Register Now'}
+              </Link>
+            </div>
+          </div>
+
+          {/* Trust Indicators */}
+          <div className="mt-12 text-center">
+            <p className="text-sm opacity-75 mb-4">
+              {isMounted ? t('join.trusted') : 'Trusted by thousands of dancers and instructors worldwide'}
+            </p>
+            <div className="flex justify-center gap-8 flex-wrap">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">✓</span>
+                <span className="text-sm">{isMounted ? t('join.verifiedInstructors') : 'Verified Instructors'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">✓</span>
+                <span className="text-sm">{isMounted ? t('join.securePayments') : 'Secure Payments'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">✓</span>
+                <span className="text-sm">{isMounted ? t('join.support') : '24/7 Support'}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Dance Styles Section */}
       <DanceStylesTabs danceStyles={danceStyles} />
 
