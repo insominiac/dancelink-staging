@@ -29,11 +29,6 @@ function PaymentPageContent() {
   const [paymentProvider, setPaymentProvider] = useState<'STRIPE' | 'WISE' | 'PAYPAL'>('PAYPAL')
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [wiseRecipientData, setWiseRecipientData] = useState({
-    name: '',
-    email: '',
-    currency: 'USD'
-  })
 
   useEffect(() => {
     // Get booking data from URL parameters or sessionStorage
@@ -59,14 +54,6 @@ function PaymentPageContent() {
     }
   }, [searchParams, router])
 
-  const handleWiseRecipientChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setWiseRecipientData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
-
   const processPayment = async () => {
     if (!bookingData) return
     
@@ -74,15 +61,6 @@ function PaymentPageContent() {
     setError(null)
     
     try {
-      // Validate Wise recipient data if Wise is selected
-      if (paymentProvider === 'WISE') {
-        if (!wiseRecipientData.name.trim() || !wiseRecipientData.email.trim()) {
-          setError('Please provide recipient details for Wise payment')
-          setIsProcessing(false)
-          return
-        }
-      }
-
       // First create/find user
       const userResponse = await fetch('/api/public/users', {
         method: 'POST',
@@ -106,15 +84,7 @@ function PaymentPageContent() {
         itemId: bookingData.classId || bookingData.eventId,
         userId: userData.userId,
         successUrl: `${window.location.origin}/booking/confirmation/{CHECKOUT_SESSION_ID}`,
-        cancelUrl: `${window.location.origin}/booking/payment?${searchParams?.toString() || ''}`,
-        ...(paymentProvider === 'WISE' && {
-          wiseRecipientDetails: {
-            name: wiseRecipientData.name,
-            email: wiseRecipientData.email,
-            currency: wiseRecipientData.currency,
-            type: 'EMAIL'
-          }
-        })
+        cancelUrl: `${window.location.origin}/booking/payment?${searchParams?.toString() || ''}`
       }
 
       const paymentResponse = await fetch('/api/payments/create-session', {
@@ -129,7 +99,7 @@ function PaymentPageContent() {
         throw new Error(paymentResult.error || 'Failed to create payment session')
       }
 
-      // Handle payment provider specific flows
+      // Handle PayPal payment flow
       if (paymentProvider === 'PAYPAL') {
         // PayPal integration - redirect to PayPal checkout
         if (paymentResult.sessionUrl || paymentResult.approvalUrl) {
@@ -137,20 +107,8 @@ function PaymentPageContent() {
         } else {
           throw new Error('No payment URL received from PayPal')
         }
-      } else if (paymentProvider === 'STRIPE') {
-        if (paymentResult.sessionUrl) {
-          window.location.href = paymentResult.sessionUrl
-        } else {
-          throw new Error('No payment URL received from Stripe')
-        }
-      } else if (paymentProvider === 'WISE') {
-        const params = new URLSearchParams({
-          transferId: paymentResult.transferId,
-          bookingId: paymentResult.booking.id,
-          amount: paymentResult.booking.finalAmount,
-          currency: 'USD'
-        })
-        router.push(`/booking/wise-payment?${params.toString()}`)
+      } else {
+        throw new Error('Unsupported payment provider')
       }
 
     } catch (error) {
@@ -310,59 +268,6 @@ function PaymentPageContent() {
               />
             </div>
 
-              {/* Wise Recipient Details */}
-              {paymentProvider === 'WISE' && (
-                <div className="mb-6 p-4 lg:p-6 border border-gray-300 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50">
-                  <h4 className="text-sm lg:text-base font-semibold text-gray-900 mb-4 flex items-center">
-                    <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    </svg>
-                    Recipient Details for Wise Transfer
-                  </h4>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Recipient Name *
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        required
-                        value={wiseRecipientData.name}
-                        onChange={handleWiseRecipientChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
-                        placeholder="Who should receive the payment?"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Recipient Email *
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        required
-                        value={wiseRecipientData.email}
-                        onChange={handleWiseRecipientChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
-                        placeholder="recipient@example.com"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Currency</label>
-                      <select
-                        name="currency"
-                        value={wiseRecipientData.currency}
-                        onChange={handleWiseRecipientChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
-                      >
-                        <option value="USD">USD - US Dollar</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              )}
-
               {/* Total and Continue Button */}
               <div className="border-t border-gray-200 pt-6">
                 <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-4 lg:p-6 mb-6">
@@ -384,21 +289,10 @@ function PaymentPageContent() {
                     </div>
                   ) : (
                     <div className="flex items-center justify-center space-x-3">
-                      {paymentProvider === 'STRIPE' ? (
-                        <>
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                          </svg>
-                          <span>Pay Securely with Card - ${bookingData.price}</span>
-                        </>
-                      ) : (
-                        <>
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
-                          </svg>
-                          <span>Pay Now - ${bookingData.price}</span>
-                        </>
-                      )}
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                      <span>Pay Now - ${bookingData.price}</span>
                     </div>
                   )}
                 </button>
@@ -412,7 +306,7 @@ function PaymentPageContent() {
                     <span>Your payment information is secure and encrypted</span>
                   </div>
                   <div className="flex items-center justify-center space-x-4 text-xs text-gray-400">
-                    <span>{paymentProvider === 'STRIPE' ? 'Powered by Stripe' : 'Powered by Wise'}</span>
+                     <span>Powered by PayPal</span>
                     <span>•</span>
                     <span>256-bit SSL Security</span>
                     <span>•</span>
