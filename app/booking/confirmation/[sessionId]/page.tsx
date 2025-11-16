@@ -1,7 +1,8 @@
 import { Suspense } from 'react'
-import { notFound } from 'next/navigation'
-import { stripe } from '@/app/lib/stripe'
+import { notFound, redirect } from 'next/navigation'
 import prisma from '@/app/lib/db'
+import ConfirmationActions from './ConfirmationActions'
+import PayPalReturnHandler from './PayPalReturnHandler'
 
 interface BookingConfirmationPageProps {
   params: {
@@ -11,20 +12,9 @@ interface BookingConfirmationPageProps {
 
 async function getBookingDetails(sessionId: string) {
   try {
-    // Get session details from Stripe
-    const session = await stripe.checkout.sessions.retrieve(sessionId, {
-      expand: ['payment_intent', 'line_items']
-    })
-
-    if (!session) {
-      return null
-    }
-
-    // Get booking from database
-    const booking = await prisma.booking.findFirst({
-      where: {
-        stripeSessionId: sessionId
-      },
+    // First try to find booking by ID (for PayPal or direct bookings)
+    let booking = await prisma.booking.findUnique({
+      where: { id: sessionId },
       include: {
         user: true,
         class: {
@@ -48,9 +38,6 @@ async function getBookingDetails(sessionId: string) {
           }
         },
         transactions: {
-          where: {
-            provider: 'STRIPE'
-          },
           orderBy: {
             createdAt: 'desc'
           },
@@ -59,8 +46,48 @@ async function getBookingDetails(sessionId: string) {
       }
     })
 
+    // If not found by ID, try Stripe session ID
+    if (!booking) {
+      booking = await prisma.booking.findFirst({
+        where: {
+          stripeSessionId: sessionId
+        },
+        include: {
+          user: true,
+          class: {
+            include: {
+              venue: true,
+              classInstructors: {
+                include: {
+                  instructor: {
+                    include: {
+                      user: true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          event: {
+            include: {
+              venue: true,
+              organizer: true
+            }
+          },
+          transactions: {
+            where: {
+              provider: 'STRIPE'
+            },
+            orderBy: {
+              createdAt: 'desc'
+            },
+            take: 1
+          }
+        }
+      })
+    }
+
     return {
-      session,
       booking
     }
   } catch (error) {
@@ -78,7 +105,7 @@ export default async function BookingConfirmationPage({ params }: BookingConfirm
     notFound()
   }
 
-  const { session, booking } = data
+  const { booking } = data
   const transaction = booking.transactions[0]
   const item = booking.class || booking.event
   const isClass = Boolean(booking.class)
@@ -86,6 +113,11 @@ export default async function BookingConfirmationPage({ params }: BookingConfirm
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* PayPal Return Handler */}
+        {booking.paymentMethod === 'PAYPAL' && booking.paymentStatus === 'pending' && (
+          <PayPalReturnHandler bookingId={booking.id} />
+        )}
+        
         {/* Success Header */}
         <div className="text-center mb-8">
           <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
@@ -256,23 +288,7 @@ export default async function BookingConfirmationPage({ params }: BookingConfirm
           </div>
 
           {/* Action Buttons */}
-          <div className="px-6 py-6 border-t border-gray-200 flex flex-col sm:flex-row gap-4">
-            <button
-              onClick={() => window.print()}
-              className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors"
-            >
-              <svg className="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-              </svg>
-              Print Receipt
-            </button>
-            <a
-              href="/"
-              className="flex-1 bg-purple-600 text-white text-center px-4 py-2 rounded-md hover:bg-purple-700 transition-colors"
-            >
-              Back to Home
-            </a>
-          </div>
+          <ConfirmationActions />
         </div>
       </div>
     </div>

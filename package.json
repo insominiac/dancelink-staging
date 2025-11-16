@@ -17,6 +17,7 @@
   "dependencies": {
     "@google-cloud/translate": "^9.2.0",
     "@next-auth/prisma-adapter": "^1.0.5",
+    "@paypal/checkout-server-sdk": "^1.0.3",
     "@prisma/client": "^6.15.0",
     "@stripe/stripe-js": "^7.9.0",
     "@types/nodemailer": "^7.0.1",

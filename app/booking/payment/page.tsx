@@ -26,7 +26,7 @@ function PaymentPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [bookingData, setBookingData] = useState<BookingData | null>(null)
-  const [paymentProvider, setPaymentProvider] = useState<'STRIPE' | 'WISE'>('STRIPE')
+  const [paymentProvider, setPaymentProvider] = useState<'STRIPE' | 'WISE' | 'PAYPAL'>('PAYPAL')
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [wiseRecipientData, setWiseRecipientData] = useState({
@@ -37,7 +37,7 @@ function PaymentPageContent() {
 
   useEffect(() => {
     // Get booking data from URL parameters or sessionStorage
-    const bookingDataParam = searchParams.get('data')
+    const bookingDataParam = searchParams?.get('data')
     if (bookingDataParam) {
       try {
         const decodedData = JSON.parse(decodeURIComponent(bookingDataParam))
@@ -106,7 +106,7 @@ function PaymentPageContent() {
         itemId: bookingData.classId || bookingData.eventId,
         userId: userData.userId,
         successUrl: `${window.location.origin}/booking/confirmation/{CHECKOUT_SESSION_ID}`,
-        cancelUrl: `${window.location.origin}/booking/payment?${searchParams.toString()}`,
+        cancelUrl: `${window.location.origin}/booking/payment?${searchParams?.toString() || ''}`,
         ...(paymentProvider === 'WISE' && {
           wiseRecipientDetails: {
             name: wiseRecipientData.name,
@@ -130,7 +130,14 @@ function PaymentPageContent() {
       }
 
       // Handle payment provider specific flows
-      if (paymentProvider === 'STRIPE') {
+      if (paymentProvider === 'PAYPAL') {
+        // PayPal integration - redirect to PayPal checkout
+        if (paymentResult.sessionUrl || paymentResult.approvalUrl) {
+          window.location.href = paymentResult.sessionUrl || paymentResult.approvalUrl
+        } else {
+          throw new Error('No payment URL received from PayPal')
+        }
+      } else if (paymentProvider === 'STRIPE') {
         if (paymentResult.sessionUrl) {
           window.location.href = paymentResult.sessionUrl
         } else {
@@ -389,7 +396,7 @@ function PaymentPageContent() {
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
                           </svg>
-                          <span>Pay with Wise Transfer - ${bookingData.price}</span>
+                          <span>Pay Now - ${bookingData.price}</span>
                         </>
                       )}
                     </div>

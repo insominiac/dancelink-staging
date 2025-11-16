@@ -4,8 +4,8 @@ import React, { useState } from 'react'
 import { CreditCard, Globe, DollarSign } from 'lucide-react'
 
 interface PaymentProviderSelectorProps {
-  onProviderChange: (provider: 'STRIPE' | 'WISE') => void
-  selectedProvider: 'STRIPE' | 'WISE'
+  onProviderChange: (provider: 'STRIPE' | 'WISE' | 'PAYPAL') => void
+  selectedProvider: 'STRIPE' | 'WISE' | 'PAYPAL'
   disabled?: boolean
 }
 
@@ -14,33 +14,46 @@ export default function PaymentProviderSelector({
   selectedProvider,
   disabled = false
 }: PaymentProviderSelectorProps) {
-  const [hoveredProvider, setHoveredProvider] = useState<'STRIPE' | 'WISE' | null>(null)
+  const [hoveredProvider, setHoveredProvider] = useState<'STRIPE' | 'WISE' | 'PAYPAL' | null>(null)
 
   const providers = [
     {
-      id: 'STRIPE' as const,
-      name: 'Credit/Debit Card',
-      description: 'Pay instantly with your card',
-      icon: <CreditCard className="w-6 h-6" />,
-      features: ['Instant payment', 'Credit/Debit cards', 'Secure checkout'],
+      id: 'PAYPAL' as const,
+      name: 'PayPal',
+      description: 'Pay securely with PayPal',
+      icon: <DollarSign className="w-6 h-6" />,
+      features: ['Instant payment', 'PayPal & Credit cards', 'Buyer protection'],
       processingTime: 'Instant',
-      fees: 'Standard card fees apply',
+      fees: 'Standard PayPal fees apply',
       color: 'bg-blue-50 border-blue-200',
       activeColor: 'bg-blue-100 border-blue-400',
       textColor: 'text-blue-700',
     },
-    {
-      id: 'WISE' as const,
-      name: 'Wise Transfer',
-      description: 'International transfers with great exchange rates',
-      icon: <Globe className="w-6 h-6" />,
-      features: ['Low fees', 'Great exchange rates', 'Multi-currency'],
-      processingTime: '1-2 business days',
-      fees: 'Lower international fees',
-      color: 'bg-green-50 border-green-200',
-      activeColor: 'bg-green-100 border-green-400',
-      textColor: 'text-green-700',
-    },
+    // Temporarily hidden payment methods
+    // {
+    //   id: 'STRIPE' as const,
+    //   name: 'Credit/Debit Card',
+    //   description: 'Pay instantly with your card',
+    //   icon: <CreditCard className="w-6 h-6" />,
+    //   features: ['Instant payment', 'Credit/Debit cards', 'Secure checkout'],
+    //   processingTime: 'Instant',
+    //   fees: 'Standard card fees apply',
+    //   color: 'bg-blue-50 border-blue-200',
+    //   activeColor: 'bg-blue-100 border-blue-400',
+    //   textColor: 'text-blue-700',
+    // },
+    // {
+    //   id: 'WISE' as const,
+    //   name: 'Wise Transfer',
+    //   description: 'International transfers with great exchange rates',
+    //   icon: <Globe className="w-6 h-6" />,
+    //   features: ['Low fees', 'Great exchange rates', 'Multi-currency'],
+    //   processingTime: '1-2 business days',
+    //   fees: 'Lower international fees',
+    //   color: 'bg-green-50 border-green-200',
+    //   activeColor: 'bg-green-100 border-green-400',
+    //   textColor: 'text-green-700',
+    // },
   ]
 
   return (
@@ -143,7 +156,9 @@ export default function PaymentProviderSelector({
           <div className="text-sm text-gray-600">
             <p className="font-medium mb-1">Secure Payment Processing</p>
             <p>
-              {selectedProvider === 'STRIPE' 
+              {selectedProvider === 'PAYPAL' 
+                ? 'Your payment is processed securely by PayPal with buyer protection and industry-leading security.'
+                : selectedProvider === 'STRIPE'
                 ? 'Your payment information is processed securely by Stripe and never stored on our servers.'
                 : 'Your international transfer is processed securely by Wise with bank-level security and regulated by financial authorities.'
               }
