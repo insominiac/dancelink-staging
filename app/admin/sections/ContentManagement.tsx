@@ -411,12 +411,12 @@ export default function ContentManagement() {
 
       if (instructorsRes.ok) {
         const instructorsData = await instructorsRes.json()
-        setInstructorsContent(instructorsData.content)
+        setInstructorsContent(instructorsData)
       }
 
       if (contactRes.ok) {
         const contactData = await contactRes.json()
-        setContactContent(contactData.content)
+        setContactContent(contactData)
       }
     } catch (error) {
       console.error('Error loading saved content:', error)
@@ -531,7 +531,7 @@ export default function ContentManagement() {
       const response = await fetch('/api/admin/content/instructors', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: instructorsContent })
+        body: JSON.stringify(instructorsContent)
       })
 
       if (response.ok) {
@@ -555,7 +555,7 @@ export default function ContentManagement() {
       const response = await fetch('/api/admin/content/contact', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: contactContent })
+        body: JSON.stringify(contactContent)
       })
 
       if (response.ok) {
@@ -658,7 +658,7 @@ export default function ContentManagement() {
 
       if (response.ok) {
         const data = await response.json()
-        setInstructorsContent(data.content)
+        setInstructorsContent(data)
         alert('Instructors page content reset to defaults successfully!')
       } else {
         throw new Error('Failed to reset instructors content')
@@ -684,7 +684,7 @@ export default function ContentManagement() {
 
       if (response.ok) {
         const data = await response.json()
-        setContactContent(data.content)
+        setContactContent(data)
         alert('Contact page content reset to defaults successfully!')
       } else {
         throw new Error('Failed to reset contact content')
@@ -1865,6 +1865,32 @@ export default function ContentManagement() {
                 placeholder="https://twitter.com/yourpage"
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">YouTube</label>
+              <input
+                type="url"
+                value={siteSettings.socialMedia.youtube}
+                onChange={(e) => setSiteSettings({
+                  ...siteSettings,
+                  socialMedia: {...siteSettings.socialMedia, youtube: e.target.value}
+                })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="https://youtube.com/@yourchannel"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">TikTok</label>
+              <input
+                type="url"
+                value={siteSettings.socialMedia.tiktok}
+                onChange={(e) => setSiteSettings({
+                  ...siteSettings,
+                  socialMedia: {...siteSettings.socialMedia, tiktok: e.target.value}
+                })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="https://tiktok.com/@yourpage"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -2886,6 +2912,7 @@ export default function ContentManagement() {
               </div>
               
               {/* Hero Features */}
+              
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Hero Features</label>
                 <div className="space-y-2">
@@ -2937,7 +2964,6 @@ export default function ContentManagement() {
               </div>
             </div>
           </div>
-
           {/* Stats Section */}
           <div className="border border-gray-200 rounded-lg p-6">
             <h4 className="text-lg font-semibold mb-4">Statistics Section</h4>
