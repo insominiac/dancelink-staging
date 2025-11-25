@@ -302,6 +302,7 @@ model DanceStyle {
   id              String                  @id @default(cuid())
   name            String                  @unique
   category        String?
+  subcategory     String?                 @map("subcategory")
   isActive        Boolean                 @default(true) @map("is_active")
   createdAt       DateTime                @default(now()) @map("created_at")
   updatedAt       DateTime                @updatedAt @map("updated_at")
@@ -328,6 +329,8 @@ model DanceStyle {
   @@index([isActive])
   @@index([isFeatured])
   @@index([sortOrder])
+  @@index([category])
+  @@index([subcategory])
   @@map("dance_styles")
 }
 
@@ -930,6 +933,7 @@ model InstructorsPageContent {
   heroBadgeText        String?
   heroTitle            String?
   heroSubtitle         String?
+  heroFeatures         Json?
   statsSection         Json?
   noInstructorsSection Json?
   errorSection         Json?
