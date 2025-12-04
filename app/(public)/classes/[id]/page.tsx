@@ -153,7 +153,7 @@ export default function ClassDetailPage({ params }: { params: { id: string } }) 
           <div className="flex items-start justify-between mb-6">
             <div>
               <h1 className="text-5xl font-bold mb-4 dance-font">{classData.title}</h1>
-              <p className="text-xl opacity-90">{classData.description}</p>
+              <p className="text-xl text-white">{classData.description}</p>
             </div>
             <span className={`px-4 py-2 rounded-full text-sm font-semibold ${
               classData.level === 'Beginner' ? 'bg-green-100 text-green-800' :
