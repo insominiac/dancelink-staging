@@ -82,15 +82,9 @@ export default function ClassDetailPage({ params }: { params: { id: string } }) 
   }
 
   const spotsLeft = classData.maxCapacity - classData.currentStudents
-  const missing: string[] = []
-  if (!classData.venue?.name) missing.push('venue')
-  if (!classData.scheduleTime) missing.push('time')
-  if (!classData.price || isNaN(parseFloat(classData.price)) || parseFloat(classData.price) <= 0) missing.push('price')
-  if (!classData.maxCapacity || classData.maxCapacity <= 0) missing.push('capacity')
-  if (!classData.classInstructors || classData.classInstructors.length === 0) missing.push('instructor')
-  const bookable = missing.length === 0
-  const isAvailable = spotsLeft > 0 && classData.isActive && bookable
-  const disabledReason = !bookable ? `Booking unavailable: missing ${missing.join(', ')}. Please check back later.` : undefined
+  // Remove blocking validation - allow booking even with missing info
+  const isAvailable = spotsLeft > 0 && classData.isActive
+  const disabledReason = !isAvailable ? 'No spots available' : undefined
 
   const handleMobileBookNow = () => {
     const el = document.getElementById('booking')
@@ -193,19 +187,57 @@ export default function ClassDetailPage({ params }: { params: { id: string } }) 
                   <div className="dance-card" style={{padding: '1.5rem'}}>
                     <h3 className="font-semibold mb-2" style={{color: 'var(--primary-dark)'}}>🗓️ Start Date</h3>
                     <p style={{color: 'var(--neutral-gray)'}}>
-                      {formatDateSafe(classData.startDate) || '—'}
+                      {classData.startDate && formatDateSafe(classData.startDate) ? (
+                        formatDateSafe(classData.startDate)
+                      ) : (
+                        <span className="flex items-center gap-1">
+                          <span className="text-lg">⏳</span>
+                          <span className="text-sm italic">Schedule will be updated soon.</span>
+                        </span>
+                      )}
                     </p>
                   </div>
                   <div className="dance-card" style={{padding: '1.5rem'}}>
                     <h3 className="font-semibold mb-2" style={{color: 'var(--primary-dark)'}}>📆 End Date</h3>
                     <p style={{color: 'var(--neutral-gray)'}}>
-                      {formatDateSafe(classData.endDate) || '—'}
+                      {classData.endDate && formatDateSafe(classData.endDate) ? (
+                        formatDateSafe(classData.endDate)
+                      ) : (
+                        <span className="flex items-center gap-1">
+                          <span className="text-lg">⏳</span>
+                          <span className="text-sm italic">Schedule will be updated soon.</span>
+                        </span>
+                      )}
                     </p>
                   </div>
                 </div>
 
+                {/* Instructor Information */}
+                <div className="dance-card" style={{padding: '1.5rem', marginTop: '1.5rem'}}>
+                  <h3 className="font-semibold mb-3" style={{color: 'var(--primary-dark)'}}>👨‍🏫 Instructor</h3>
+                  {classData.classInstructors && classData.classInstructors.length > 0 ? (
+                    <div>
+                      <p className="font-medium mb-1" style={{color: 'var(--primary-dark)'}}>
+                        {classData.classInstructors[0].instructor?.user?.fullName || 'Professional Instructor'}
+                      </p>
+                      {classData.classInstructors[0].instructor?.specialty && (
+                        <p className="text-sm" style={{color: 'var(--neutral-gray)'}}>
+                          {classData.classInstructors[0].instructor.specialty}
+                        </p>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">⏳</span>
+                      <p className="text-sm italic" style={{color: 'var(--neutral-gray)'}}>
+                        Instructor will be updated soon.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
                 {/* Venue Information */}
-                {classData.venue && (
+                {classData.venue ? (
                   <div className="dance-card" style={{padding: '1.5rem', marginTop: '1.5rem'}}>
                     <h3 className="font-semibold mb-3" style={{color: 'var(--primary-dark)'}}>📍 Location</h3>
                     <div>
@@ -213,6 +245,16 @@ export default function ClassDetailPage({ params }: { params: { id: string } }) 
                       <p style={{color: 'var(--neutral-gray)'}}>{classData.venue.addressLine1}</p>
                       <p style={{color: 'var(--neutral-gray)'}}>
                         {classData.venue.city}{classData.venue.state && `, ${classData.venue.state}`}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="dance-card" style={{padding: '1.5rem', marginTop: '1.5rem'}}>
+                    <h3 className="font-semibold mb-3" style={{color: 'var(--primary-dark)'}}>📍 Location</h3>
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">⏳</span>
+                      <p className="text-sm italic" style={{color: 'var(--neutral-gray)'}}>
+                        Location will be announced soon.
                       </p>
                     </div>
                   </div>

@@ -321,14 +321,9 @@ export default function ClassesPage() {
               const availability = getAvailabilityStatus(cls)
               const spotsLeft = getSpotsLeft(cls)
               
-              const missing: string[] = []
-              if (!cls.venue?.name) missing.push('venue')
-              if (!cls.schedule || cls.schedule === 'TBD') missing.push('time')
-              if (!cls.price || isNaN(parseFloat(cls.price)) || parseFloat(cls.price) <= 0) missing.push('price')
-              if (!cls.maxStudents || cls.maxStudents <= 0) missing.push('capacity')
-              if (!cls.classInstructors || cls.classInstructors.length === 0) missing.push('instructor')
-              const bookable = missing.length === 0
-              const disabledReason = !bookable ? `Awaiting venue or instructor confirmation.` : undefined
+              // Allow booking regardless of missing instructor or venue
+              const bookable = spotsLeft > 0
+              const disabledReason = !bookable ? 'No spots available' : undefined
 
               return (
                 <div key={cls.id} className="bg-white rounded-xl shadow-md overflow-hidden group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col border border-gray-100">
@@ -391,14 +386,20 @@ export default function ClassesPage() {
                         <div className="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center mr-3">
                           <span className="text-green-600 text-sm">📍</span>
                         </div>
-                        <span className="text-sm font-medium truncate" title={cls.venue?.name || (isMounted ? t('classes.tbd') : 'TBD')}>{cls.venue?.name || (isMounted ? t('classes.tbd') : 'TBD')}</span>
+                        <span className="text-sm font-medium truncate" title={cls.venue?.name || 'Venue to be announced'}>
+                          {cls.venue?.name || (
+                            <span className="italic text-gray-500">Venue to be announced</span>
+                          )}
+                        </span>
                       </div>
                       <div className="flex items-center text-gray-700 col-span-1 sm:col-span-1">
                         <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center mr-3">
                           <span className="text-purple-600 text-sm">👨‍🏫</span>
                         </div>
-                        <span className="text-sm font-medium truncate" title={cls.classInstructors?.[0]?.instructor?.user?.fullName || (isMounted ? t('classes.proInstructor') : 'Pro Instructor')}>
-                          {cls.classInstructors?.[0]?.instructor?.user?.fullName || (isMounted ? t('classes.proInstructor') : 'Pro Instructor')}
+                        <span className="text-sm font-medium truncate" title={cls.classInstructors?.[0]?.instructor?.user?.fullName || 'Instructor to be announced'}>
+                          {cls.classInstructors?.[0]?.instructor?.user?.fullName || (
+                            <span className="italic text-gray-500">Instructor to be announced</span>
+                          )}
                         </span>
                       </div>
                     </div>
